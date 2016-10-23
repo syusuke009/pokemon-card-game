@@ -1,0 +1,619 @@
+.hidden {
+    display: none;
+}
+.invisible {
+    visibility: hidden;
+}
+
+.btn {
+    border: 1px solid #f0f0f1;
+    background-color: #f0f0f1;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 4px 16px;
+    transition: background-color 0.5s ease, border-color 0.5s ease;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.3);
+}
+.btn:hover {
+    border-color: #d6d6d8;
+    background-color: #d6d6d8;
+}
+.btn:active {
+    border-color: #c3c3c7;
+    background-color: #c3c3c7;
+}
+.btn:focus {
+    outline: none;
+}
+.btn.disabled {
+    color: #ccc;
+}
+.btn.disabled:hover {
+    cursor: default;
+    background-color: #f0f0f1;
+}
+.btn.disabled:active {
+    background-color: #f0f0f1;
+}
+.btn.btn-danger {
+    color: white;
+    background-color: #e91e63;
+    border-color: #e91e63;
+}
+.btn.btn-danger:hover {
+    border-color: #d11b59;
+    background-color: #d11b59;
+}
+.btn.btn-danger:active {
+    border-color: #b5184e;
+    background-color: #b5184e;
+}
+.btn.btn-primary {
+    color: white;
+    background-color: #4285f4;
+    border-color: #4285f4;
+}
+.btn.btn-primary:hover {
+    border-color: #3b77db;
+    background-color: #3b77db;
+}
+.btn.btn-primary:active {
+    border-color: #b5184e;
+    background-color: #b5184e;
+}
+
+.dialog-backdrop {
+    background-color: #000;
+    z-index: -1;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.3s ease;
+}
+.dialog-backdrop.open {
+    opacity: 0.7;
+    z-index: 9999;
+}
+.dialog-window {
+    background-color: #fff;
+    z-index: -1;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border-radius: 5px;
+    transition: opacity 0.3s ease;
+}
+.dialog-window.open {
+    z-index: 10000;
+    opacity: 1;
+}
+.dialog-header {
+    height: 32px;
+    color: white;
+    background-color: #3b77db;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-size: 20px;
+    line-height: 32px;
+    padding: 8px 16px;
+}
+.dialog-buttons {
+    padding: 16px;
+    bottom: 0;
+    position: absolute;
+    width: calc(100% - 32px);
+    text-align: right;
+    border-top: 1px solid #dadde0;
+}
+
+.divider {
+    color: #a4aab0;
+}
+
+.field {
+    display: inline-block;
+}
+
+.detail {
+    top: 0;
+    right: 0;
+    position: fixed;
+    width: 320px;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.player-field {
+    display: flex;
+    height: 332px;
+    margin: 8px;
+    width: 880px;
+}
+
+.deck-area {
+    flex-basis: 98px;
+    margin: 0 8px;
+}
+
+.monster-area {
+    flex-grow: 1;
+    margin: 0 8px;
+}
+
+.side {
+    flex-basis: 98px;
+    margin: 0 8px;
+    padding: 8px;
+    border: 2px dashed #ccc;
+    position: relative;
+}
+
+.deck {
+    height: 154px;
+    border: 2px solid #ccc;
+}
+.rest-card-count {
+    font-weight: bold;
+    color: #fff;
+    padding: 4px;
+    opacity: 0.9;
+}
+
+.trush {
+    border: 2px dashed #ccc;
+    height: 154px;
+    padding: 8px;
+}
+
+.bench {
+    height: 150px;
+    margin: 8px 0;
+    display: flex;
+}
+
+.battle-monster {
+    height: 150px;
+    margin: 8px;
+    display: flex;
+    justify-content: center;
+}
+
+.hands {
+    margin: 8px;
+    height: 150px;
+}
+
+.card {
+    width: 96px;
+    height: 136px;
+    margin: 8px;
+    border-radius: 2px;
+    border: 1px solid #888;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    box-shadow: 0 3px 6px 0 rgba(0,0,0,.25), 0 1px 2px 0 rgba(0,0,0,.15), 0 -1px 4px -1px rgba(0,0,0,.1);
+}
+.card:hover {
+    box-shadow: 0 6px 11px 0 rgba(0,0,0,.25), 0 2px 5px 0 rgba(0,0,0,.2), 0 -3px 6px -3px rgba(0,0,0,.08);
+}
+.card.rear {
+    cursor: default;
+}
+.card.rear:hover {
+    box-shadow: 0 3px 6px 0 rgba(0,0,0,.25), 0 1px 2px 0 rgba(0,0,0,.15), 0 -1px 4px -1px rgba(0,0,0,.1);
+}
+.card.unselectable {
+	opacity: 0.5;
+	cursor: default;
+}
+
+.side .card {
+    position: absolute;
+    margin: 0;
+    background-color: white;
+}
+
+.side .card:nth-child(1) {
+    top: 8px;
+}
+.side .card:nth-child(2) {
+    top: 42px;
+}
+.side .card:nth-child(3) {
+    top: 76px;
+}
+.side .card:nth-child(4) {
+    top: 110px;
+}
+.side .card:nth-child(5) {
+    top: 144px;
+}
+.side .card:nth-child(6) {
+    top: 178px;
+}
+
+.hands .card {
+    display: inline-block
+}
+
+.type-area {
+    font-size: 10px;
+    margin: 4px;
+    background-color: white;
+}
+
+.type-mark {
+    display: inline-block;
+    text-align: center;
+    border-radius: 50%;
+}
+
+.detail-content {
+    font-size: 16px;
+    margin: 16px;
+    padding: 8px;
+    background-color: #fff;
+}
+.detail-name {}
+
+.card .type-mark {
+    height: 15px;
+    width: 15px;
+    background-size: cover;
+    vertical-align: bottom;
+}
+
+.detail-content .type-mark {
+    height: 28px;
+    width: 28px;
+    background-size: cover;
+    vertical-align: sub;
+    margin-right: 8px;
+}
+
+.card-img {
+    margin: 0 4px;
+}
+
+.card-img.img-1,
+.card-img.img-2,
+.card-img.img-3,
+.card-img.img-supporter,
+.card-img.img-goods {
+    width: 88px;
+    line-height: 69px;
+}
+.card-img.img-supporter,
+.card-img.img-goods{
+
+    margin-bottom: 8px;
+    margin-top: 5px;
+}
+.card-img.img-energy {
+    width: 88px;
+    height: 108px;
+}
+.card-img.img-energy-sp {
+    width: 88px;
+    height: 62px;
+}
+
+.name-area {
+    font-size: 12px;
+    margin: 4px 4px 16px 4px;
+    background-color: white;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.img-energy+.name-area {
+    display: none;
+}
+
+.detail-area-name {
+    font-size: 20px;
+    border-bottom: 2px solid #4b9bff;
+    margin-bottom: 8px;
+}
+
+.detail-kind-caption {
+    display: inline-block;
+    width: 180px;
+}
+
+.detail-max-hp {
+    display: inline-block;
+    width: 86px;
+    text-align: right;
+}
+
+.detail-img {
+    width: 272px;
+}
+
+.detail-img.img-energy,
+.detail-img.img-energy-sp {
+    width: 272px;
+}
+
+.detail-skill1,
+.detail-skill2 {
+    border-bottom: 1px solid #dadde0;
+    margin-top: 8px;
+    font-size: 18px;
+}
+
+.skill1-cost,
+.skill2-cost {
+}
+
+.skill1-description,
+.skill2-description {
+    font-size: 10.5px;
+}
+
+.skill1-name,
+.skill2-name {
+    display: inline-block;
+    margin-right: 8px;
+    width: 200px;
+}
+
+.skill1-damage,
+.skill2-damage {
+    display: inline-block;
+    width: 56px;
+    font-weight: bold;
+}
+
+.detail-escape-cost,
+.detail-weak,
+.detail-regist {
+    margin-top: 4px;
+}
+
+.detail-escape-simbol {
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+.detail-energy,
+.detail-damage,
+.detail-status {
+	display: flex;
+	margin-bottom: 8px;
+}
+
+.detail-content .label {
+    margin-right: 8px;
+    vertical-align: middle;
+    display: inline-block;
+    width: 81px;
+    flex-basis: 92px;
+}
+.detail-content .value-group {
+	flex-basis: 208px;
+}
+
+.buttons-row {
+    margin: 8px 16px;
+}
+
+.card.rear {
+    background-image: url("../img/rear.jpg");
+    background-size: 96px 136px;
+}
+
+.card.normal {
+    background-color: #f5f5f5;
+}
+.card.normal:hover {
+    background-color: #eee;
+}
+.card.normal .type-mark,
+.detail-content.normal .type-mark {
+    background-image: url(../img/type/normal.jpg);
+}
+
+.card.leaf {
+    background-color: #00a65a;
+}
+.card.leaf:hover {
+    background-color: #008d4c;
+}
+.card.leaf .type-mark,
+.detail-content.leaf .type-mark {
+    background-image: url(../img/type/leaf.jpg);
+}
+
+.card.trainer {
+    background-color: #fff;
+}
+.card.trainer:hover {
+    background-color: #f2f2f2;
+}
+.card.trainer .type-mark,
+.detail-content.trainer .type-mark {
+    display: none;
+}
+
+.cost,
+.damage-counter {
+    height: 22px;
+    width: 22px;
+    background-size: cover;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+.cost.normal {
+    background-image: url(../img/type/normal.jpg);
+}
+.cost.leaf {
+    background-image: url(../img/type/leaf.jpg);
+}
+.cost.fire {
+    background-image: url(../img/type/fire.jpg);
+}
+.cost.aqua {
+    background-image: url(../img/type/aqua.jpg);
+}
+.cost.thunder {
+    background-image: url(../img/type/thunder.jpg);
+}
+.cost.fight {
+    background-image: url(../img/type/fight.jpg);
+}
+.cost.esper {
+    background-image: url(../img/type/esper.jpg);
+}
+.damage-counter {
+    background-image: url(../img/damage10.jpg);
+}
+.status {
+	display: inline-block;
+	height: 24px;
+	font-size: 12px;
+}
+.status.poison:before {
+	content: 'どく';
+	color: #fff;
+	background-color: #c44ad9;
+	padding: 2px 8px;
+	border-radius: 24px;
+	margin-right: 4px;
+}
+.status.burn:before {
+	content: 'やけど';
+	color: #fff;
+	background-color: #e91e63;
+	padding: 2px 8px;
+	border-radius: 24px;
+	margin-right: 4px;
+}
+.status.sleep:before {
+	content: 'ねむり';
+	color: #fff;
+	background-color: #4285f4;
+	padding: 2px 8px;
+	border-radius: 24px;
+	margin-right: 4px;
+}
+.status.paralysis:before {
+	content: 'マヒ';
+	color: #fff;
+	background-color: #f4b142;
+	padding: 2px 8px;
+	border-radius: 24px;
+	margin-right: 4px;
+}
+.status.confusion:before {
+	content: 'こんらん';
+	color: #fff;
+	background-color: #9299a0;
+	padding: 2px 8px;
+	border-radius: 24px;
+	margin-right: 4px;
+}
+
+/* *************************
+ * dialog
+ * ************************ */
+.skill-selection-container {
+	padding:16px;
+}
+.holding-energy {
+    display: flex;
+    margin-bottom: 16px;
+}
+.holding-energy .label {
+    margin-right: 8px;
+}
+.skill-panel {
+	margin-top: 8px;
+	padding: 8px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.15), 0 -1px 2px -1px rgba(0,0,0,.1);
+}
+.skill-panel:hover {
+	background-color: #e6e8ea;
+}
+.cost-area {
+    display: inline-block;
+    width: 136px;
+    margin-right: 8px;
+    vertical-align: middle;
+    height: 27px;
+}
+.skill-caption {
+    display: inline-block;
+    font-size: 18px;
+    width: 220px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+.damage-caption {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    width: 56px;
+    vertical-align: middle;
+}
+.effect-description {
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.coin {
+  background-size: cover;
+  border-radius: 50%;
+  border-width: 0px;
+  border-color: gray;
+  border-style: solid;
+}
+.coin.front {
+  background-image: url(../img/coin-front.jpg);
+}
+.coin.rear {
+  background-image: url(../img/coin-rear.jpg);
+}
+.coin-toss-container {
+    position: relative;
+    height: 400px;
+}
+.coin-toss-container .target-coin {
+    width: 64px;
+    height: 64px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    position: absolute;
+}
+.coin-toss-container .explanation {
+    border: 1px solid #dadde0;
+    padding: 8px;
+    position: absolute;
+    right: 16px;
+    bottom: 40px;
+}
+.coin-toss-container .explanation .row {
+    margin: 4px 0;
+}
+.coin-toss-container .explanation .coin {
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}

@@ -1,0 +1,35 @@
+.toss {
+  animation: coin-toss 1.0s linear 0s 1 normal;
+}
+@keyframes coin-toss {
+  0% { bottom:50px; background-image: url(../img/coin-front.jpg); border-width: 1px 1px; transform: rotateX(0deg); }
+  5% { bottom:82px; border-width: 3px 1px; transform: rotateX(90deg); }
+  10% { bottom:120px; background-image: url(../img/coin-rear.jpg); border-width: 1px 1px; transform: rotateX(180deg); }
+  15% { bottom:154px; border-width: 3px 1px; transform: rotateX(270deg); }
+  20% { bottom:184px; background-image: url(../img/coin-front.jpg); border-width: 1px 1px; transform: rotateX(360deg); }
+  25% { bottom:210px; border-width: 3px 1px; transform: rotateX(450deg); }
+  30% { bottom:232px; background-image: url(../img/coin-rear.jpg); border-width: 1px 1px; transform: rotateX(540deg); }
+  35% { bottom:250px; border-width: 3px 1px; transform: rotateX(630deg); }
+  40% { bottom:264px; background-image: url(../img/coin-front.jpg); border-width: 1px 1px; transform: rotateX(720deg); }
+  45% { bottom:274px; border-width: 3px 1px; transform: rotateX(810deg); }
+  50% { bottom:280px; background-image: url(../img/coin-rear.jpg); border-width: 1px 1px; transform: rotateX(900deg); }
+  55% { bottom:274px; border-width: 3px 1px; transform: rotateX(990deg); }
+  60% { bottom:264px; background-image: url(../img/coin-front.jpg); border-width: 1px 1px; transform: rotateX(1080deg); }
+  65% { bottom:250px; border-width: 3px 1px; transform: rotateX(1170deg); }
+  70% { bottom:232px; background-image: url(../img/coin-rear.jpg); border-width: 1px 1px; transform: rotateX(1260deg); }
+  75% { bottom:210px; border-width: 3px 1px; transform: rotateX(1350deg); }
+  80% { bottom:184px; background-image: url(../img/coin-front.jpg); border-width: 1px 1px; transform: rotateX(1440deg); }
+  85% { bottom:154px; border-width: 3px 1px; transform: rotateX(1530deg); }
+  90% { bottom:120px; background-image: url(../img/coin-rear.jpg); border-width: 1px 1px; transform: rotateX(1620deg); }
+  95% { bottom:82px; border-width: 3px 1px; transform: rotateX(1710deg); }
+  100% { bottom:50px; background-image: url(../img/coin-front.jpg); border-width: 1px 1px; transform: rotateX(1800deg); }
+}
+
+.selectable {
+	animation: selectable-highlight 1.0s ease 0s infinite normal;
+}
+@keyframes selectable-highlight {
+  0% { box-shadow: 0 3px 6px 0 rgba(242, 245, 70,.25), 0 1px 2px 0 rgba(0,0,0,.15), 0 -1px 4px -1px rgba(242, 245, 70,.1); }
+  50% { box-shadow: 0 0 4px 8px rgba(242, 245, 70, 0.5), 0 0 5px 10px rgba(242, 245, 70,.3); }
+  100% { box-shadow: 0 3px 6px 0 rgba(242, 245, 70,.25), 0 1px 2px 0 rgba(0,0,0,.15), 0 -1px 4px -1px rgba(242, 245, 70,.1); }
+}

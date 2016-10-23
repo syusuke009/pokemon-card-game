@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Card Detail Test</title>
+
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/animation.css">
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/styles.css">
+<script type="text/javascript" src="../main/webapp/js/lib/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="../main/webapp/json/card-list.json"></script>
+<script type="text/javascript" src="../main/webapp/json/skill.json"></script>
+<script type="text/javascript" src="../main/webapp/js/dao/card-mst-dao.js"></script>
+<script type="text/javascript" src="../main/webapp/js/dao/skill-dao.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/monster-card.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/energy-card.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/skill.js"></script>
+<script type="text/javascript" src="../main/webapp/js/const.js"></script>
+<script type="text/javascript" src="../main/webapp/js/util-func.js"></script>
+<script type="text/javascript" src="../main/webapp/js/card-factory.js"></script>
+<script type="text/javascript" src="../main/webapp/js/view/renderer/card-detail-renderer.js"></script>
+
+</head>
+
+
+<body>
+	<div id="detail-area" class="detail">
+		<div class="detail-content">
+			<input class="detail-trn-id" type="hidden" />
+			<div class="detail-area-name"><span class="type-mark"></span><span class="detail-name"></span></div>
+			<div class="detail-kind-caption"></div><div class="detail-max-hp"></div>
+			<img class="detail-img" />
+			<div class="detail-monster-info">
+				<div class="detail-special"></div>
+				<div class="detail-skill1">
+					<div class="skill1-cost"></div>
+					<div class="skill1-name"></div>
+					<div class="skill1-damage"></div>
+					<div class="skill1-description"></div>
+				</div>
+				<div class="detail-skill2">
+					<div class="skill2-cost"></div>
+					<div class="skill2-name"></div>
+					<div class="skill2-damage"></div>
+					<div class="skill2-description"></div>
+				</div>
+				<div class="detail-escape-cost"></div>
+				<div class="detail-weak"></div>
+				<div class="detail-regist"></div>
+				<hr class="divider">
+				<div class="detail-energy"></div>
+				<div class="detail-damage"></div>
+				<div class="detail-status"></div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var cardDao = new CardMstDao();
+		var skillDao = new SkillDao();
+		var key = {};
+		key.id = 'test-card';
+		key.cardCode = '15';
+		var card = cardDao.get(key.cardCode);
+		if (!!card.skill1 && (typeof card.skill1 === 'string')) {
+		  var skill1 = skillDao.get(card.skill1.replace('skill_',''));
+		  card.skill1 = new Skill(card.skill1, skill1);
+		}
+		if (!!card.skill2 && (typeof card.skill2 === 'string')) {
+		  var skill2 = skillDao.get(card.skill2.replace('skill_',''));
+		  card.skill2 = new Skill(card.skill2, skill2);
+		}
+		var monster = CardFactory.create(key, card);
+
+		key.id = 'test-energy1';
+		key.cardCode = '10001';
+		card = cardDao.get(key.cardCode);
+		monster.addEnergy(CardFactory.create(key, card));
+
+		key.id = 'test-energy2';
+		key.cardCode = '10004';
+		card = cardDao.get(key.cardCode);
+		monster.addEnergy(CardFactory.create(key, card));
+
+		key.id = 'test-energy3';
+		key.cardCode = '10003';
+		card = cardDao.get(key.cardCode);
+		monster.addEnergy(CardFactory.create(key, card));
+
+		key.id = 'test-energy4';
+		key.cardCode = '10002';
+		card = cardDao.get(key.cardCode);
+		monster.addEnergy(CardFactory.create(key, card));
+
+		key.id = 'test-energy5';
+		key.cardCode = '10006';
+		card = cardDao.get(key.cardCode);
+		monster.addEnergy(CardFactory.create(key, card));
+
+		key.id = 'test-energy6';
+		key.cardCode = '10005';
+		card = cardDao.get(key.cardCode);
+		monster.addEnergy(CardFactory.create(key, card));
+
+		key.id = 'test-energy7';
+		key.cardCode = '10011';
+		card = cardDao.get(key.cardCode);
+		monster.addEnergy(CardFactory.create(key, card));
+
+		monster.hurt(80);
+		monster.setStatus(["poison","burn","sleep","paralysis","confusion"]);
+
+		var renderer = new CardDetailRenderer($('#detail-area'));
+		renderer.render(monster);
+	</script>
+</body>
+</html>
