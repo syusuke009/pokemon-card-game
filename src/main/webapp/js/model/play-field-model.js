@@ -22,8 +22,8 @@
     return this.trush_;
   };
 
-  PlayField.prototype.putTrush = function(card) {
-    this.truesh_.push(card);
+  PlayField.prototype.trush = function(card) {
+    this.trush_.push(card);
   };
 
   PlayField.prototype.pickSide = function() {
