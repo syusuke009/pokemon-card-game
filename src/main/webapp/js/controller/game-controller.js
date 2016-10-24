@@ -3,6 +3,7 @@
   GameController = function() {
     this.view_ = new ApplicationView();
     this.actionButtonController_ = new ActionButtonController();
+    this.battleController_ = new BattleController();
     this.pokemonCheck_ = new PokemonChecker();
 
     this.model_ = new GameModel();
@@ -36,6 +37,8 @@
         this.onAssignBench_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ATTACH_ENERGY,
         this.onAttachEnergy_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.ATTACK,
+        this.onAttack_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.TURN_END, this.turnEnd.bind(this));
   };
 
@@ -100,6 +103,23 @@
     this.onSelectInterceptor_.forEnergyAttach(trnId);
   };
 
+  GameController.prototype.onAttack_ = function(e, trnId) {
+    var viewpoint = UtilFunc.getViewpoint(trnId);
+    var field = this.model_.getField(viewpoint);
+    var dialog = new SkillSelectionDialog();
+    var promise = dialog.show(field.getBattleMonster());
+    promise.then(function(obj) {
+      if (!!obj) {
+        return this.battleController_.battle(this.model_, obj);
+      }
+      return $.Deferred().reject().promise();
+    }.bind(this)).then(function(res) {
+      this.turnEnd();
+    }.bind(this), function(res) {
+      // do nothing
+    });
+  };
+
   GameController.prototype.turnStart = function() {
     var viewpoint = this.model_.getTurn().whoseTurn();
     var field = this.model_.getField(viewpoint || Const.Viewpoint.ME);
@@ -123,11 +143,11 @@
         return;
       }
     }
-    this.pokemonCheck_.check(this.model_);
-
-    this.model_.nextTurn();
-
-    this.turnStart();
+    var $defer = this.pokemonCheck_.check(this.model_);
+    $defer.then(function(res){
+      this.model_.nextTurn();
+      this.turnStart();
+    }.bind(this));
   };
 
   GameController.prototype.gameset = function(winner) {

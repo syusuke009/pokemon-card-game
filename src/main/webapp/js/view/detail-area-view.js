@@ -10,6 +10,7 @@
     TO_BENCH: 'to-bench',
     USE: 'use',
     ATTACH: 'attach',
+    ATTACK: 'attack',
     TURN_END: 'turn-end'
   };
 
@@ -41,6 +42,12 @@
       if ($(e.target).hasClass('disabled')) return;
       var $trnId = this.$element_.find('.detail-trn-id');
       this.$element_.trigger(DetailAreaView.EventType.ATTACH, $trnId.val());
+    }.bind(this));
+
+    this.$element_.on('click', '.attack-button', function(e){
+      if ($(e.target).hasClass('disabled')) return;
+      var $trnId = this.$element_.find('.detail-trn-id');
+      this.$element_.trigger(DetailAreaView.EventType.ATTACK, $trnId.val());
     }.bind(this));
 
     this.$element_.on('click', '.turn-end-button', function(e){

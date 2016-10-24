@@ -4,7 +4,7 @@
   };
 
   PokemonChecker.prototype.check = function(model) {
-
+    var $defer = $.Deferred();
     var myModel = model.getField(Const.Viewpoint.ME);
     var rivalModel = model.getField(Const.Viewpoint.RIVAL);
 
@@ -24,6 +24,11 @@
     }
 
     this.checkEffects_();
+
+    this.checkAlive_(myModel);
+    this.checkAlive_(rivalModel);
+
+    return $defer.promise();
   };
 
   PokemonChecker.prototype.checkPoison_ = function(field) {
@@ -47,6 +52,23 @@
   };
 
   PokemonChecker.prototype.checkEffects_ = function() {
+
+  };
+
+  PokemonChecker.prototype.checkAlive_ = function(field) {
+    var isDead = function(c) {
+      return c.hp <= c.getDamageCount() * 10;
+    };
+    var monster = field.getBattleMonster();
+    if (isDead(monster)) {
+      field.trush(monster);
+      field.setBattleMonster(null);
+    }
+    $.each(field.getBench(), function(idx, card) {
+      if (isDead(card)) {
+        field.trush(field.pickBench(card.trnId));
+      }
+    });
 
   };
 

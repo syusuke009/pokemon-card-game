@@ -45,7 +45,7 @@
   };
 
   MonsterCard.prototype.hurt = function(value) {
-    this.damage_ += value;
+    this.damage_ += Number(value);
     if (this.damage_ > this.hp) {
       this.damage_ = this.hp;
     }
