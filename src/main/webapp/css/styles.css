@@ -193,7 +193,7 @@
 .card {
     width: 96px;
     height: 136px;
-    margin: 8px;
+    margin: 4px;
     border-radius: 2px;
     border: 1px solid #888;
     cursor: pointer;

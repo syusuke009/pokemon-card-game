@@ -8,6 +8,7 @@
   DetailAreaView.EventType = {
     TO_BATTLE: 'to-buttle',
     TO_BENCH: 'to-bench',
+    EVOLUTE: 'evolute',
     USE: 'use',
     ATTACH: 'attach',
     ATTACK: 'attack',
@@ -37,6 +38,11 @@
       if ($(e.target).hasClass('disabled')) return;
       var $trnId = this.$element_.find('.detail-trn-id');
       this.$element_.trigger(DetailAreaView.EventType.TO_BENCH, $trnId.val());
+    }.bind(this));
+    this.$element_.on('click', '.evolution-button', function(e){
+      if ($(e.target).hasClass('disabled')) return;
+      var $trnId = this.$element_.find('.detail-trn-id');
+      this.$element_.trigger(DetailAreaView.EventType.EVOLUTE, $trnId.val());
     }.bind(this));
     this.$element_.on('click', '.attach-button', function(e){
       if ($(e.target).hasClass('disabled')) return;
@@ -106,6 +112,13 @@
       $trainerButtons.hide();
       $energyButtons.show();
       this.switchDisabled_(control.attach, $energyButtons.find('.attach-button'));
+      break;
+    case 'none':
+    default:
+      $fromHandButtons.hide();
+      $fromBattleButtons.hide();
+      $trainerButtons.hide();
+      $energyButtons.hide();
       break;
     }
   };

@@ -34,5 +34,31 @@
     };
   };
 
+  CardSelectInterceptor.prototype.forEvolution = function(evolutionTrnId) {
+    this.obj_ = evolutionTrnId;
+    this.func_ = function(evolutionTrnId, eventdata, model) {
+      var viewpoint = UtilFunc.getViewpoint(eventdata.trnId);
+      var field = model.getField(viewpoint);
+      var base = field.selectFrom(eventdata.area, eventdata.trnId);
+      var evoluted = field.pickHand(evolutionTrnId);
+      evoluted.evolute(base);
+      field.override(eventdata.area, base, evoluted);
+      model.getTurn().newAssign(evolutionTrnId);
+      return true;
+    };
+  };
+
+  CardSelectInterceptor.prototype.forGoBattle = function($defer) {
+    this.obj_ = $defer;
+    this.func_ = function($defer, eventdata, model) {
+      var viewpoint = UtilFunc.getViewpoint(eventdata.trnId);
+      var field = model.getField(viewpoint);
+      var monster = field.pickBench(eventdata.trnId);
+      field.setBattleMonster(monster);
+      $defer.resolve(true);
+      return true;
+    };
+  };
+
 
 })(jQuery);

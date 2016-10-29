@@ -35,6 +35,8 @@
         this.onAssignBattle_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BENCH,
         this.onAssignBench_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.EVOLUTE,
+        this.onEvolute_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ATTACH_ENERGY,
         this.onAttachEnergy_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ATTACK,
@@ -74,6 +76,8 @@
       this.model_.getTurn().newAssign(trnId);
     }
     this.view_.redrawField(this.model_);
+    var control = this.actionButtonController_.control(card, this.model_, Const.Area.BATTLE_MONSTER);
+    this.view_.redrawDetail(card, Const.Area.BATTLE_MONSTER, control);
   };
 
   GameController.prototype.onAssignBench_ = function(e, trnId) {
@@ -85,6 +89,19 @@
       this.model_.getTurn().newAssign(trnId);
     }
     this.view_.redrawField(this.model_);
+    var control = this.actionButtonController_.control(card, this.model_, Const.Area.BENCH);
+    this.view_.redrawDetail(card, Const.Area.BENCH, control);
+  };
+
+  GameController.prototype.onEvolute_ = function(e, trnId) {
+    var viewpoint = UtilFunc.getViewpoint(trnId);
+    var field = this.model_.getField(viewpoint);
+    var card = field.selectHand(trnId);
+    var selectables = UtilFunc.findEvolutionBase(card, field, this.model_.getTurn());
+
+    this.view_.drawSelectable(selectables);
+
+    this.onSelectInterceptor_.forEvolution(trnId);
   };
 
   GameController.prototype.onAttachEnergy_ = function(e, trnId) {
@@ -135,22 +152,50 @@
   GameController.prototype.turnEnd = function() {
     if (this.model_.getTurn().isSetupTurn()) {
       if (!this.model_.getField(Const.Viewpoint.ME).getBattleMonster()) {
-        alert('自分のバトルモンスターを出してください');
+        MessageDisplay.println('自分のバトルモンスターを出してください');
         return;
       }
       if (!this.model_.getField(Const.Viewpoint.RIVAL).getBattleMonster()) {
-        alert('相手のバトルモンスターを出してください');
+        MessageDisplay.println('相手のバトルモンスターを出してください');
         return;
       }
     }
     var $defer = this.pokemonCheck_.check(this.model_);
     $defer.then(function(res){
+      var $deferMyBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.ME);
+      var $deferRivalBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.RIVAL);
+      return $.when($deferMyBattle, $deferRivalBattle);
+    }.bind(this)).then(function(my, rival){
+      if (!my && !rival) this.gameset(null);
+      if (!my) this.gameset(Const.Viewpoint.RIVAL);
+      if (!rival) this.gameset(Const.Viewpoint.ME);
+
       this.model_.nextTurn();
       this.turnStart();
     }.bind(this));
   };
 
+  GameController.prototype.exchangeIfDying_ = function(model, viewpoint) {
+    var $defer = $.Deferred();
+    var field = model.getField(viewpoint);
+    if (!!field.getBattleMonster()) {
+      return $defer.resolve(true).promise();
+    }
+    var selectables = field.getBench().map(function(c) {
+      return c.trnId;
+    });
+    if (selectables.length === 0) {
+      $defer.resolve(false)
+      return $defer.promise();
+    }
+    this.view_.drawSelectable(selectables);
+    this.onSelectInterceptor_.forGoBattle($defer);
+    return $defer.promise();
+  };
+
   GameController.prototype.gameset = function(winner) {
-    throw winner + 'の勝利';
+    var message = !!winner ? winner + 'の勝利！' : '引き分け';
+    MessageDisplay.println(message);
+    throw message;
   };
 })(jQuery);

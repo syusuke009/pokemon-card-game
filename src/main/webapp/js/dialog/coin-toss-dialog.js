@@ -1,8 +1,9 @@
 (function($){
 
-  CoinTossDialog = function() {
+  CoinTossDialog = function(times) {
     this.$defer_ = null;
     this.result_ = [];
+    this.times_ = times || 1;
   };
 
 
@@ -58,6 +59,7 @@
 
   CoinTossDialog.prototype.toss_ = function($coin, $defer) {
     $coin.removeClass('front');
+    $coin.removeClass('rear');
     $coin.addClass('spin');
     $coin.addClass('toss');
     setTimeout(function() {
@@ -66,7 +68,11 @@
       var val = !!Math.floor(Math.random() * 2);
       $coin.addClass(val ? 'front' : 'rear')
       this.result_.push(val);
-      $('.dialog-buttons').find('.close-btn').removeClass('hidden');
+      if (this.result_.length === this.times_) {
+        $('.dialog-buttons').find('.close-btn').removeClass('hidden');
+      } else {
+        $('.dialog-buttons').find('.toss-btn').removeClass('invisible');
+      }
     }.bind(this), 1000);
   };
 })(jQuery);

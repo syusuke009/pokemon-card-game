@@ -24,6 +24,21 @@
     });
   };
 
+  UtilFunc.findEvolutionBase = function(evolution, field, turn) {
+    var result = field.getBench().filter(function(c){
+      return c.code === evolution.baseCardCode && !turn.isNewAssignedMonster(c.trnId);
+    });
+    var battleMonster = field.getBattleMonster();
+    if (battleMonster !== null) {
+      if (battleMonster.code === evolution.baseCardCode && !turn.isNewAssignedMonster(battleMonster.trnId)) {
+        result.push(battleMonster);
+      }
+    }
+    return result.map(function(c){
+      return c.trnId;
+    });
+  };
+
   UtilFunc.getViewpoint = function(trnId) {
     if (trnId.indexOf(Const.Viewpoint.ME) === 0) {
       return Const.Viewpoint.ME;

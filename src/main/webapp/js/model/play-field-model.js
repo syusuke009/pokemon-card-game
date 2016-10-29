@@ -108,5 +108,24 @@
         break;
     }
     return card;
-  }
+  };
+
+  PlayField.prototype.override = function(area, oldCard, newCard) {
+    switch (area) {
+    case Const.Area.HAND:
+      throw 'Unsupport override case: ' + area
+      break;
+    case Const.Area.BENCH:
+      var idx = this.bench_.findIndex(function(c){
+        return c.trnId === oldCard.trnId;
+      });
+      if (idx >= 0) {
+        this.bench_[idx] = newCard;
+      }
+      break;
+    case Const.Area.BATTLE_MONSTER:
+      this.setBattleMonster(newCard);
+      break;
+    }
+  };
 })(jQuery);

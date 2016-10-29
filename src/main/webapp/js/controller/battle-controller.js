@@ -1,6 +1,7 @@
 (function($){
 
   BattleController = function() {
+    this.effectDao_ = new EffectDao();
     this.calculator_ = new DamageCalculator();
   };
 
@@ -17,9 +18,19 @@
     var result = this.calculator_.calculate(skill, attacker, defender);
     defender.hurt(result.damage);
 
+    if (skill.timing === Const.EffectTiming.AFTER_DAMAGE) {
+      var effect = this.effectDao_.get(skill.effect);
+      result.attacker = attacker;
+      result.defender = defender;
+      effect(result).then(function(){
+        $defer.resolve();
+      });
+    } else {
+      $defer.resolve();
+    }
+
     turn.attacked();
 
-    $defer.resolve();
 
     return $defer.promise();
   };

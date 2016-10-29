@@ -35,13 +35,13 @@
       this.stanbyHands_();
     }
     while (!UtilFunc.existsBaseMonster(this.myField_.getHands())) {
-      alert('プレイヤーの手札にたねモンスターがいないので引き直し、相手はさらに一枚引きます');
+      MessageDisplay.println('プレイヤーの手札にたねモンスターがいないので引き直し、相手はさらに一枚引きます');
       this.revertHands_(this.myField_);
       this.drawHand_(this.myField_);
       this.drawHand_(this.rivalField_, 1);
     }
     while (!UtilFunc.existsBaseMonster(this.rivalField_.getHands())) {
-      alert('相手の手札にたねモンスターがいないので引き直し、プレイヤーはさらに一枚引きます');
+      MessageDisplay.println('相手の手札にたねモンスターがいないので引き直し、プレイヤーはさらに一枚引きます');
       this.revertHands_(this.rivalField_);
       this.drawHand_(this.rivalField_);
       this.drawHand_(this.myField_, 1);

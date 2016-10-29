@@ -16,6 +16,7 @@
 
 <body>
 	<button id="button" class="btn">コイントス</button>
+	<button id="button-3times" class="btn">コイントス(3回)</button>
 
 	<div class="dialog-backdrop"></div>
 	<div class="dialog-window">
@@ -27,6 +28,13 @@
 	<script type="text/javascript">
 		$('#button').on('click', function(e){
 		  var ctd = new CoinTossDialog();
+		  var promise = ctd.show();
+		  promise.then(function(r) {
+		    alert(r);
+		  });
+		});
+		$('#button-3times').on('click', function(e){
+		  var ctd = new CoinTossDialog(3);
 		  var promise = ctd.show();
 		  promise.then(function(r) {
 		    alert(r);
