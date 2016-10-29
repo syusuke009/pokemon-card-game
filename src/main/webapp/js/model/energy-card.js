@@ -11,6 +11,7 @@
     this.typeCaption = UtilFunc.getTypeCaption(this.type);
     this.name = mst.name;
     this.value = mst.value;
+    this.description = mst.description;
 
     this.dir = 'energy';
   };

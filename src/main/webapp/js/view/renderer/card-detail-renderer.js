@@ -23,26 +23,34 @@
     $img.attr('src', 'img/' + card.dir + '/' + card.code + '.jpg');
     var $hp = this.$element_.find('.detail-max-hp');
     var $monsterInfo = this.$element_.find('.detail-monster-info');
+    var $decription = this.$element_.find('.detail-description');
 
     switch(card.kind) {
     case '1':
     case '2':
     case '3':
       $monsterInfo.show();
+      $decription.hide();
       this.rendererForMonster_(card, $hp);
       break;
     case 'goods':
     case 'supporter':
       $monsterInfo.hide();
-      this.rendererForTrainer_(card, $hp);
+      $hp.hide();
+      $decription.show();
+      this.rendererForTrainer_(card, $decription);
       break;
     case 'energy':
       $monsterInfo.hide();
-      this.rendererForNormalEnergy_(card, $hp);
+      $hp.hide();
+      $decription.hide();
+      this.rendererForNormalEnergy_(card);
       break;
     case 'energy-sp':
       $monsterInfo.hide();
-      this.rendererForSpecialEnergy_(card, $hp);
+      $hp.hide();
+      $decription.hide();
+      this.rendererForSpecialEnergy_(card, $decription);
       break;
     }
   };
@@ -108,16 +116,15 @@
 
   };
 
-  CardDetailRenderer.prototype.rendererForTrainer_ = function(card, $hp){
-    $hp.hide();
+  CardDetailRenderer.prototype.rendererForTrainer_ = function(card, $decription){
+    $decription.text(card.description)
   };
 
-  CardDetailRenderer.prototype.rendererForNormalEnergy_ = function(card, $hp){
-    $hp.hide();
+  CardDetailRenderer.prototype.rendererForNormalEnergy_ = function(card){
   };
 
-  CardDetailRenderer.prototype.rendererForSpecialEnergy_ = function(card, $hp) {
-    this.rendererForTrainer_(card, $hp);
+  CardDetailRenderer.prototype.rendererForSpecialEnergy_ = function(card, $decription) {
+    this.rendererForTrainer_(card, $decription);
   };
 
   CardDetailRenderer.prototype.createTypeHtml_ = function(types){

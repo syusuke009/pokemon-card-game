@@ -402,6 +402,11 @@
 	flex-basis: 208px;
 }
 
+.detail-description {
+    margin: 8px 0;
+    padding: 4px;
+}
+
 .buttons-row {
     margin: 8px 16px;
 }
