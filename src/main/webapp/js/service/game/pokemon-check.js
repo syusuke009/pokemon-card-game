@@ -26,8 +26,10 @@
     this.checkEffects_();
 
     $.when(def1, def2, def3, def4).then(function(){
-      this.checkAlive_(myModel);
-      this.checkAlive_(rivalModel);
+      var myDyingCount = this.checkDying_(myModel);
+      this.getSide_(rivalModel, myDyingCount);
+      var rivalDyingCount = this.checkDying_(rivalModel);
+      this.getSide_(myModel, rivalDyingCount);
       $defer.resolve();
     }.bind(this));
 
@@ -48,8 +50,8 @@
     var status = monster.getStatus();
     if (status.indexOf(Const.Status.BURN) >= 0) {
       var dialog = new CoinTossDialog();
-      dialog.show().then(function(bool){
-        if (bool) {
+      dialog.show().then(function(response){
+        if (response[0]) {
           monster.hurt(20);
         }
         $defer.resolve();
@@ -66,8 +68,8 @@
     var status = monster.getStatus();
     if (status.indexOf(Const.Status.SLEEP) >= 0) {
       var dialog = new CoinTossDialog();
-      dialog.show().then(function(bool){
-        if (bool) {
+      dialog.show().then(function(response){
+        if (response[0]) {
           status.splice(status.indexOf(Const.Status.SLEEP), 1);
         }
         $defer.resolve();
@@ -90,20 +92,33 @@
 
   };
 
-  PokemonChecker.prototype.checkAlive_ = function(field) {
+  PokemonChecker.prototype.checkDying_ = function(field) {
     var isDead = function(c) {
       return c.hp <= c.getDamageCount() * 10;
     };
+    var count = 0;
     var monster = field.getBattleMonster();
     if (isDead(monster)) {
       field.trush(monster);
       field.setBattleMonster(null);
+      count++;
+      MessageDisplay.println(monster.name + ' はたおれた！');
     }
     $.each(field.getBench(), function(idx, card) {
       if (isDead(card)) {
         field.trush(field.pickBench(card.trnId));
+        count++;
+        MessageDisplay.println(card.name + ' はたおれた！');
       }
     });
+    return count;
+  };
+
+  PokemonChecker.prototype.getSide_ = function(field, count) {
+    for (var i = 0; i < count; i++) {
+      var side = field.pickSide();
+      field.addHand(side);
+    }
   };
 
 })(jQuery);

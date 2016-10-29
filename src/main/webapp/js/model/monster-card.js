@@ -66,6 +66,34 @@
     this.status_ = status;
   };
 
+  MonsterCard.prototype.addStatus = function(status) {
+    if (this.status_.indexOf(status) >= 0) {
+      return;
+    }
+    switch(status) {
+    case Const.Status.POISON:
+    case Const.Status.BURN:
+      break;
+    case Const.Status.SLEEP:
+    case Const.Status.PARALYSIS:
+    case Const.Status.CONFUSION:
+      var idx = this.status_.indexOf(SLEEP);
+      if (idx => 0) {
+        this.status_.splice(idx, 1);
+      }
+      idx = this.status_.indexOf(PARALYSIS);
+      if (idx => 0) {
+        this.status_.splice(idx, 1);
+      }
+      idx = this.status_.indexOf(CONFUSION);
+      if (idx => 0) {
+        this.status_.splice(idx, 1);
+      }
+      break;
+    }
+    this.status_.push(status);
+  };
+
   MonsterCard.prototype.escape = function() {
     this.status_ = [];
   };

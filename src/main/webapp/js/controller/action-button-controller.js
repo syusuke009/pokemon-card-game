@@ -7,7 +7,7 @@
     var turn = game.getTurn();
     var viewpoint = turn.isSetupTurn() ?  UtilFunc.getViewpoint(card.trnId) : turn.whoseTurn();
     if (viewpoint !== UtilFunc.getViewpoint(card.trnId)) {
-      return {};
+      return { kind: 'none' };
     }
     var field = game.getField(viewpoint);
     switch(card.kind) {
@@ -108,15 +108,7 @@
     if (turn.isFirstTurn()) {
       return false;
     }
-    var result = field.getBench().some(function(c){
-      return c.code === card.baseCardCode && !turn.isNewAssignedMonster(c.trnId);
-    });
-    if (result) return true;
-    var battleMonster = field.getBattleMonster();
-    if (battleMonster == null) {
-      return false;
-    }
-    return battleMonster.code === card.baseCardCode && !turn.isNewAssignedMonster(battleMonster.trnId);
+    return UtilFunc.findEvolutionBase(card, field, turn).length > 0;
   };
 
 

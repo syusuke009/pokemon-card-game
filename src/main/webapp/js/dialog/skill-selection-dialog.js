@@ -2,7 +2,6 @@
 
   SkillSelectionDialog = function() {
     this.$defer_ = null;
-    this.result_ = [];
   };
 
 
@@ -25,7 +24,6 @@
     this.unbindEvents_($('.dialog-content'), $('.dialog-buttons'));
     $('.dialog-backdrop').removeClass('open');
     $('.dialog-window').removeClass('open');
-    this.$defer_.resolve(this.result_);
   };
 
   SkillSelectionDialog.prototype.createContentDom_ = function(card) {
@@ -114,6 +112,7 @@
   };
 
   SkillSelectionDialog.prototype.onClickClose_ = function(e) {
+    this.$defer_.resolve(null);
     this.close();
   };
 

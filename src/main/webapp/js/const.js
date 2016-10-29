@@ -22,4 +22,9 @@
   };
 
   Const.Types = ["normal","leaf","fire","aqua","thunder","fight","esper"];
+
+  Const.EffectTiming = {
+    CALC_DAMAGE: 'calc-damage',
+    AFTER_DAMAGE: 'after-damage'
+  };
 })(jQuery);

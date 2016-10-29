@@ -4,7 +4,7 @@ SkillList = {
 "2_2":{"name":"どくのこな","cost":["leaf","leaf","leaf"],"damage":"20","description":"相手を「どく」状態にする。","effect":"skill_2_2","timing":"after-damage"},
 "3_1":{"name":"ソーラービーム","cost":["leaf","leaf","leaf","leaf"],"damage":"60","description":"","effect":""},
 "13_1":{"name":"どくばり","cost":["leaf"],"damage":"10","description":"コインを投げて「おもて」なら、相手を「どく」状態にする。","effect":"skill_13_1","timing":"after-damage"},
-"14_1":{"name":"かたまる","cost":["normal","normal"],"damage":"0","description":"コインを投げて「おもて」なら、次の相手の番にうけるダメージが0になる。","effect":"skill_14_1"},
+"14_1":{"name":"かたまる","cost":["normal","normal"],"damage":"0","description":"コインを投げて「おもて」なら、次の相手の番にうけるダメージが0になる。","effect":"skill_14_1","timing":"after-damage"},
 "14_2":{"name":"どくのこな","cost":["leaf","leaf"],"damage":"20","description":"コインを投げて「おもて」なら、相手を「どく」状態にする。","effect":"skill_14_2","timing":"after-damage"},
 "15_1":{"name":"ダブルニードル","cost":["normal","normal","normal"],"damage":"30","damageCaption":"30×","description":"コインを2枚投げて「おもて」の出た数×30のダメージ。","effect":"skill_15_1","timing":"calc-damage"},
 "15_2":{"name":"どくばり","cost":["leaf","leaf","leaf"],"damage":"40","description":"コインを投げて「おもて」なら、相手を「どく」状態にする。","effect":"skill_15_2","timing":"after-damage"},
