@@ -11,11 +11,11 @@
     this.checkPoison_(myModel);
     this.checkPoison_(rivalModel);
 
-    this.checkBurn_(myModel);
-    this.checkBurn_(rivalModel);
+    var def1 = this.checkBurn_(myModel);
+    var def2 = this.checkBurn_(rivalModel);
 
-    this.checkSleep_(myModel);
-    this.checkSleep_(rivalModel);
+    var def3 = this.checkSleep_(myModel);
+    var def4 = this.checkSleep_(rivalModel);
 
     if (model.getTurn().whoseTurn() === Const.Viewpoint.ME) {
       this.checkParalysis_(myModel);
@@ -25,8 +25,11 @@
 
     this.checkEffects_();
 
-    this.checkAlive_(myModel);
-    this.checkAlive_(rivalModel);
+    $.when(def1, def2, def3, def4).then(function(){
+      this.checkAlive_(myModel);
+      this.checkAlive_(rivalModel);
+      $defer.resolve();
+    }.bind(this));
 
     return $defer.promise();
   };
@@ -39,16 +42,48 @@
     }
   };
 
-  PokemonChecker.prototype.checkBurn_ = function() {
-
+  PokemonChecker.prototype.checkBurn_ = function(field) {
+    var $defer = $.Deferred();
+    var monster = field.getBattleMonster();
+    var status = monster.getStatus();
+    if (status.indexOf(Const.Status.BURN) >= 0) {
+      var dialog = new CoinTossDialog();
+      dialog.show().then(function(bool){
+        if (bool) {
+          monster.hurt(20);
+        }
+        $defer.resolve();
+      });
+    } else {
+      $defer.resolve();
+    }
+    return $defer.promise();
   };
 
-  PokemonChecker.prototype.checkSleep_ = function() {
-
+  PokemonChecker.prototype.checkSleep_ = function(field) {
+    var $defer = $.Deferred();
+    var monster = field.getBattleMonster();
+    var status = monster.getStatus();
+    if (status.indexOf(Const.Status.SLEEP) >= 0) {
+      var dialog = new CoinTossDialog();
+      dialog.show().then(function(bool){
+        if (bool) {
+          status.splice(status.indexOf(Const.Status.SLEEP), 1);
+        }
+        $defer.resolve();
+      });
+    } else {
+      $defer.resolve();
+    }
+    return $defer.promise();
   };
 
-  PokemonChecker.prototype.checkParalysis_ = function() {
-
+  PokemonChecker.prototype.checkParalysis_ = function(field) {
+    var monster = field.getBattleMonster();
+    var status = monster.getStatus();
+    if (status.indexOf(Const.Status.PARALYSIS) >= 0) {
+      status.splice(status.indexOf(Const.Status.PARALYSIS), 1);
+    }
   };
 
   PokemonChecker.prototype.checkEffects_ = function() {
@@ -69,7 +104,6 @@
         field.trush(field.pickBench(card.trnId));
       }
     });
-
   };
 
 })(jQuery);
