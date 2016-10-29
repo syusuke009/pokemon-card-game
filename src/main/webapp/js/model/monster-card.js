@@ -88,4 +88,10 @@
     }
     return false;
   };
+
+  MonsterCard.prototype.canEscape = function() {
+    return this.status_.every(function(state) {
+      return state !== Const.Status.SLEEP && state !== Const.Status.PARALYSIS;
+    });
+  };
 })(jQuery);
