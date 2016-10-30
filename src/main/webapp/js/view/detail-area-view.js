@@ -44,6 +44,11 @@
       var $trnId = this.$element_.find('.detail-trn-id');
       this.$element_.trigger(DetailAreaView.EventType.EVOLUTE, $trnId.val());
     }.bind(this));
+    this.$element_.on('click', '.use-button', function(e){
+      if ($(e.target).hasClass('disabled')) return;
+      var $trnId = this.$element_.find('.detail-trn-id');
+      this.$element_.trigger(DetailAreaView.EventType.USE, $trnId.val());
+    }.bind(this));
     this.$element_.on('click', '.attach-button', function(e){
       if ($(e.target).hasClass('disabled')) return;
       var $trnId = this.$element_.find('.detail-trn-id');

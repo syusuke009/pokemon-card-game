@@ -15,19 +15,22 @@
     var defender = defenderField.getBattleMonster();
     var skill = attacker[skillKey];
 
-    var result = this.calculator_.calculate(skill, attacker, defender);
-    defender.hurt(result.damage);
+    this.calculator_.calculate(skill, attacker, defender).then(function(result) {
+      defender.hurt(result.damage);
 
-    if (skill.timing === Const.EffectTiming.AFTER_DAMAGE) {
-      var effect = this.effectDao_.get(skill.effect);
-      result.attacker = attacker;
-      result.defender = defender;
-      effect(result).then(function(){
+      if (skill.timing === Const.EffectTiming.AFTER_DAMAGE) {
+        var effect = this.effectDao_.getSkillEffect(skill.effect);
+        var param = {};
+        param.damage = result.damage;
+        param.attacker = attacker;
+        param.defender = defender;
+        effect(param).then(function(){
+          $defer.resolve();
+        });
+      } else {
         $defer.resolve();
-      });
-    } else {
-      $defer.resolve();
-    }
+      }
+    }.bind(this));
 
     turn.attacked();
 

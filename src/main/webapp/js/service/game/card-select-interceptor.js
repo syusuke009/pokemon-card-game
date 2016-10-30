@@ -60,5 +60,13 @@
     };
   };
 
+  CardSelectInterceptor.prototype.forUseTrainer = function(effectFunc) {
+    this.obj_ = effectFunc;
+    this.func_ = function(effectFunc, eventdata, model) {
+      effectFunc(eventdata, model);
+      return true;
+    };
+  };
+
 
 })(jQuery);

@@ -10,6 +10,7 @@
     this.type = 'trainer';
     this.typeCaption = '道';
     this.name = mst.name;
+    this.description = mst.description;
     this.effect = mst.effect;
 
     this.dir = 'trainer';

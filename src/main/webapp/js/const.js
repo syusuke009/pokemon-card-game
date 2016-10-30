@@ -18,7 +18,9 @@
     BURN: 'burn',
     SLEEP: 'sleep',
     PARALYSIS: 'paralysis',
-    CONFUSION: 'confusion'
+    CONFUSION: 'confusion',
+
+    DAMAGE_GUARD: 'damage-guard'
   };
 
   Const.Types = ["normal","leaf","fire","aqua","thunder","fight","esper"];
