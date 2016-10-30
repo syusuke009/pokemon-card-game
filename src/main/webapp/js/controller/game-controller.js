@@ -8,6 +8,7 @@
 
     this.model_ = new GameModel();
 
+    this.effectDao_ = new EffectDao();
     this.onSelectInterceptor_ = new CardSelectInterceptor();
   };
 
@@ -37,6 +38,8 @@
         this.onAssignBench_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.EVOLUTE,
         this.onEvolute_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.USE,
+        this.onUseTrainer_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ATTACH_ENERGY,
         this.onAttachEnergy_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ATTACK,
@@ -104,10 +107,28 @@
     this.onSelectInterceptor_.forEvolution(trnId);
   };
 
+  GameController.prototype.onUseTrainer_ = function(e, trnId) {
+    var viewpoint = UtilFunc.getViewpoint(trnId);
+    var field = this.model_.getField(viewpoint);
+    var card = field.pickHand(trnId);
+
+    var func = this.effectDao_.getTrainerTarget(card.code);
+    if (!!func) {
+      var selectables = func(this.model_);
+      this.view_.drawSelectable(selectables);
+
+      var effectFunc = this.effectDao_.getTrainerEffect(card.code);
+      this.onSelectInterceptor_.forUseTrainer(effectFunc);
+    } else {
+      this.effectDao_.getTrainerEffect(card.code)(this.model_);
+      field.trush(card);
+      this.view_.redrawField(this.model_);
+    }
+  };
+
   GameController.prototype.onAttachEnergy_ = function(e, trnId) {
     var viewpoint = UtilFunc.getViewpoint(trnId);
     var field = this.model_.getField(viewpoint);
-    var other = this.model_.getField(UtilFunc.reverseViewpoint(viewpoint));
 
     var selectables = [];
     selectables.push(field.getBattleMonster().trnId);
@@ -159,6 +180,9 @@
         MessageDisplay.println('相手のバトルモンスターを出してください');
         return;
       }
+      this.model_.nextTurn();
+      this.turnStart();
+      return;
     }
     var $defer = this.pokemonCheck_.check(this.model_);
     $defer.then(function(res){

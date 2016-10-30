@@ -28,7 +28,7 @@
     return this.deck_.length === 0;
   };
 
-  Deck.prototype.getSize = function() {
+  Deck.prototype.size = function() {
     return this.deck_.length;
   };
 

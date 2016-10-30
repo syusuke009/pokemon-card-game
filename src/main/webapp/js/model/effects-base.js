@@ -20,4 +20,16 @@
     });
     return $defer.promise();
   };
+
+  EffectsBase.damageGuardByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        param.attacker.addStatus(Const.Status.DAMAGE_GUARD);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
 })(jQuery);

@@ -292,9 +292,9 @@
 }
 .card-img.img-supporter,
 .card-img.img-goods{
-
     margin-bottom: 8px;
     margin-top: 5px;
+    height: 49px;
 }
 .card-img.img-energy {
     width: 88px;
@@ -407,8 +407,11 @@
     padding: 4px;
 }
 
+.buttons-content .btn {
+    margin-right: 8px;
+}
 .buttons-row {
-    margin: 8px 16px;
+    margin: 16px;
 }
 
 .card.rear {
@@ -551,6 +554,13 @@
 }
 .skill-panel:hover {
 	background-color: #e6e8ea;
+}
+.skill-panel.disabled {
+	opacity: 0.4;
+	cursor: default;
+}
+.skill-panel.disabled:hover {
+	background-color: inherit;
 }
 .cost-area {
     display: inline-block;

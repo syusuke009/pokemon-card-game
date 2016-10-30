@@ -27,7 +27,7 @@
 
 
   PlayFieldView.prototype.renderInner_ = function($view, model){
-    $view.find('.rest-card-count').text('残 ' + model.getDeck().getSize());
+    $view.find('.rest-card-count').text('残 ' + model.getDeck().size());
 
     var sideTmpl = Hogan.compile($('#card-list-template').text());
     $view.find('.side').html(sideTmpl.render({'list':model.getSide()}));

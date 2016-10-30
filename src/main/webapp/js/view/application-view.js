@@ -11,6 +11,7 @@
     ASSIGN_BATTLE: 'assign-battle',
     ASSIGN_BENCH: 'assign-bench',
     EVOLUTE: DetailAreaView.EventType.EVOLUTE,
+    USE: DetailAreaView.EventType.USE,
     ATTACH_ENERGY: DetailAreaView.EventType.ATTACH,
     ATTACK: DetailAreaView.EventType.ATTACK,
     TURN_END: DetailAreaView.EventType.TURN_END

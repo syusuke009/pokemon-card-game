@@ -23,7 +23,7 @@
       this.checkParalysis_(rivalModel);
     }
 
-    this.checkEffects_();
+    this.checkEffects_(model);
 
     $.when(def1, def2, def3, def4).then(function(){
       var myDyingCount = this.checkDying_(myModel);
@@ -88,8 +88,35 @@
     }
   };
 
-  PokemonChecker.prototype.checkEffects_ = function() {
+  PokemonChecker.prototype.checkEffects_ = function(model) {
+    var turn = model.getTurn();
+    var attackerField = model.getField(turn.whoseTurn());
+    var defenderField = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
 
+    // clear defence effect
+    var defenceEffect = [Const.Status.DAMAGE_GUARD];
+    var monster = defenderField.getBattleMonster();
+    this.removeEffect_(monster, defenceEffect);
+    defenderField.getBench().forEach(function(m) {
+      this.removeEffect_(m, defenceEffect);
+    }.bind(this));
+
+    // clear attack effect
+    var attackEffect = [];
+    var monster = attackerField.getBattleMonster();
+    this.removeEffect_(monster, attackEffect);
+    attackerField.getBench().forEach(function(m) {
+      this.removeEffect_(m, attackEffect);
+    }.bind(this));
+  };
+
+  PokemonChecker.prototype.removeEffect_ = function(card, effects) {
+    var status = card.getStatus();
+    effects.forEach(function(effect) {
+      if (status.indexOf(effect) >= 0) {
+        status.splice(status.indexOf(effect), 1);
+      }
+    });
   };
 
   PokemonChecker.prototype.checkDying_ = function(field) {

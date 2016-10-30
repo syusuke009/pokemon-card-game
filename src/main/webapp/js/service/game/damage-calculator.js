@@ -1,35 +1,50 @@
 (function($){
 
   DamageCalculator = function() {
+    this.effectDao_ = new EffectDao();
   };
 
   DamageCalculator.prototype.calculate = function(skill, attacker, defender) {
     var result = {};
 
-    var d = this.calculateSkillImpact_(skill);
-    if (d <= 0) {
+    if (defender.getStatus().indexOf(Const.Status.DAMAGE_GUARD) >= 0) {
       result.damage = 0;
-      return result;
+      return $.Deferred().resolve(result).promise();
     }
 
-    d = this.effectAttackerGoods_(attacker, d);
+    return this.calculateSkillImpact_(skill).then(function(d) {
+      var $defer = $.Deferred();
+      if (d <= 0) {
+        result.damage = 0;
+        $defer.resolve(result);
+        return $defer.promise();
+      }
 
-    d = this.effectWeak_(attacker, defender, d);
+      d = this.effectAttackerGoods_(attacker, d);
 
-    d = this.effectRegist_(attacker, defender, d);
+      d = this.effectWeak_(attacker, defender, d);
 
-    d = this.effectDefenderGoods_(defender, d);
+      d = this.effectRegist_(attacker, defender, d);
 
-    result.damage = d;
-    return result;
+      d = this.effectDefenderGoods_(defender, d);
+
+      result.damage = d;
+      $defer.resolve(result);
+      return $defer.promise();
+    }.bind(this));
   };
 
   DamageCalculator.prototype.calculateSkillImpact_ = function(skill) {
-    if (skill.timing === 'damage-calc') {
-
+    var $defer;
+    if (skill.timing === 'calc-damage') {
+      var param = {};
+      param.skill = skill;
+      $defer = this.effectDao_.get(skill.effect)(param);
     } else {
-      return skill.damage;
+      $defer = $.Deferred();
+      $defer.resolve(skill.damage);
     }
+    return $defer.promise();
   };
 
   DamageCalculator.prototype.effectAttackerGoods_ = function(attacker, d) {
