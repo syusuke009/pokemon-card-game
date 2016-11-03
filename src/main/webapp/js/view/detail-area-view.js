@@ -12,6 +12,7 @@
     USE: 'use',
     ATTACH: 'attach',
     ATTACK: 'attack',
+    ESCAPE: 'escape',
     TURN_END: 'turn-end'
   };
 
@@ -59,6 +60,11 @@
       if ($(e.target).hasClass('disabled')) return;
       var $trnId = this.$element_.find('.detail-trn-id');
       this.$element_.trigger(DetailAreaView.EventType.ATTACK, $trnId.val());
+    }.bind(this));
+    this.$element_.on('click', '.escape-button', function(e){
+      if ($(e.target).hasClass('disabled')) return;
+      var $trnId = this.$element_.find('.detail-trn-id');
+      this.$element_.trigger(DetailAreaView.EventType.ESCAPE, $trnId.val());
     }.bind(this));
 
     this.$element_.on('click', '.turn-end-button', function(e){

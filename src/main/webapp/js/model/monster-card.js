@@ -44,6 +44,15 @@
     return this.energy_;
   };
 
+  MonsterCard.prototype.removeEnergy = function(e) {
+    var idx = this.energy_.findIndex(function(c) {
+      return e.trnId === c.trnId;
+    });
+    if (idx >= 0) {
+      this.energy_.splice(idx, 1);
+    }
+  };
+
   MonsterCard.prototype.hurt = function(value) {
     this.damage_ += Number(value);
     if (this.damage_ > this.hp) {
@@ -94,7 +103,22 @@
     this.status_.push(status);
   };
 
-  MonsterCard.prototype.escape = function() {
+  MonsterCard.prototype.getBase = function() {
+    return this.evolutedBase_;
+  };
+
+  MonsterCard.prototype.getAllBase = function() {
+    var result = [];
+    if (!!this.evolutedBase_) {
+      result.push(this.evolutedBase_);
+      if (!!this.evolutedBase_.getBase()) {
+        result.push(this.evolutedBase_.getBase());
+      }
+    }
+    return result;
+  };
+
+  MonsterCard.prototype.backToBench = function() {
     this.status_ = [];
   };
 
@@ -118,8 +142,10 @@
   };
 
   MonsterCard.prototype.canEscape = function() {
-    return this.status_.every(function(state) {
+    var statusCond = this.status_.every(function(state) {
       return state !== Const.Status.SLEEP && state !== Const.Status.PARALYSIS;
     });
+    var energyCond = UtilFunc.checkEnoughEnergy(this.escapeCost, UtilFunc.mapEnergyToArray(this.energy_));
+    return statusCond && energyCond;
   };
 })(jQuery);

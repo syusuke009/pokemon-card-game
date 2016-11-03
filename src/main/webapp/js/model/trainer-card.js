@@ -16,6 +16,10 @@
     this.dir = 'trainer';
   };
 
+  TrainerCard.prototype.isSupporter = function() {
+    return this.kind === 'supporter';
+  };
+
   TrainerCard.KindCaption = {
     'goods': 'グッズ',
     'supporter': 'サポーター'

@@ -14,6 +14,7 @@
     USE: DetailAreaView.EventType.USE,
     ATTACH_ENERGY: DetailAreaView.EventType.ATTACH,
     ATTACK: DetailAreaView.EventType.ATTACK,
+    ESCAPE: DetailAreaView.EventType.ESCAPE,
     TURN_END: DetailAreaView.EventType.TURN_END
   };
 

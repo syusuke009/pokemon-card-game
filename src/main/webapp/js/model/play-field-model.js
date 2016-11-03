@@ -47,6 +47,7 @@
   };
 
   PlayField.prototype.putBench = function(card) {
+    card.backToBench();
     this.bench_.push(card);
   };
 

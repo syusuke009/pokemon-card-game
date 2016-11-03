@@ -11,7 +11,7 @@
     border-radius: 3px;
     cursor: pointer;
     padding: 4px 16px;
-    transition: background-color 0.5s ease, border-color 0.5s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
     box-shadow: 0 2px 3px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.3);
 }
 .btn:hover {
@@ -26,7 +26,8 @@
     outline: none;
 }
 .btn.disabled {
-    color: #ccc;
+    color: #d0d0d0;
+    opacity: 0.4;
 }
 .btn.disabled:hover {
     cursor: default;
@@ -58,8 +59,8 @@
     background-color: #3b77db;
 }
 .btn.btn-primary:active {
-    border-color: #b5184e;
-    background-color: #b5184e;
+    border-color: #3369c3;
+    background-color: #3369c3;
 }
 
 .dialog-backdrop {
@@ -111,6 +112,42 @@
     width: calc(100% - 32px);
     text-align: right;
     border-top: 1px solid #dadde0;
+}
+.dialog-buttons .btn {
+    margin-left: 16px;
+}
+
+.checkbox {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 8px;
+    border: 1px solid #a4aab0;
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    top: 3px;
+}
+.checkbox:after {
+    display: inline-block;
+    content: ".";
+    width: 12px;
+    height: 12px;
+    color: transparent;
+    background-color: transparent;
+    border-radius: 3px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: background-color 0.15s ease;
+}
+.checkbox.checked:after {
+    background-color: #a4aab0;
+}
+.checkbox.disabled,
+.checkbox.disabled:after {
+    opacity: 0.4;
+    cursor: inherit;
 }
 
 .divider {
@@ -197,7 +234,7 @@
     border-radius: 2px;
     border: 1px solid #888;
     cursor: pointer;
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 3px 6px 0 rgba(0,0,0,.25), 0 1px 2px 0 rgba(0,0,0,.15), 0 -1px 4px -1px rgba(0,0,0,.1);
 }
 .card:hover {
@@ -631,4 +668,22 @@
     display: inline-block;
     margin-right: 8px;
     vertical-align: middle;
+}
+
+.energy-selection-container .required-area {
+    margin: 16px;
+}
+.energy-selection-container .row {
+    margin: 8px 16px;
+    padding: 4px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.15), 0 -1px 2px -1px rgba(0,0,0,.1);
+}
+.energy-selection-container .types {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: top;
+}
+.energy-selection-container .caption {
+    display: inline-block;
+    width: 200px;
 }

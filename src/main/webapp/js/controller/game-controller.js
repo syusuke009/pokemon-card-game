@@ -32,18 +32,13 @@
     this.view_.getElement().on(ApplicationView.EventType.SELECT_CARD,
         this.onSelectCard_.bind(this));
 
-    this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BATTLE,
-        this.onAssignBattle_.bind(this));
-    this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BENCH,
-        this.onAssignBench_.bind(this));
-    this.view_.getElement().on(ApplicationView.EventType.EVOLUTE,
-        this.onEvolute_.bind(this));
-    this.view_.getElement().on(ApplicationView.EventType.USE,
-        this.onUseTrainer_.bind(this));
-    this.view_.getElement().on(ApplicationView.EventType.ATTACH_ENERGY,
-        this.onAttachEnergy_.bind(this));
-    this.view_.getElement().on(ApplicationView.EventType.ATTACK,
-        this.onAttack_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BATTLE, this.onAssignBattle_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BENCH, this.onAssignBench_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.EVOLUTE, this.onEvolute_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.USE, this.onUseTrainer_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.ATTACH_ENERGY, this.onAttachEnergy_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.ATTACK, this.onAttack_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.ESCAPE, this.onEscape_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.TURN_END, this.turnEnd.bind(this));
   };
 
@@ -112,6 +107,10 @@
     var field = this.model_.getField(viewpoint);
     var card = field.pickHand(trnId);
 
+    if (card.isSupporter()) {
+      this.model_.getTurn().useSupporter();
+    }
+
     var func = this.effectDao_.getTrainerTarget(card.code);
     if (!!func) {
       var selectables = func(this.model_);
@@ -156,6 +155,39 @@
     }.bind(this), function(res) {
       // do nothing
     });
+  };
+
+  GameController.prototype.onEscape_ = function(e, trnId) {
+    var viewpoint = UtilFunc.getViewpoint(trnId);
+    var field = this.model_.getField(viewpoint);
+
+    var escaped = field.getBattleMonster();
+
+    var dialog = new EnergySelectionDialog();
+    dialog.show(escaped.getEnergy(), escaped.escapeCost).then(function(trushed){
+
+      trushed.forEach(function(trnId) {
+        var obj = {};
+        obj.trnId = trnId;
+        escaped.removeEnergy(obj);
+      });
+
+      var selectables = field.getBench().map(function(c) {
+        return c.trnId;
+      });
+
+      this.view_.drawSelectable(selectables);
+
+      var $defer = $.Deferred();
+      this.onSelectInterceptor_.forGoBattle($defer);
+      $defer.promise().then(function() {
+        field.putBench(escaped);
+        this.model_.escape(viewpoint);
+        this.view_.redrawField(this.model_);
+      }.bind(this));
+
+    }.bind(this));
+
   };
 
   GameController.prototype.turnStart = function() {
