@@ -3,6 +3,7 @@
   EnergySelectionDialog = function() {
     this.$defer_ = null;
 
+    this.energyMap_;
     this.require_;
   };
 
@@ -14,6 +15,10 @@
     var $content = $('.dialog-content').html(this.createContentDom_(require, energies));
     var $buttons = $('.dialog-buttons').html(this.createButtonsDom_());
 
+    this.energyMap_ = {};
+    energies.forEach(function(e) {
+      this.energyMap_[e.trnId] = e;
+    }.bind(this));
     this.require_ = require;
 
     this.bindEvents_($content, $buttons);
@@ -29,8 +34,8 @@
 
     var result = [];
     $('.dialog-content').find('.checked').parent().each(function(idx, row) {
-      result.push($(row).attr('data-trn-id'));
-    });
+      result.push(this.energyMap_[$(row).attr('data-trn-id')]);
+    }.bind(this));
     this.$defer_.resolve(result);
   };
 

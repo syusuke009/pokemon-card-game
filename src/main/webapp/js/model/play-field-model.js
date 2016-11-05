@@ -27,6 +27,9 @@
   };
 
   PlayField.prototype.pickSide = function() {
+    if (this.side_.length === 0) {
+      return null;
+    }
     return this.side_.shift();
   };
 

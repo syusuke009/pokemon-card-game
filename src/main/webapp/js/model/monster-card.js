@@ -86,15 +86,15 @@
     case Const.Status.SLEEP:
     case Const.Status.PARALYSIS:
     case Const.Status.CONFUSION:
-      var idx = this.status_.indexOf(SLEEP);
+      var idx = this.status_.indexOf(Const.Status.SLEEP);
       if (idx => 0) {
         this.status_.splice(idx, 1);
       }
-      idx = this.status_.indexOf(PARALYSIS);
+      idx = this.status_.indexOf(Const.Status.PARALYSIS);
       if (idx => 0) {
         this.status_.splice(idx, 1);
       }
-      idx = this.status_.indexOf(CONFUSION);
+      idx = this.status_.indexOf(Const.Status.CONFUSION);
       if (idx => 0) {
         this.status_.splice(idx, 1);
       }
@@ -131,6 +131,11 @@
   };
 
   MonsterCard.prototype.canAttack = function() {
+    if (this.status_.some(function(state) {
+      return state === Const.Status.SLEEP || state === Const.Status.PARALYSIS;
+    })) {
+      return false;
+    };
     var energies = UtilFunc.mapEnergyToArray(this.getEnergy());
     if (!!this.skill1 && this.skill1.satisfy(energies)) {
       return true;

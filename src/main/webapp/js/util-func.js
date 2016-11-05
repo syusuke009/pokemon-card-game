@@ -73,13 +73,13 @@
 
   UtilFunc.checkEnoughEnergy = function(require, provide) {
     var stock = {};
-    $.each(provide, function(idx, e) {
+    provide.forEach(function(e) {
       var count = !!stock[e] ? stock[e] : 0;
       stock[e] = count + 1;
     });
 
     var normalCostCount = 0;
-    $.each(require, function(idx, e) {
+    require.forEach(function(e) {
       if (e === 'normal') {
         normalCostCount++;
         return;
@@ -97,6 +97,42 @@
       extraCount += cnt;
     });
     return satisfyRequiredType && normalCostCount <= extraCount;
+  };
+
+  UtilFunc.calculateExtraEnergy = function(require, provide, type) {
+    var stock = {};
+    provide.forEach(function(e) {
+      var count = !!stock[e] ? stock[e] : 0;
+      stock[e] = count + 1;
+    });
+
+    var normalCostCount = 0;
+    require.forEach(function(e) {
+      if (e === 'normal') {
+        normalCostCount++;
+        return;
+      }
+      var count = stock[e];
+      stock[e] = count - 1;
+    });
+
+    var specificTypeCount = 0;
+    var otherTypeCount = 0;
+    $.each(stock, function(key, val) {
+      if (key === type) {
+        specificTypeCount++;
+      } else {
+        otherTypeCount++;
+      }
+    });
+    if (otherTypeCount >= normalCostCount) {
+      return specificTypeCount;
+    }
+    var lackNormalCount = normalCostCount - otherTypeCount;
+    if (lackNormalCount > specificTypeCount) {
+      return 0;
+    }
+    return specificTypeCount - lackNormalCount;
   };
 
   UtilFunc.getTypeCaption = function(type) {

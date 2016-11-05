@@ -166,10 +166,8 @@
     var dialog = new EnergySelectionDialog();
     dialog.show(escaped.getEnergy(), escaped.escapeCost).then(function(trushed){
 
-      trushed.forEach(function(trnId) {
-        var obj = {};
-        obj.trnId = trnId;
-        escaped.removeEnergy(obj);
+      trushed.forEach(function(c) {
+        escaped.removeEnergy(c);
       });
 
       var selectables = field.getBench().map(function(c) {
@@ -203,12 +201,15 @@
   };
 
   GameController.prototype.turnEnd = function() {
-    if (this.model_.getTurn().isSetupTurn()) {
-      if (!this.model_.getField(Const.Viewpoint.ME).getBattleMonster()) {
+    var turn = this.model_.getTurn();
+    var myField = this.model_.getField(Const.Viewpoint.ME);
+    var rivalField = this.model_.getField(Const.Viewpoint.RIVAL);
+    if (turn.isSetupTurn()) {
+      if (!myField.getBattleMonster()) {
         MessageDisplay.println('自分のバトルモンスターを出してください');
         return;
       }
-      if (!this.model_.getField(Const.Viewpoint.RIVAL).getBattleMonster()) {
+      if (!rivalField.getBattleMonster()) {
         MessageDisplay.println('相手のバトルモンスターを出してください');
         return;
       }
@@ -222,6 +223,13 @@
       var $deferRivalBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.RIVAL);
       return $.when($deferMyBattle, $deferRivalBattle);
     }.bind(this)).then(function(my, rival){
+      // side clear
+      var mySide = myField.getSide();
+      var rivalSide = rivalField.getSide();
+      if (mySide.length === 0 && rivalSide.length === 0) this.gameset(null);
+      if (mySide.length === 0) this.gameset(Const.Viewpoint.ME);
+      if (mySide.length === 0) this.gameset(Const.Viewpoint.RIVAL);
+      // no monster
       if (!my && !rival) this.gameset(null);
       if (!my) this.gameset(Const.Viewpoint.RIVAL);
       if (!rival) this.gameset(Const.Viewpoint.ME);
@@ -249,7 +257,7 @@
     return $defer.promise();
   };
 
-  GameController.prototype.gameset = function(winner) {
+  GameController.prototype.gameset = function(winner, reason) {
     var message = !!winner ? winner + 'の勝利！' : '引き分け';
     MessageDisplay.println(message);
     throw message;

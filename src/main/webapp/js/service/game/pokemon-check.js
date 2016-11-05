@@ -144,6 +144,9 @@
   PokemonChecker.prototype.getSide_ = function(field, count) {
     for (var i = 0; i < count; i++) {
       var side = field.pickSide();
+      if (side === null) {
+        break;
+      }
       field.addHand(side);
     }
   };

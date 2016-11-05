@@ -457,10 +457,10 @@
 }
 
 .card.normal {
-    background-color: #f5f5f5;
+    background-color: #e6e6e6;
 }
 .card.normal:hover {
-    background-color: #eee;
+    background-color: #d6d6d6;
 }
 .card.normal .type-mark,
 .detail-content.normal .type-mark {
@@ -476,6 +476,61 @@
 .card.leaf .type-mark,
 .detail-content.leaf .type-mark {
     background-image: url(../img/type/leaf.jpg);
+}
+
+.card.fire {
+    background-color: #ff4444;
+}
+.card.fire:hover {
+    background-color: #d0362f;
+}
+.card.fire .type-mark,
+.detail-content.fire .type-mark {
+    background-image: url(../img/type/fire.jpg);
+}
+
+.card.aqua {
+    background-color: #44cbff;
+}
+.card.aqua:hover {
+    background-color: #3cb2e0;
+}
+.card.aqua .type-mark,
+.detail-content.aqua .type-mark {
+    background-image: url(../img/type/aqua.jpg);
+}
+
+.card.thunder {
+    background-color: #f7f139;
+}
+.card.thunder:hover {
+    background-color: #e0da2b;
+}
+.card.thunder .type-mark,
+.detail-content.thunder .type-mark {
+    background-image: url(../img/type/thunder.jpg);
+}
+
+.card.fight {
+    background-color: #fff;
+}
+.card.fight:hover {
+    background-color: #fff;
+}
+.card.fight .type-mark,
+.detail-content.fight .type-mark {
+    background-image: url(../img/type/fight.jpg);
+}
+
+.card.esper {
+    background-color: #fff;
+}
+.card.esper:hover {
+    background-color: #fff;
+}
+.card.esper .type-mark,
+.detail-content.esper .type-mark {
+    background-image: url(../img/type/esper.jpg);
 }
 
 .card.trainer {
