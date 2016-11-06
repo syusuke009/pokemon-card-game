@@ -15,8 +15,44 @@
 "13":{"name":"ビードル","kind":"1","base":"","type":"leaf","hp":"40","special":"","skill1":"skill_13_1","skill2":"","escape":["normal"],"weak":{"fire":"*2"}},
 "14":{"name":"コクーン","kind":"2","base":"13","type":"leaf","hp":"80","special":"","skill1":"skill_14_1","skill2":"skill_14_2","escape":["normal","normal"],"weak":{"fire":"*2"}},
 "15":{"name":"スピアー","kind":"3","base":"14","type":"leaf","hp":"80","special":"","skill1":"skill_15_1","skill2":"skill_15_2","escape":[],"weak":{"fire":"*2"},"regist":{"fight":"-30"}},
-"16":{"name":"ポッポ","kind":"1","base":"","type":"normal","hp":"40","special":"","skill1":"skill_16_1","skill2":"","escape":["normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
-"17":{"name":"ピジョン","kind":"2","base":"16","type":"normal","hp":"60","special":"","skill1":"skill_17_1","skill2":"skill_17_2","escape":["normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
+// "16":{"name":"ポッポ","kind":"1","base":"","type":"normal","hp":"40","special":"","skill1":"skill_16_1","skill2":"","escape":["normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
+// "17":{"name":"ピジョン","kind":"2","base":"16","type":"normal","hp":"60","special":"","skill1":"skill_17_1","skill2":"skill_17_2","escape":["normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
+
+"19":{"name":"コラッタ","kind":"1","base":"","type":"normal","hp":"30","special":"","skill1":"skill_19_1","skill2":"","escape":[],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
+"20":{"name":"ラッタ","kind":"2","base":"19","type":"normal","hp":"60","special":"","skill1":"skill_20_1","skill2":"skill_20_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
+
+"25":{"name":"ピカチュウ","kind":"1","base":"","type":"thunder","hp":"40","special":"","skill1":"skill_25_1","skill2":"skill_25_2","escape":["normal"],"weak":{"fight":"*2"}},
+"26":{"name":"ライチュウ","kind":"2","base":"25","type":"thunder","hp":"80","special":"","skill1":"skill_26_1","skill2":"skill_26_2","escape":["normal"],"weak":{"fight":"*2"}},
+// "27":{"name":"サンド","kind":"1","base":"","type":"fight","hp":"40","special":"","skill1":"skill_27_1","skill2":"","escape":["normal"],"weak":{"leaf":"*2"},"regist":{"thunder":"-30"}},
+
+// "32":{"name":"ニドラン♂","kind":"1","base":"","type":"leaf","hp":"40","special":"","skill1":"skill_32_1","skill2":"","escape":["normal"],"weak":{"esper":"*2"}},
+// "33":{"name":"ニドリーノ","kind":"2","base":"32","type":"leaf","hp":"60","special":"","skill1":"skill_33_1","skill2":"skill_33_2","escape":["normal"],"weak":{"esper":"*2"}},
+// "34":{"name":"ニドキング","kind":"3","base":"33","type":"leaf","hp":"90","special":"","skill1":"skill_34_1","skill2":"skill_34_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+// "35":{"name":"ピッピ","kind":"1","base":"","type":"normal","hp":"40","special":"","skill1":"skill_35_1","skill2":"skill_35_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
+
+// "37":{"name":"ロコン","kind":"1","base":"","type":"fire","hp":"50","special":"","skill1":"skill_37_1","skill2":"","escape":["normal"],"weak":{"aqua":"*2"}},
+// "38":{"name":"キュウコン","kind":"2","base":"38","type":"fire","hp":"80","special":"","skill1":"skill_38_1","skill2":"skill_38_2","escape":["normal"],"weak":{"aqua":"*2"}},
+
+// "50":{"name":"ディグダ","kind":"1","base":"","type":"fight","hp":"30","special":"","skill1":"skill_50_1","skill2":"skill_50_2","escape":[],"weak":{"leaf":"*2"},"regist":{"thunder":"-30"}},
+// "51":{"name":"ダグトリオ","kind":"2","base":"50","type":"fight","hp":"70","special":"","skill1":"skill_51_1","skill2":"skill_51_2","escape":["normal","normal"],"weak":{"leaf":"*2"},"regist":{"thunder":"-30"}},
+
+// "58":{"name":"ガーディ","kind":"1","base":"","type":"fire","hp":"60","special":"","skill1":"skill_58_1","skill2":"","escape":["normal"],"weak":{"aqua":"*2"}},
+// "59":{"name":"ウィンディ","kind":"2","base":"58","type":"fire","hp":"100","special":"","skill1":"skill_59_1","skill2":"skill_59_2","escape":["normal","normal","normal"],"weak":{"aqua":"*2"}},
+// "60":{"name":"ニョロモ","kind":"1","base":"","type":"aqua","hp":"40","special":"","skill1":"skill_60_1","skill2":"","escape":["normal"],"weak":{"leaf":"*2"}},
+// "61":{"name":"ニョロゾ","kind":"2","base":"60","type":"aqua","hp":"60","special":"","skill1":"skill_61_1","skill2":"skill_61_2","escape":["normal"],"weak":{"leaf":"*2"}},
+// "62":{"name":"ニョロボン","kind":"3","base":"61","type":"aqua","hp":"90","special":"","skill1":"skill_62_1","skill2":"skill_62_2","escape":["normal","normal","normal"],"weak":{"leaf":"*2"}},
+// "63":{"name":"ケーシィ","kind":"1","base":"","type":"esper","hp":"30","special":"","skill1":"skill_63_1","skill2":"","escape":[],"weak":{"esper":"*2"}},
+// "64":{"name":"ユンゲラー","kind":"2","base":"63","type":"esper","hp":"60","special":"","skill1":"skill_64_1","skill2":"skill_64_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+// "65":{"name":"フーディン","kind":"3","base":"64","type":"esper","hp":"80","special":"ダメージスワップ","skill1":"skill_65_1","skill2":"","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+// "66":{"name":"ワンリキー","kind":"1","base":"","type":"fight","hp":"50","special":"","skill1":"skill_66_1","skill2":"","escape":["normal"],"weak":{"esper":"*2"}},
+// "67":{"name":"ゴーリキー","kind":"2","base":"66","type":"fight","hp":"80","special":"","skill1":"skill_67_1","skill2":"skill_67_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+// "68":{"name":"カイリキー","kind":"3","base":"67","type":"fight","hp":"100","special":"はんげき","skill1":"skill_68_1","skill2":"","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+
+"77":{"name":"ポニータ","kind":"1","base":"","type":"fire","hp":"40","special":"","skill1":"skill_77_1","skill2":"skill_77_2","escape":["normal"],"weak":{"aqua":"*2"}},
+
+// "81":{"name":"コイル","kind":"1","base":"","type":"thunder","hp":"40","special":"","skill1":"skill_81_1","skill2":"skill_81_2","escape":["normal"],"weak":{"fight":"*2"}},
+// "82":{"name":"レアコイル","kind":"2","base":"81","type":"thunder","hp":"60","special":"","skill1":"skill_82_1","skill2":"skill_82_2","escape":["normal"],"weak":{"fight":"*2"}},
+// "83":{"name":"カモネギ","kind":"1","base":"","type":"normal","hp":"50","special":"","skill1":"skill_83_1","skill2":"skill_83_2","escape":["normal"],"weak":{"thunder":"*2"}}"regist":{"fight":"-30"}},
 
 "1001":{"name":"きずぐすり","kind":"goods","effect":"1001","description":"自分の場のポケモンにのっているダメージカウンターを2個まで、とりのぞくことができる。"},
 "1002":{"name":"いいきずぐすり","kind":"goods","effect":"1002","description":"自分の場にいるポケモンから、エネルギーカードのついているものを1匹選ぶ。そのポケモンについているエネルギーカードを1枚トラッシュして、そのポケモンにのっているダメージカウンターを最大4個、とりのぞく。"},

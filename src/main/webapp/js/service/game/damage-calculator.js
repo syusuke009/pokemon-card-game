@@ -4,15 +4,13 @@
     this.effectDao_ = new EffectDao();
   };
 
-  DamageCalculator.prototype.calculate = function(skill, attacker, defender) {
+  DamageCalculator.prototype.calculate = function(skill, attacker, defender, model) {
     var result = {};
+    result.skill = skill;
+    result.attacker = attacker;
+    result.defender = defender;
 
-    if (defender.getStatus().indexOf(Const.Status.DAMAGE_GUARD) >= 0) {
-      result.damage = 0;
-      return $.Deferred().resolve(result).promise();
-    }
-
-    return this.calculateSkillImpact_(skill).then(function(d) {
+    return this.calculateSkillImpact_(skill, attacker, defender, model).then(function(d) {
       var $defer = $.Deferred();
       if (d <= 0) {
         result.damage = 0;
@@ -20,13 +18,13 @@
         return $defer.promise();
       }
 
-      d = this.effectAttackerGoods_(attacker, d);
+      d = this.effectAttackerEffect_(attacker, d);
 
       d = this.effectWeak_(attacker, defender, d);
 
       d = this.effectRegist_(attacker, defender, d);
 
-      d = this.effectDefenderGoods_(defender, d);
+      d = this.effectDefenderEffect_(defender, d);
 
       result.damage = d;
       $defer.resolve(result);
@@ -34,12 +32,15 @@
     }.bind(this));
   };
 
-  DamageCalculator.prototype.calculateSkillImpact_ = function(skill) {
+  DamageCalculator.prototype.calculateSkillImpact_ = function(skill, attacker, defender, model) {
     var $defer;
-    if (skill.timing === 'calc-damage') {
+    if (skill.timing === Const.EffectTiming.CALC_DAMAGE) {
       var param = {};
       param.skill = skill;
-      $defer = this.effectDao_.get(skill.effect)(param);
+      param.attacker = attacker;
+      param.defender = defender;
+      param.model = model;
+      $defer = this.effectDao_.getSkillEffect(skill.effect)(param);
     } else {
       $defer = $.Deferred();
       $defer.resolve(skill.damage);
@@ -47,7 +48,7 @@
     return $defer.promise();
   };
 
-  DamageCalculator.prototype.effectAttackerGoods_ = function(attacker, d) {
+  DamageCalculator.prototype.effectAttackerEffect_ = function(attacker, d) {
     return d;
   };
 
@@ -74,7 +75,11 @@
     return d;
   };
 
-  DamageCalculator.prototype.effectDefenderGoods_ = function(defender, d) {
+  DamageCalculator.prototype.effectDefenderEffect_ = function(defender, d) {
+    var effect = defender.getDefenceEffect();
+    if (effect[Const.Status.DAMAGE_GUARD]) {
+      return 0;
+    }
     return d;
   };
 

@@ -25,6 +25,10 @@
     this.status_ = [];
     this.energy_ = [];
 
+    this.attackEffectReservation_ = {};
+    this.attackEffect_ = {};
+    this.defenceEffect_ = {};
+
     this.evolutedBase_ = null;
 
     this.dir = 'monster';
@@ -86,15 +90,15 @@
     case Const.Status.SLEEP:
     case Const.Status.PARALYSIS:
     case Const.Status.CONFUSION:
-      var idx = this.status_.indexOf(SLEEP);
+      var idx = this.status_.indexOf(Const.Status.SLEEP);
       if (idx => 0) {
         this.status_.splice(idx, 1);
       }
-      idx = this.status_.indexOf(PARALYSIS);
+      idx = this.status_.indexOf(Const.Status.PARALYSIS);
       if (idx => 0) {
         this.status_.splice(idx, 1);
       }
-      idx = this.status_.indexOf(CONFUSION);
+      idx = this.status_.indexOf(Const.Status.CONFUSION);
       if (idx => 0) {
         this.status_.splice(idx, 1);
       }
@@ -131,6 +135,11 @@
   };
 
   MonsterCard.prototype.canAttack = function() {
+    if (this.status_.some(function(state) {
+      return state === Const.Status.SLEEP || state === Const.Status.PARALYSIS;
+    })) {
+      return false;
+    };
     var energies = UtilFunc.mapEnergyToArray(this.getEnergy());
     if (!!this.skill1 && this.skill1.satisfy(energies)) {
       return true;
@@ -147,5 +156,30 @@
     });
     var energyCond = UtilFunc.checkEnoughEnergy(this.escapeCost, UtilFunc.mapEnergyToArray(this.energy_));
     return statusCond && energyCond;
+  };
+
+  MonsterCard.prototype.addAttackSkillEffect = function(status) {
+    this.attackEffectReservation_[status] = true;
+  };
+
+  MonsterCard.prototype.addDefenceSkillEffect = function(status) {
+    this.defenceEffect_[status] = true;
+  };
+
+  MonsterCard.prototype.getAttackEffect = function() {
+    return this.attackEffect_;
+  };
+
+  MonsterCard.prototype.getDefenceEffect = function() {
+    return this.defenceEffect_;
+  };
+
+  MonsterCard.prototype.updateAttackEffect = function() {
+    this.attackEffect_ = this.attackEffectReservation_;
+    this.attackEffectReservation_ = {};
+  };
+
+  MonsterCard.prototype.updateDefenceEffect = function() {
+    this.defenceEffect_ = {};
   };
 })(jQuery);

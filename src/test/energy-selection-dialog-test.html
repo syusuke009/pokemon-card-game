@@ -50,8 +50,10 @@
 		$('#button').on('click', function(e){
 		  var esd = new EnergySelectionDialog();
 		  var promise = esd.show(energies, ['normal', 'normal']);
-		  promise.then(function(s) {
-		    alert(s);
+		  promise.then(function(res) {
+		    alert(res.map(function(t){
+		      return t.trnId;
+		    }));
 		  });
 		});
 	</script>
