@@ -93,30 +93,15 @@
     var attackerField = model.getField(turn.whoseTurn());
     var defenderField = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
 
-    // clear defence effect
-    var defenceEffect = [Const.Status.DAMAGE_GUARD];
-    var monster = defenderField.getBattleMonster();
-    this.removeEffect_(monster, defenceEffect);
+    defenderField.getBattleMonster().updateDefenceEffect();
     defenderField.getBench().forEach(function(m) {
-      this.removeEffect_(m, defenceEffect);
+      m.updateDefenceEffect();
     }.bind(this));
 
-    // clear attack effect
-    var attackEffect = [];
-    var monster = attackerField.getBattleMonster();
-    this.removeEffect_(monster, attackEffect);
+    attackerField.getBattleMonster().updateAttackEffect();
     attackerField.getBench().forEach(function(m) {
-      this.removeEffect_(m, attackEffect);
+      m.updateAttackEffect();
     }.bind(this));
-  };
-
-  PokemonChecker.prototype.removeEffect_ = function(card, effects) {
-    var status = card.getStatus();
-    effects.forEach(function(effect) {
-      if (status.indexOf(effect) >= 0) {
-        status.splice(status.indexOf(effect), 1);
-      }
-    });
   };
 
   PokemonChecker.prototype.checkDying_ = function(field) {

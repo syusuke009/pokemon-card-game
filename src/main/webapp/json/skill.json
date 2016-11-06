@@ -28,9 +28,9 @@ SkillList = {
 "20_2":{"name":"いかりのまえば","cost":["normal","normal","normal"],"damage":"","description":"相手の残りのHPの半分(切り上げ)のダメージをあたえる。","effect":"skill_20_2","timing":"calc-damage"},
 
 "25_1":{"name":"かじる","cost":["normal"],"damage":"10","description":"","effect":""},
-"25_2":{"name":"でんげき","cost":["thunder","normal"],"damage":"30","description":"コインを投げて「うら」なら、自分にも10ダメージ。","effect":"skill_25_2"},
-"26_1":{"name":"こうそくいどう","cost":["thunder","normal","normal"],"damage":"20","description":"コインを投げて「おもて」なら、次の相手の番の「ワザ」をうけない。","effect":"skill_26_1"},
-"26_2":{"name":"かみなり","cost":["thunder","thunder","thunder","normal"],"damage":"60","description":"コインを投げて「うら」なら、自分にも30ダメージ。","effect":"skill_26_2"},
+"25_2":{"name":"でんげき","cost":["thunder","normal"],"damage":"30","description":"コインを投げて「うら」なら、自分にも10ダメージ。","effect":"skill_25_2","timing":"after-damage"},
+"26_1":{"name":"こうそくいどう","cost":["thunder","normal","normal"],"damage":"20","description":"コインを投げて「おもて」なら、次の相手の番の「ワザ」をうけない。","effect":"skill_26_1","timing":"after-damage"},
+"26_2":{"name":"かみなり","cost":["thunder","thunder","thunder","normal"],"damage":"60","description":"コインを投げて「うら」なら、自分にも30ダメージ。","effect":"skill_26_2","timing":"after-damage"},
 
 
 "77_1":{"name":"けとばす","cost":["normal","normal"],"damage":"20","description":"","effect":""},

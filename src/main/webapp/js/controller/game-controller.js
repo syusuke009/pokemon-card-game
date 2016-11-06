@@ -228,7 +228,7 @@
       var rivalSide = rivalField.getSide();
       if (mySide.length === 0 && rivalSide.length === 0) this.gameset(null);
       if (mySide.length === 0) this.gameset(Const.Viewpoint.ME);
-      if (mySide.length === 0) this.gameset(Const.Viewpoint.RIVAL);
+      if (rivalSide.length === 0) this.gameset(Const.Viewpoint.RIVAL);
       // no monster
       if (!my && !rival) this.gameset(null);
       if (!my) this.gameset(Const.Viewpoint.RIVAL);

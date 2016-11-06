@@ -10,11 +10,6 @@
     result.attacker = attacker;
     result.defender = defender;
 
-    if (defender.getStatus().indexOf(Const.Status.DAMAGE_GUARD) >= 0) {
-      result.damage = 0;
-      return $.Deferred().resolve(result).promise();
-    }
-
     return this.calculateSkillImpact_(skill, attacker, defender, model).then(function(d) {
       var $defer = $.Deferred();
       if (d <= 0) {
@@ -23,13 +18,13 @@
         return $defer.promise();
       }
 
-      d = this.effectAttackerGoods_(attacker, d);
+      d = this.effectAttackerEffect_(attacker, d);
 
       d = this.effectWeak_(attacker, defender, d);
 
       d = this.effectRegist_(attacker, defender, d);
 
-      d = this.effectDefenderGoods_(defender, d);
+      d = this.effectDefenderEffect_(defender, d);
 
       result.damage = d;
       $defer.resolve(result);
@@ -53,7 +48,7 @@
     return $defer.promise();
   };
 
-  DamageCalculator.prototype.effectAttackerGoods_ = function(attacker, d) {
+  DamageCalculator.prototype.effectAttackerEffect_ = function(attacker, d) {
     return d;
   };
 
@@ -80,7 +75,11 @@
     return d;
   };
 
-  DamageCalculator.prototype.effectDefenderGoods_ = function(defender, d) {
+  DamageCalculator.prototype.effectDefenderEffect_ = function(defender, d) {
+    var effect = defender.getDefenceEffect();
+    if (effect[Const.Status.DAMAGE_GUARD]) {
+      return 0;
+    }
     return d;
   };
 

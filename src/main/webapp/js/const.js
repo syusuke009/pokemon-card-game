@@ -15,12 +15,14 @@
 
   Const.Status = {
     POISON: 'poison',
+    BI_POISON: 'bi-poison',
     BURN: 'burn',
     SLEEP: 'sleep',
     PARALYSIS: 'paralysis',
     CONFUSION: 'confusion',
 
-    DAMAGE_GUARD: 'damage-guard'
+    DAMAGE_GUARD: 'damage-guard',
+    MATCHLESS: 'matchless'
   };
 
   Const.Types = ["normal","leaf","fire","aqua","thunder","fight","esper"];

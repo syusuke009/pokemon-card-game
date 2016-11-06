@@ -38,7 +38,19 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addStatus(Const.Status.DAMAGE_GUARD);
+        param.attacker.addDefenceSkillEffect(Const.Status.DAMAGE_GUARD);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.matchlessByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        param.attacker.addDefenceSkillEffect(Const.Status.MATCHLESS);
       }
       $defer.resolve();
     });
@@ -61,6 +73,26 @@
     var $defer = $.Deferred();
     var extra = UtilFunc.calculateExtraEnergy(skill.cost, energies, type);
     $defer.resolve(skill.damage + (Math.max(extra, limit) * 10));
+    return $defer.promise();
+  };
+
+  EffectsBase.selfDamageByCoinToss = function(damage, attacker) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (!response[0]) {
+        attacker.hurt(damage);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.halfHpDamage = function(param) {
+    var $defer = $.Deferred();
+    var defender = param.defender;
+    var rest = (defender.hp / 10) - defender.getDamageCount();
+    $defer.resolve(Math.ceil(rest / 2) * 10);
     return $defer.promise();
   };
 })(jQuery);

@@ -17,6 +17,11 @@
 
     turn.attacked();
 
+    if (defender.getDefenceEffect()[Const.Status.MATCHLESS]) {
+      $defer.resolve();
+      return $defer.promise();
+    }
+
     return this.processBeforeDamage_(skill, attacker, defender)
         .then(function(){
           return this.calculator_.calculate(skill, attacker, defender, model);

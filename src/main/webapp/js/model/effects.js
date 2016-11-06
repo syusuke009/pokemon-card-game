@@ -52,7 +52,16 @@
   };
   Effects.skill_15_2 = EffectsBase.poisonByCoinToss;
 
+  Effects.skill_20_2 = EffectsBase.halfHpDamage;
 
+  Effects.skill_25_2 = function(param) {
+    return EffectsBase.selfDamageByCoinToss(10, param.attacker);
+  };
+
+  Effects.skill_26_1 = EffectsBase.matchlessByCoinToss;
+  Effects.skill_26_2 = function(param) {
+    return EffectsBase.selfDamageByCoinToss(30, param.attacker);
+  };
 
 
   Effects.trainer_effect_1001 = function(eventdata, model) {
