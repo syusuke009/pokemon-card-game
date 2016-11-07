@@ -10,7 +10,7 @@
     this.type = mst.type;
     this.typeCaption = UtilFunc.getTypeCaption(this.type);
     this.name = mst.name;
-    this.hp = mst.hp;
+    this.hp = Number(mst.hp);
     this.baseCardCode = mst.base;
 
     this.special = mst.special;
@@ -65,6 +65,37 @@
     if (this.damage_ < 0) {
       this.damage_ = 0;
     }
+  };
+
+  MonsterCard.prototype.trush = function() {
+    var targets = [];
+    this.energy_.forEach(function(e) {
+      targets.push(e);
+    });
+    this.getAllBase().forEach(function(b) {
+      targets.push(b);
+    });
+    $.each(this.attackEffect_, function(key, value) {
+      if (!!value.trnId) {
+        targets.push(value);
+      }
+    });
+    $.each(this.defenceEffect_, function(key, value) {
+      if (!!value.trnId) {
+        targets.push(value);
+      }
+    });
+
+    this.damage_ = 0;
+    this.status_ = [];
+    this.energy_ = [];
+    this.attackEffectReservation_ = {};
+    this.attackEffect_ = {};
+    this.defenceEffect_ = {};
+    this.evolutedBase_ = null;
+
+    targets.push(this);
+    return targets;
   };
 
   MonsterCard.prototype.getDamageCount = function() {

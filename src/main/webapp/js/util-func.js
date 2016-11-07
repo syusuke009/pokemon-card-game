@@ -120,9 +120,9 @@
     var otherTypeCount = 0;
     $.each(stock, function(key, val) {
       if (key === type) {
-        specificTypeCount++;
+        specificTypeCount += val;
       } else {
-        otherTypeCount++;
+        otherTypeCount += val;
       }
     });
     if (otherTypeCount >= normalCostCount) {

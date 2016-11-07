@@ -1,6 +1,7 @@
 (function($){
 
   ActionButtonController = function() {
+    this.effectDao_ = new EffectDao();
   };
 
   ActionButtonController.prototype.control = function(card, game, area) {
@@ -18,7 +19,7 @@
       return this.forEvolutionMonster_(card, field, area, turn, game);
     case 'goods':
     case 'supporter':
-      return this.forTrainer_(card, field, area, turn);
+      return this.forTrainer_(card, field, area, turn, game);
     case 'energy':
     case 'energy-sp':
       return this.forEnergy_(field, area, turn);
@@ -66,7 +67,7 @@
     return result;
   };
 
-  ActionButtonController.prototype.forTrainer_ = function(card, field, area, turn) {
+  ActionButtonController.prototype.forTrainer_ = function(card, field, area, turn, game) {
     var result = {};
     result.kind = 'trainer';
     switch(area) {
@@ -74,7 +75,9 @@
       if (turn.isSetupTurn()) {
         result.use = false;
       } else{
-        result.use = card.kind === 'goods' ? true : !turn.isUsedSupporter();
+        var notlimit = card.kind === 'goods' ? true : !turn.isUsedSupporter();
+        var condition = this.effectDao_.getTrainerUseCondition(card.code)(game);
+        result.use = notlimit && condition;
       }
       break;
     }

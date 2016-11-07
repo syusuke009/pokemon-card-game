@@ -96,7 +96,13 @@
     var viewpoint = UtilFunc.getViewpoint(eventdata.trnId);
     var field = model.getField(viewpoint);
     var target = field.selectFrom(eventdata.area, eventdata.trnId);
-    target.hurt(-40);
+    var dialog = new EnergySelectionDialog();
+    dialog.show(target.getEnergy(), ['normal']).then(function(response){
+      response.forEach(function(trushed){
+        target.removeEnergy(trushed);
+      })
+      target.hurt(-40);
+    });
   };
   Effects.trainer_condition_1002 = function(model) {
     return Effects.trainer_target_1002(model).length > 0;
@@ -145,6 +151,55 @@
     });
   };
   Effects.trainer_target_1003 = null;
+
+  Effects.trainer_effect_1011 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var candidates = [];
+    var field = model.getField(viewpoint);
+    candidates.push(field.getBattleMonster());
+    field.getBench().forEach(function(c) {
+      candidates.push(c);
+    });
+    var field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    candidates.push(field.getBattleMonster());
+    field.getBench().forEach(function(c) {
+      candidates.push(c);
+    });
+    candidates.forEach(function(target) {
+      var damageCount = target.getDamageCount();
+      if (damageCount > 0) {
+        target.hurt(damageCount * (-10));
+        $.each($.extend([], target.getEnergy()), function(idx, e) {
+          target.removeEnergy(e);
+        });
+      }
+    });
+  };
+  Effects.trainer_condition_1011 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monster = field.getBattleMonster();
+    if (monster.getDamageCount() > 0) {
+      return true;
+    }
+    if (field.getBench().some(function(c) {
+      return c.getDamageCount() > 0;
+    })) {
+      return true;
+    }
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    monster = field.getBattleMonster();
+    if (monster.getDamageCount() > 0) {
+      return true;
+    }
+    if (field.getBench().some(function(c) {
+      return c.getDamageCount() > 0;
+    })) {
+      return true;
+    }
+    return false;
+  };
+  Effects.trainer_target_1011 = null;
 
 
 

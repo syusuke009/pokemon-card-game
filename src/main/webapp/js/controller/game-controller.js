@@ -163,8 +163,7 @@
 
     var escaped = field.getBattleMonster();
 
-    var dialog = new EnergySelectionDialog();
-    dialog.show(escaped.getEnergy(), escaped.escapeCost).then(function(trushed){
+    var afterTrushed = function(trushed){
 
       trushed.forEach(function(c) {
         escaped.removeEnergy(c);
@@ -184,8 +183,14 @@
         this.view_.redrawField(this.model_);
       }.bind(this));
 
-    }.bind(this));
+    }.bind(this);
 
+    if (escaped.escapeCost.length === 0) {
+      afterTrushed([]);
+    } else {
+      var dialog = new EnergySelectionDialog();
+      dialog.show(escaped.getEnergy(), escaped.escapeCost).then(afterTrushed);
+    }
   };
 
   GameController.prototype.turnStart = function() {
