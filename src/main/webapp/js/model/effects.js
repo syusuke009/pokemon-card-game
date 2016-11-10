@@ -2,6 +2,23 @@
 
   Effects = {};
 
+  Effects.EventType = {
+      REQUEST_SELECT : 'request-select',
+      REQUEST_REDRAW_FIELD : 'request-redraw-field',
+      REQUEST_REDRAW_DETAIL : 'request-redraw-detail',
+  };
+  Effects.getEventTarget = function() {
+    return $(document.body);
+  };
+  Effects.dispatchSelectRequestEvent = function(selectables, $defer) {
+    if (!selectables) throw 'need to pass parameger of selectable trnIds';
+    if (!$defer) throw 'need to pass parameger of $.Deferred';
+    Effects.getEventTarget().trigger(Effects.EventType.REQUEST_SELECT, [selectables, $defer]);
+  };
+  Effects.dispatchRedrawFieldRequestEvent = function() {
+    Effects.getEventTarget().trigger(Effects.EventType.REQUEST_REDRAW_FIELD);
+  };
+
   Effects.skill_1_1 = function(param) {
     var $defer = $.Deferred();
     var d = param.attacker.getDamageCount();
@@ -203,6 +220,57 @@
 
 
 
+  Effects.trainer_effect_1013 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var monster = field.getBattleMonster();
+      field.setBattleMonster(field.pickBench(response.trnId));
+      field.putBench(monster);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    Effects.dispatchSelectRequestEvent(field.getBench().map(function(card) {
+      return card.trnId;
+    }), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1013 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getBench().length > 0;
+  };
+  Effects.trainer_target_1013 = null;
+
+
+  Effects.trainer_effect_1020 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
+    var field = model.getField(viewpoint);
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var monster = field.getBattleMonster();
+      field.setBattleMonster(field.pickBench(response.trnId));
+      field.putBench(monster);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    Effects.dispatchSelectRequestEvent(field.getBench().map(function(card) {
+      return card.trnId;
+    }), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1020 = function(model) {
+    var viewpoint = UtilFunc.reverseViewpoint(model.getTurn().whoseTurn());
+    var field = model.getField(viewpoint);
+    return field.getBench().length > 0;
+  };
+  Effects.trainer_target_1020 = null;
+
+
+
 
 
   Effects.trainer_effect_8001 = function(model) {
@@ -237,4 +305,103 @@
     return field.getDeck().size() >= 2;
   };
   Effects.trainer_target_8002 = null;
+
+  Effects.trainer_effect_8003 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    // TODO
+  };
+  Effects.trainer_condition_8003 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    // TODO
+  };
+  Effects.trainer_target_8003 = null;
+
+  Effects.trainer_effect_8004 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var mst = new CardMstDao();
+    var evolutionTrnId;
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var $defer = $.Deferred();
+      evolutionTrnId = response.trnId;
+      var secondEvo = field.selectFrom(response.area, response.trnId);
+      var firstEvo = CardFactory.create({}, mst.get(secondEvo.baseCardCode));
+      var bases = UtilFunc.findEvolutionBase(firstEvo, field, turn);
+      Effects.dispatchSelectRequestEvent(bases, $defer);
+      return $defer.promise();
+    }).then(function(response) {
+      var base = field.selectFrom(response.area, response.trnId);
+      var evoluted = field.pickHand(evolutionTrnId);
+      evoluted.evolute(base);
+      field.override(response.area, base, evoluted);
+      turn.newAssign(evolutionTrnId);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    var secondEvos = field.getHands().filter(function(card) {
+      return card.kind === '3';
+    }).filter(function(secondEvo) {
+      var firstEvo = CardFactory.create({}, mst.get(secondEvo.baseCardCode));
+      var bases = UtilFunc.findEvolutionBase(firstEvo, field, turn);
+      return bases.length > 0;
+    }).map(function(card) {
+      return card.trnId;
+    });
+    Effects.dispatchSelectRequestEvent(secondEvos, $defer);
+    return false;
+  };
+  Effects.trainer_condition_8004 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var mst = new CardMstDao();
+    var targets = field.getHands().filter(function(card) {
+      return card.kind === '3';
+    }).filter(function(secondEvo) {
+      var firstEvo = CardFactory.create({}, mst.get(secondEvo.baseCardCode));
+      var bases = UtilFunc.findEvolutionBase(firstEvo, field, turn);
+      return bases.length > 0;
+    }).map(function(card) {
+      return card.trnId;
+    });
+    return targets.length > 0;
+  };
+  Effects.trainer_target_8004 = null;
+
+  Effects.trainer_effect_8005 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    // TODO
+  };
+  Effects.trainer_condition_8005 = function(model) {
+    // TODO
+  };
+  Effects.trainer_target_8005 = null;
+
+  Effects.trainer_effect_8006 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
+    var field = model.getField(viewpoint);
+    var deck = field.getDeck();
+    field.getHands().map(function(hand) {
+      return hand.trnId;
+    }).forEach(function(trnId) {
+      deck.add(field.pickHand(trnId));
+    });
+    deck.shuffle();
+    for (var i = 0; i < 7; i++) {
+      field.addHand(deck.draw());
+    }
+  };
+  Effects.trainer_condition_8006 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
+    var field = model.getField(viewpoint);
+    return field.getHands().length > 0;
+  };
+  Effects.trainer_target_8006 = null;
 })(jQuery);

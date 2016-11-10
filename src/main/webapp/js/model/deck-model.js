@@ -5,7 +5,7 @@
   };
 
   Deck.prototype.draw = function() {
-    return this.deck_.shift();
+    return this.deck_.pop();
   };
 
   Deck.prototype.add = function(card) {
