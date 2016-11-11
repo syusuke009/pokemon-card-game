@@ -33,6 +33,32 @@
     return $defer.promise();
   };
 
+  EffectsBase.confusionByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        param.defender.addStatus(Const.Status.CONFUSION);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.poisonOrConfusionByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        param.defender.addStatus(Const.Status.POISON);
+      } else {
+        param.defender.addStatus(Const.Status.CONFUSION);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
   EffectsBase.damageGuardByCoinToss = function(param) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
@@ -73,6 +99,25 @@
     var $defer = $.Deferred();
     var extra = UtilFunc.calculateExtraEnergy(skill.cost, energies, type);
     $defer.resolve(skill.damage + (Math.max(extra, limit) * 10));
+    return $defer.promise();
+  };
+
+  EffectsBase.boostByDamage = function(target, skill) {
+    var $defer = $.Deferred();
+    var boost = target.getDamageCount() * 10;
+    $defer.resolve(skill.damage + boost);
+    return $defer.promise();
+  };
+
+  EffectsBase.pluralAttack = function(param, times) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog(times);
+    dialog.show().then(function(response){
+      var times = response.filter(function(b){
+        return b;
+      }).length;
+      $defer.resolve(param.skill.damage * times);
+    });
     return $defer.promise();
   };
 

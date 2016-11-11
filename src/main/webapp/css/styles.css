@@ -512,10 +512,10 @@
 }
 
 .card.fight {
-    background-color: #fff;
+    background-color: #e25b1a;
 }
 .card.fight:hover {
-    background-color: #fff;
+    background-color: #ce541b;
 }
 .card.fight .type-mark,
 .detail-content.fight .type-mark {
@@ -523,10 +523,10 @@
 }
 
 .card.esper {
-    background-color: #fff;
+    background-color: #722aff;
 }
 .card.esper:hover {
-    background-color: #fff;
+    background-color: #611fe2;
 }
 .card.esper .type-mark,
 .detail-content.esper .type-mark {

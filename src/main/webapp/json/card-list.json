@@ -52,7 +52,34 @@
 
 // "81":{"name":"コイル","kind":"1","base":"","type":"thunder","hp":"40","special":"","skill1":"skill_81_1","skill2":"skill_81_2","escape":["normal"],"weak":{"fight":"*2"}},
 // "82":{"name":"レアコイル","kind":"2","base":"81","type":"thunder","hp":"60","special":"","skill1":"skill_82_1","skill2":"skill_82_2","escape":["normal"],"weak":{"fight":"*2"}},
-// "83":{"name":"カモネギ","kind":"1","base":"","type":"normal","hp":"50","special":"","skill1":"skill_83_1","skill2":"skill_83_2","escape":["normal"],"weak":{"thunder":"*2"}}"regist":{"fight":"-30"}},
+// "83":{"name":"カモネギ","kind":"1","base":"","type":"normal","hp":"50","special":"","skill1":"skill_83_1","skill2":"skill_83_2","escape":["normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
+"84":{"name":"ドードー","kind":"1","base":"","type":"normal","hp":"50","special":"","skill1":"skill_84_1","skill2":"","escape":[""],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
+
+"86":{"name":"パウワウ","kind":"1","base":"","type":"aqua","hp":"60","special":"","skill1":"skill_86_1","skill2":"","escape":["normal"],"weak":{"thunder":"*2"}},
+"87":{"name":"ジュゴン","kind":"2","base":"86","type":"aqua","hp":"80","special":"","skill1":"skill_87_1","skill2":"skill_87_2","escape":["normal","normal","normal"],"weak":{"thunder":"*2"}},
+
+// "92":{"name":"ゴース","kind":"1","base":"","type":"esper","hp":"30","special":"","skill1":"skill_92_1","skill2":"skill_92_2","escape":[],"regist":{"fight":"-30"}},
+// "93":{"name":"ゴースト","kind":"2","base":"92","type":"esper","hp":"60","special":"","skill1":"skill_93_1","skill2":"skill_93_2","escape":["normal"],"regist":{"fight":"-30"}},
+
+// "95":{"name":"イワーク","kind":"1","base":"","type":"fight","hp":"90","special":"","skill1":"skill_95_1","skill2":"skill_95_2","escape":["normal","normal","normal"],"weak":{"leaf":"*2"}},
+"96":{"name":"スリープ","kind":"1","base":"","type":"esper","hp":"50","special":"","skill1":"skill_96_1","skill2":"skill_96_2","escape":["normal"],"weak":{"esper":"*2"}},
+
+"100":{"name":"ビリリダマ","kind":"1","base":"","type":"thunder","hp":"40","special":"","skill1":"skill_100_1","skill2":"","escape":["normal"],"weak":{"fight":"*2"}},
+"101":{"name":"マルマイン","kind":"2","base":"100","type":"thunder","hp":"80","special":"エネエネ","skill1":"skill_101_1","skill2":"","escape":["normal"],"weak":{"fight":"*2"}},
+
+"107":{"name":"エビワラー","kind":"1","base":"","type":"fight","hp":"70","special":"","skill1":"skill_107_1","skill2":"skill_107_2","escape":["normal","normal"],"weak":{"esper":"*2"}},
+
+"109":{"name":"ドガース","kind":"1","base":"","type":"leaf","hp":"50","special":"","skill1":"skill_109_1","skill2":"","escape":["normal"],"weak":{"esper":"*2"}},
+
+"113":{"name":"ラッキー","kind":"1","base":"","type":"normal","hp":"120","special":"","skill1":"skill_113_1","skill2":"skill_113_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
+"114":{"name":"モンジャラ","kind":"1","base":"","type":"leaf","hp":"50","special":"","skill1":"skill_114_1","skill2":"skill_114_2","escape":["normal","normal"],"weak":{"fire":"*2"}},
+
+"120":{"name":"ヒトデマン","kind":"1","base":"","type":"aqua","hp":"40","special":"","skill1":"skill_120_1","skill2":"","escape":["normal"],"weak":{"thunder":"*2"}},
+"121":{"name":"スターミー","kind":"2","base":"120","type":"aqua","hp":"60","special":"","skill1":"skill_121_1","skill2":"skill_121_2","escape":["normal"],"weak":{"thunder":"*2"}},
+
+"124":{"name":"ルージュラ","kind":"1","base":"","type":"esper","hp":"70","special":"","skill1":"skill_124_1","skill2":"skill_124_2","escape":["normal","normal"],"weak":{"esper":"*2"}},
+"125":{"name":"エレブー","kind":"1","base":"","type":"thunder","hp":"70","special":"","skill1":"skill_125_1","skill2":"skill_125_2","escape":["normal","normal"],"weak":{"fight":"*2"}},
+"126":{"name":"ブーバー","kind":"1","base":"","type":"fire","hp":"50","special":"","skill1":"skill_126_1","skill2":"skill_126_2","escape":["normal","normal"],"weak":{"aqua":"*2"}},
 
 "1001":{"name":"きずぐすり","kind":"goods","effect":"1001","description":"自分の場のポケモンにのっているダメージカウンターを2個まで、とりのぞくことができる。"},
 "1002":{"name":"いいきずぐすり","kind":"goods","effect":"1002","description":"自分の場にいるポケモンから、エネルギーカードのついているものを1匹選ぶ。そのポケモンについているエネルギーカードを1枚トラッシュして、そのポケモンにのっているダメージカウンターを最大4個、とりのぞく。"},
@@ -87,7 +114,7 @@
 "10002":{"name":"炎エネルギー","kind":"energy","type":"fire","value":"1"},
 "10003":{"name":"水エネルギー","kind":"energy","type":"aqua","value":"1"},
 "10004":{"name":"雷エネルギー","kind":"energy","type":"thunder","value":"1"},
-"10005":{"name":"超エネルギー","kind":"energy","type":"fight","value":"1"},
-"10006":{"name":"闘エネルギー","kind":"energy","type":"esper","value":"1"},
+"10005":{"name":"超エネルギー","kind":"energy","type":"esper","value":"1"},
+"10006":{"name":"闘エネルギー","kind":"energy","type":"fight","value":"1"},
 "10011":{"name":"無色2個エネルギー","kind":"energy-sp","type":"normal","value":"2"}
 }

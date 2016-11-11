@@ -57,15 +57,7 @@
   Effects.skill_14_2 = EffectsBase.poisonByCoinToss;
 
   Effects.skill_15_1 = function(param) {
-    var $defer = $.Deferred();
-    var dialog = new CoinTossDialog(2);
-    dialog.show().then(function(response){
-      var times = response.filter(function(b){
-        return b;
-      }).length;
-      $defer.resolve(param.skill.damage * times);
-    });
-    return $defer.promise();
+    return EffectBase.pluralAttack(param, 2);
   };
   Effects.skill_15_2 = EffectsBase.poisonByCoinToss;
 
@@ -79,6 +71,64 @@
   Effects.skill_26_2 = function(param) {
     return EffectsBase.selfDamageByCoinToss(30, param.attacker);
   };
+
+  Effects.skill_84_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
+  };
+
+  Effects.skill_87_2 = EffectsBase.paralysisByCoinToss;
+
+  Effects.skill_96_2 = EffectsBase.confusionByCoinToss;
+
+  Effects.skill_101_1 = Effects.skill_25_2;
+
+  Effects.skill_109_1 = EffectsBase.poisonOrConfusionByCoinToss;
+
+  Effects.skill_113_1 = EffectsBase.damageGuardByCoinToss;
+  Effects.skill_113_2 = function(param) {
+    var $defer = $.Deferred();
+    param.attacker.hurt(80);
+    $defer.resolve();
+    return $defer.promise();
+  };
+
+  Effects.skill_114_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_114_2 = EffectsBase.poison;
+
+  Effects.skill_121_1 = function(param) {
+    var attacker = param.attacker;
+    return EffectsBase.trushEnergy(attacker, ["aqua"]).then(function(response) {
+      attacker.hurt(attacker.hp * (-1));
+    });
+  };
+  Effects.skill_121_2 = EffectsBase.paralysisByCoinToss;
+
+  Effects.skill_124_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
+  };
+  Effects.skill_124_2 = function(param) {
+    return EffectsBase.boostByDamage(param.defender, param.skill);
+  };
+
+  Effects.skill_125_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_125_2 = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        $defer.resolve(param.skill.damage + 10);
+      } else {
+        $defer.resolve(param.skill.damage);
+        param.attacker.hurt(10);
+      }
+    });
+    return $defer.promise();
+  };
+
+  Effects.skill_126_2 = Effects.skill_4_2;
+
+
+
 
 
   Effects.trainer_effect_1001 = function(eventdata, model) {
