@@ -17,16 +17,34 @@
 
     turn.attacked();
 
+    if (attacker.getStatus().indexOf(Const.Status.CONFUSION) >= 0) {
+      var dialog = new CoinTossDialog();
+      return dialog.show().then(function(response){
+        if (response[0]) {
+          return this.battle_(skill, attacker, defender, model);
+        } else {
+          attacker.hurt(30);
+          $defer.resolve();
+          return $defer.promise();
+        }
+      }.bind(this));
+    } else {
+      $defer.resolve();
+      return this.battle_(skill, attacker, defender, model);
+    }
+  };
+
+  BattleController.prototype.battle_ = function(skill, attacker, defender, model) {
     if (defender.getDefenceEffect()[Const.Status.MATCHLESS]) {
       $defer.resolve();
       return $defer.promise();
     }
 
     return this.processBeforeDamage_(skill, attacker, defender)
-        .then(function(){
-          return this.calculator_.calculate(skill, attacker, defender, model);
-        }.bind(this))
-        .then(this.processAfterDamage_.bind(this));
+    .then(function(){
+      return this.calculator_.calculate(skill, attacker, defender, model);
+    }.bind(this))
+    .then(this.processAfterDamage_.bind(this));
   };
 
   BattleController.prototype.processBeforeDamage_ = function(skill, attacker, defender) {

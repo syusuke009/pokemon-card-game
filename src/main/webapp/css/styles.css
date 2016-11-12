@@ -193,7 +193,9 @@
 }
 
 .deck {
-    height: 154px;
+    height: 146px;
+    padding: 4px;
+    margin: 8px 0;
     border: 2px solid #ccc;
 }
 .rest-card-count {
@@ -205,8 +207,8 @@
 
 .trush {
     border: 2px dashed #ccc;
-    height: 154px;
-    padding: 8px;
+    height: 146px;
+    padding: 4px;
 }
 
 .bench {
@@ -278,6 +280,9 @@
 
 .hands .card {
     display: inline-block
+}
+.bench .card {
+    margin: 4px 10.5px;
 }
 
 .type-area {

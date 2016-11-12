@@ -42,6 +42,11 @@
 
     var battleMonster = model.getBattleMonster();
     $view.find('.bench').html(openedTmpl.render({'list':model.getBench()}));
+
+    var trush = model.getTrush();
+    if (trush.length > 0) {
+      $view.find('.trush').html(openedTmpl.render({'list':[trush[trush.length - 1]]}));
+    }
   };
 
   PlayFieldView.prototype.drawSelectable = function(selectable) {

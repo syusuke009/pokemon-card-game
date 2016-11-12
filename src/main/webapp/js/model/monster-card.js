@@ -122,15 +122,15 @@
     case Const.Status.PARALYSIS:
     case Const.Status.CONFUSION:
       var idx = this.status_.indexOf(Const.Status.SLEEP);
-      if (idx => 0) {
+      if (idx >= 0) {
         this.status_.splice(idx, 1);
       }
       idx = this.status_.indexOf(Const.Status.PARALYSIS);
-      if (idx => 0) {
+      if (idx >= 0) {
         this.status_.splice(idx, 1);
       }
       idx = this.status_.indexOf(Const.Status.CONFUSION);
-      if (idx => 0) {
+      if (idx >= 0) {
         this.status_.splice(idx, 1);
       }
       break;
