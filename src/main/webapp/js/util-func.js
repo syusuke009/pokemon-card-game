@@ -18,8 +18,8 @@
     return String(kind) === 'energy' || String(kind) === 'energy-sp';
   };
 
-  UtilFunc.existsBaseMonster = function(arr){
-    return arr.some(function(card){
+  UtilFunc.existsBaseMonster = function(hands){
+    return hands.getAll().some(function(card){
       return UtilFunc.isBaseMonster(card.kind);
     });
   };
@@ -51,6 +51,12 @@
       return Const.Viewpoint.RIVAL;
     }
     return Const.Viewpoint.ME;
+  };
+
+  UtilFunc.mapToTrnId = function(cards) {
+    return cards.map(function(c) {
+      return c.trnId;
+    });
   };
 
   UtilFunc.mapEnergyToArray = function(energies) {
@@ -120,9 +126,9 @@
     var otherTypeCount = 0;
     $.each(stock, function(key, val) {
       if (key === type) {
-        specificTypeCount++;
+        specificTypeCount += val;
       } else {
-        otherTypeCount++;
+        otherTypeCount += val;
       }
     });
     if (otherTypeCount >= normalCostCount) {

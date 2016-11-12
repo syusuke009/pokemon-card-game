@@ -193,7 +193,9 @@
 }
 
 .deck {
-    height: 154px;
+    height: 146px;
+    padding: 4px;
+    margin: 8px 0;
     border: 2px solid #ccc;
 }
 .rest-card-count {
@@ -205,8 +207,8 @@
 
 .trush {
     border: 2px dashed #ccc;
-    height: 154px;
-    padding: 8px;
+    height: 146px;
+    padding: 4px;
 }
 
 .bench {
@@ -278,6 +280,9 @@
 
 .hands .card {
     display: inline-block
+}
+.bench .card {
+    margin: 4px 10.5px;
 }
 
 .type-area {
@@ -512,10 +517,10 @@
 }
 
 .card.fight {
-    background-color: #fff;
+    background-color: #e25b1a;
 }
 .card.fight:hover {
-    background-color: #fff;
+    background-color: #ce541b;
 }
 .card.fight .type-mark,
 .detail-content.fight .type-mark {
@@ -523,10 +528,10 @@
 }
 
 .card.esper {
-    background-color: #fff;
+    background-color: #722aff;
 }
 .card.esper:hover {
-    background-color: #fff;
+    background-color: #611fe2;
 }
 .card.esper .type-mark,
 .detail-content.esper .type-mark {
@@ -725,12 +730,23 @@
     vertical-align: middle;
 }
 
+.card-selection-container .required-area,
 .energy-selection-container .required-area {
     margin: 16px;
 }
+.required-area .label {
+    margin-right: 8px;
+}
+.card-selection-container .list-area,
+.energy-selection-container .list-area {
+    height: 300px;
+    overflow-y: auto;
+}
+.card-selection-container .row,
 .energy-selection-container .row {
     margin: 8px 16px;
     padding: 4px;
+    cursor: pointer;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.15), 0 -1px 2px -1px rgba(0,0,0,.1);
 }
 .energy-selection-container .types {
@@ -738,6 +754,7 @@
     margin-left: 8px;
     vertical-align: top;
 }
+.card-selection-container .caption,
 .energy-selection-container .caption {
     display: inline-block;
     width: 200px;

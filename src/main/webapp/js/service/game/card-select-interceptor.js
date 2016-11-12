@@ -68,5 +68,12 @@
     };
   };
 
+  CardSelectInterceptor.prototype.forEffect = function($defer) {
+    this.obj_ = $defer;
+    this.func_ = function($defer, eventdata, model) {
+      $defer.resolve(eventdata);
+      return false;
+    };
+  };
 
 })(jQuery);

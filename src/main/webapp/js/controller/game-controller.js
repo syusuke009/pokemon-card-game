@@ -29,9 +29,7 @@
   };
 
   GameController.prototype.bindEvents_ = function() {
-    this.view_.getElement().on(ApplicationView.EventType.SELECT_CARD,
-        this.onSelectCard_.bind(this));
-
+    this.view_.getElement().on(ApplicationView.EventType.SELECT_CARD, this.onSelectCard_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BATTLE, this.onAssignBattle_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BENCH, this.onAssignBench_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.EVOLUTE, this.onEvolute_.bind(this));
@@ -40,6 +38,9 @@
     this.view_.getElement().on(ApplicationView.EventType.ATTACK, this.onAttack_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ESCAPE, this.onEscape_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.TURN_END, this.turnEnd.bind(this));
+
+    Effects.getEventTarget().on(Effects.EventType.REQUEST_SELECT, this.onRequestSelect_.bind(this));
+    Effects.getEventTarget().on(Effects.EventType.REQUEST_REDRAW_FIELD, this.onRequestRedrawField_.bind(this));
   };
 
   GameController.prototype.onSelectCard_ = function(e, data) {
@@ -119,9 +120,11 @@
       var effectFunc = this.effectDao_.getTrainerEffect(card.code);
       this.onSelectInterceptor_.forUseTrainer(effectFunc);
     } else {
-      this.effectDao_.getTrainerEffect(card.code)(this.model_);
-      field.trush(card);
-      this.view_.redrawField(this.model_);
+      var bool = this.effectDao_.getTrainerEffect(card.code)(this.model_);
+      field.getTrush().trush(card);
+      if (bool !== false) {
+        this.view_.redrawField(this.model_);
+      }
     }
   };
 
@@ -163,8 +166,7 @@
 
     var escaped = field.getBattleMonster();
 
-    var dialog = new EnergySelectionDialog();
-    dialog.show(escaped.getEnergy(), escaped.escapeCost).then(function(trushed){
+    var afterTrushed = function(trushed){
 
       trushed.forEach(function(c) {
         escaped.removeEnergy(c);
@@ -184,8 +186,28 @@
         this.view_.redrawField(this.model_);
       }.bind(this));
 
-    }.bind(this));
+    }.bind(this);
 
+    if (escaped.escapeCost.length === 0) {
+      afterTrushed([]);
+    } else {
+      var dialog = new EnergySelectionDialog();
+      dialog.show(escaped.getEnergy(), escaped.escapeCost).then(afterTrushed);
+    }
+  };
+
+  GameController.prototype.onRequestSelect_ = function(e, selectables, $defer) {
+    this.view_.drawSelectable(selectables);
+    this.onSelectInterceptor_.forEffect($defer);
+  };
+
+  GameController.prototype.onRequestRedrawField_ = function(e) {
+    this.view_.redrawField(this.model_);
+  };
+
+  GameController.prototype.onRequestRedrawDetail_ = function(e, card, area) {
+    var control = this.actionButtonController_.control(card, this.model_, area);
+    this.view_.redrawDetail(card, area, control);
   };
 
   GameController.prototype.turnStart = function() {

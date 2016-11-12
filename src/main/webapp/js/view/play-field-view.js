@@ -33,7 +33,7 @@
     $view.find('.side').html(sideTmpl.render({'list':model.getSide()}));
 
     var openedTmpl = Hogan.compile($('#opened-card-template').text());
-    $view.find('.hands').html(openedTmpl.render({'list':model.getHands()}));
+    $view.find('.hands').html(openedTmpl.render({'list':model.getHands().getAll()}));
 
     var battleMonster = model.getBattleMonster();
     if (battleMonster !== null) {
@@ -42,6 +42,11 @@
 
     var battleMonster = model.getBattleMonster();
     $view.find('.bench').html(openedTmpl.render({'list':model.getBench()}));
+
+    var trush = model.getTrush();
+    if (!trush.isEmpty()) {
+      $view.find('.trush').html(openedTmpl.render({'list':[trush.getTop()]}));
+    }
   };
 
   PlayFieldView.prototype.drawSelectable = function(selectable) {

@@ -59,7 +59,7 @@
 
   GameSetupper.prototype.revertHands_ = function(field) {
     var deck = field.getDeck();
-    var trnIds = $.map(field.getHands(), function(h) {
+    var trnIds = $.map(field.getHands().getAll(), function(h) {
       return h.trnId;
     });
     $.each(trnIds, function(idx, trnId) {

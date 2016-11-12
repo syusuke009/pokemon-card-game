@@ -10,7 +10,7 @@
     this.type = mst.type;
     this.typeCaption = UtilFunc.getTypeCaption(this.type);
     this.name = mst.name;
-    this.hp = mst.hp;
+    this.hp = Number(mst.hp);
     this.baseCardCode = mst.base;
 
     this.special = mst.special;
@@ -40,6 +40,16 @@
     '3': '2進化ポケモン'
   };
 
+  MonsterCard.EventType = {
+      REMOVE : 'monster-remove'
+  };
+  MonsterCard.getEventTarget = function() {
+    return $(document.body);
+  };
+  MonsterCard.dispatchRemoveEvent = function(arr) {
+    MonsterCard.getEventTarget().trigger(MonsterCard.EventType.REMOVE, [arr]);
+  };
+
   MonsterCard.prototype.addEnergy = function(e) {
     this.energy_.push(e);
   };
@@ -53,7 +63,7 @@
       return e.trnId === c.trnId;
     });
     if (idx >= 0) {
-      this.energy_.splice(idx, 1);
+      MonsterCard.dispatchRemoveEvent(this.energy_.splice(idx, 1));
     }
   };
 
@@ -65,6 +75,37 @@
     if (this.damage_ < 0) {
       this.damage_ = 0;
     }
+  };
+
+  MonsterCard.prototype.trush = function() {
+    var targets = [];
+    this.energy_.forEach(function(e) {
+      targets.push(e);
+    });
+    this.getAllBase().forEach(function(b) {
+      targets.push(b);
+    });
+    $.each(this.attackEffect_, function(key, value) {
+      if (!!value.trnId) {
+        targets.push(value);
+      }
+    });
+    $.each(this.defenceEffect_, function(key, value) {
+      if (!!value.trnId) {
+        targets.push(value);
+      }
+    });
+
+    this.damage_ = 0;
+    this.status_ = [];
+    this.energy_ = [];
+    this.attackEffectReservation_ = {};
+    this.attackEffect_ = {};
+    this.defenceEffect_ = {};
+    this.evolutedBase_ = null;
+
+    targets.push(this);
+    MonsterCard.dispatchRemoveEvent(targets);
   };
 
   MonsterCard.prototype.getDamageCount = function() {
@@ -91,15 +132,15 @@
     case Const.Status.PARALYSIS:
     case Const.Status.CONFUSION:
       var idx = this.status_.indexOf(Const.Status.SLEEP);
-      if (idx => 0) {
+      if (idx >= 0) {
         this.status_.splice(idx, 1);
       }
       idx = this.status_.indexOf(Const.Status.PARALYSIS);
-      if (idx => 0) {
+      if (idx >= 0) {
         this.status_.splice(idx, 1);
       }
       idx = this.status_.indexOf(Const.Status.CONFUSION);
-      if (idx => 0) {
+      if (idx >= 0) {
         this.status_.splice(idx, 1);
       }
       break;

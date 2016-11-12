@@ -2,6 +2,23 @@
 
   Effects = {};
 
+  Effects.EventType = {
+      REQUEST_SELECT : 'request-select',
+      REQUEST_REDRAW_FIELD : 'request-redraw-field',
+      REQUEST_REDRAW_DETAIL : 'request-redraw-detail',
+  };
+  Effects.getEventTarget = function() {
+    return $(document.body);
+  };
+  Effects.dispatchSelectRequestEvent = function(selectables, $defer) {
+    if (!selectables) throw 'need to pass parameger of selectable trnIds';
+    if (!$defer) throw 'need to pass parameger of $.Deferred';
+    Effects.getEventTarget().trigger(Effects.EventType.REQUEST_SELECT, [selectables, $defer]);
+  };
+  Effects.dispatchRedrawFieldRequestEvent = function() {
+    Effects.getEventTarget().trigger(Effects.EventType.REQUEST_REDRAW_FIELD);
+  };
+
   Effects.skill_1_1 = function(param) {
     var $defer = $.Deferred();
     var d = param.attacker.getDamageCount();
@@ -40,15 +57,7 @@
   Effects.skill_14_2 = EffectsBase.poisonByCoinToss;
 
   Effects.skill_15_1 = function(param) {
-    var $defer = $.Deferred();
-    var dialog = new CoinTossDialog(2);
-    dialog.show().then(function(response){
-      var times = response.filter(function(b){
-        return b;
-      }).length;
-      $defer.resolve(param.skill.damage * times);
-    });
-    return $defer.promise();
+    return EffectBase.pluralAttack(param, 2);
   };
   Effects.skill_15_2 = EffectsBase.poisonByCoinToss;
 
@@ -62,6 +71,64 @@
   Effects.skill_26_2 = function(param) {
     return EffectsBase.selfDamageByCoinToss(30, param.attacker);
   };
+
+  Effects.skill_84_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
+  };
+
+  Effects.skill_87_2 = EffectsBase.paralysisByCoinToss;
+
+  Effects.skill_96_2 = EffectsBase.confusionByCoinToss;
+
+  Effects.skill_101_1 = Effects.skill_25_2;
+
+  Effects.skill_109_1 = EffectsBase.poisonOrConfusionByCoinToss;
+
+  Effects.skill_113_1 = EffectsBase.damageGuardByCoinToss;
+  Effects.skill_113_2 = function(param) {
+    var $defer = $.Deferred();
+    param.attacker.hurt(80);
+    $defer.resolve();
+    return $defer.promise();
+  };
+
+  Effects.skill_114_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_114_2 = EffectsBase.poison;
+
+  Effects.skill_121_1 = function(param) {
+    var attacker = param.attacker;
+    return EffectsBase.trushEnergy(attacker, ["aqua"]).then(function(response) {
+      attacker.hurt(attacker.hp * (-1));
+    });
+  };
+  Effects.skill_121_2 = EffectsBase.paralysisByCoinToss;
+
+  Effects.skill_124_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
+  };
+  Effects.skill_124_2 = function(param) {
+    return EffectsBase.boostByDamage(param.defender, param.skill);
+  };
+
+  Effects.skill_125_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_125_2 = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        $defer.resolve(param.skill.damage + 10);
+      } else {
+        $defer.resolve(param.skill.damage);
+        param.attacker.hurt(10);
+      }
+    });
+    return $defer.promise();
+  };
+
+  Effects.skill_126_2 = Effects.skill_4_2;
+
+
+
 
 
   Effects.trainer_effect_1001 = function(eventdata, model) {
@@ -96,7 +163,13 @@
     var viewpoint = UtilFunc.getViewpoint(eventdata.trnId);
     var field = model.getField(viewpoint);
     var target = field.selectFrom(eventdata.area, eventdata.trnId);
-    target.hurt(-40);
+    var dialog = new EnergySelectionDialog();
+    dialog.show(target.getEnergy(), ['normal']).then(function(response){
+      response.forEach(function(trushed){
+        target.removeEnergy(trushed);
+      })
+      target.hurt(-40);
+    });
   };
   Effects.trainer_condition_1002 = function(model) {
     return Effects.trainer_target_1002(model).length > 0;
@@ -146,6 +219,438 @@
   };
   Effects.trainer_target_1003 = null;
 
+  Effects.trainer_effect_1004 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var trush = field.getTrush();
+    var dialog = new CardSelectionDialog();
+    dialog.show(trush.getAll().filter(function(c) {
+      return c.kind === '1';
+    }), 1).then(function(response) {
+      var card = field.getTrush().pick(response[0].trnId);
+      card.hurt(Math.floor(card.hp / 2 / 10) * 10);
+      field.putBench(card);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+  };
+  Effects.trainer_condition_1004 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var trush = field.getTrush();
+    return (field.getBench().length < 5) && trush.getAll().some(function(c) {
+      return c.kind === '1';
+    });
+  };
+  Effects.trainer_target_1004 = null;
+
+  Effects.trainer_effect_1007 = function(model) {
+    var viewpoint = UtilFunc.reverseViewpoint(model.getTurn().whoseTurn());
+    var field = model.getField(viewpoint);
+    var trush = field.getTrush();
+    var dialog = new CardSelectionDialog();
+    dialog.show(trush.getAll().filter(function(c) {
+      return c.kind === '1';
+    }), 1).then(function(response) {
+      var card = field.getTrush().pick(response[0].trnId);
+      field.putBench(card);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+  };
+  Effects.trainer_condition_1007 = function(model) {
+    var viewpoint = UtilFunc.reverseViewpoint(model.getTurn().whoseTurn());
+    var field = model.getField(viewpoint);
+    var trush = field.getTrush();
+    return trush.getAll().some(function(c) {
+      return c.kind === '1';
+    });
+  };
+  Effects.trainer_target_1007 = null;
+
+  Effects.trainer_effect_1009 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var trush = field.getTrush();
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var $defer = $.Deferred();
+      var hand = hands.pick(response.trnId);
+      trush.trush(hand);
+      Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(hands.getAll()), $defer);
+      return $defer.promise();
+    }).then(function(response) {
+      var hand = hands.pick(response.trnId);
+      trush.trush(hand);
+
+      var dialog = new CardSelectionDialog();
+      return dialog.show(trush.getAll().filter(function(card) {
+        return UtilFunc.isTrainer(card.kind);
+      }), 1);
+    }).then(function(response) {
+      var card = trush.pick(response[0].trnId);
+      hands.add(card);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1009 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return (field.getHands().size() > 2) && field.getTrush().getAll().some(function(card) {
+      return UtilFunc.isTrainer(card.kind);
+    });
+  };
+  Effects.trainer_target_1009 = null;
+
+  Effects.trainer_effect_1010 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var deck = field.getDeck();
+    var trush = field.getTrush();
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var $defer = $.Deferred();
+      var hand = hands.pick(response.trnId);
+      trush.trush(hand);
+      Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(hands.getAll()), $defer);
+      return $defer.promise();
+    }).then(function(response) {
+      var hand = hands.pick(response.trnId);
+      trush.trush(hand);
+
+      var dialog = new CardSelectionDialog();
+      return dialog.show(deck.getAll(), 1);
+    }).then(function(response) {
+      var card = deck.pick(response[0].trnId);
+      hands.add(card);
+      deck.shuffle();
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1010 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return (field.getHands().size() > 2) && (!field.getDeck().isEmpty());
+  };
+  Effects.trainer_target_1010 = null;
+
+  Effects.trainer_effect_1011 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var candidates = [];
+    var field = model.getField(viewpoint);
+    candidates.push(field.getBattleMonster());
+    field.getBench().forEach(function(c) {
+      candidates.push(c);
+    });
+    var field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    candidates.push(field.getBattleMonster());
+    field.getBench().forEach(function(c) {
+      candidates.push(c);
+    });
+    candidates.forEach(function(target) {
+      var damageCount = target.getDamageCount();
+      if (damageCount > 0) {
+        target.hurt(damageCount * (-10));
+        $.each($.extend([], target.getEnergy()), function(idx, e) {
+          target.removeEnergy(e);
+        });
+      }
+    });
+  };
+  Effects.trainer_condition_1011 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monster = field.getBattleMonster();
+    if (monster.getDamageCount() > 0) {
+      return true;
+    }
+    if (field.getBench().some(function(c) {
+      return c.getDamageCount() > 0;
+    })) {
+      return true;
+    }
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    monster = field.getBattleMonster();
+    if (monster.getDamageCount() > 0) {
+      return true;
+    }
+    if (field.getBench().some(function(c) {
+      return c.getDamageCount() > 0;
+    })) {
+      return true;
+    }
+    return false;
+  };
+  Effects.trainer_target_1011 = null;
+
+
+
+  Effects.trainer_effect_1013 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var monster = field.getBattleMonster();
+      field.setBattleMonster(field.pickBench(response.trnId));
+      field.putBench(monster);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1013 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getBench().length > 0;
+  };
+  Effects.trainer_target_1013 = null;
+
+  Effects.trainer_effect_1015 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var trush = field.getTrush();
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var hand = hands.pick(response.trnId);
+      trush.trush(hand);
+
+      var dialog = new CardSelectionDialog();
+      return dialog.show(trush.getAll().filter(function(card) {
+        return card.kind === 'energy';
+      }), 2);
+    }).then(function(response) {
+      response.forEach(function(c) {
+        var card = trush.pick(c.trnId);
+        hands.add(card);
+      });
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1015 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return (field.getHands().size() > 1) && (field.getTrush().getAll().filter(function(card) {
+      return card.kind === 'energy';
+    }).length >= 2);
+  };
+  Effects.trainer_target_1015 = null;
+
+  Effects.trainer_effect_1016 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var trush = field.getTrush();
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var $defer = $.Deferred();
+      var card = field.selectFrom(response.area, response.trnId);
+
+      var dialog = new CardSelectionDialog();
+      dialog.show(card.getEnergy(), 1).then(function(res) {
+        $defer.resolve({
+          'target':response,
+          'energy': res
+        });
+      });
+      return $defer.promise();
+    }).then(function(response) {
+      response.energy.forEach(function(e) {
+        var target = field.selectFrom(response.target.area, response.target.trnId);
+        target.removeEnergy(e);
+      });
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    var targets = [];
+    targets.push(field.getBattleMonster());
+    field.getBench().forEach(function(b) {
+      targets.push(b);
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets.filter(function(card) {
+      return card.getEnergy().length > 0;
+    })), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1016 = function(model) {
+    var viewpoint = UtilFunc.reverseViewpoint(model.getTurn().whoseTurn());
+    var field = model.getField(viewpoint);
+    var targets = [];
+    targets.push(field.getBattleMonster());
+    field.getBench().forEach(function(b) {
+      targets.push(b);
+    });
+    return targets.filter(function(card) {
+      return card.getEnergy().length > 0;
+    }).length > 0;
+  };
+  Effects.trainer_target_1016 = null;
+
+  Effects.trainer_effect_1017 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var myField = model.getField(viewpoint);
+    var rivalField = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var $defer = $.Deferred();
+      var card = myField.selectFrom(response.area, response.trnId);
+
+      var dialog = new CardSelectionDialog();
+      dialog.show(card.getEnergy(), 1).then(function(res) {
+        $defer.resolve({
+          'target':response,
+          'energy': res
+        });
+      });
+      return $defer.promise();
+    }).then(function(response) {
+      var $defer = $.Deferred();
+      var target = myField.selectFrom(response.target.area, response.target.trnId);
+      response.energy.forEach(function(e) {
+        target.removeEnergy(e);
+      });
+
+      var targets = [];
+      targets.push(rivalField.getBattleMonster());
+      rivalField.getBench().forEach(function(b) {
+        targets.push(b);
+      });
+      Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets.filter(function(card) {
+        return card.getEnergy().length >= 2;
+      })), $defer);
+      return $defer.promise();
+    }).then(function(response) {
+      var $defer = $.Deferred();
+      var card = rivalField.selectFrom(response.area, response.trnId);
+
+      var dialog = new CardSelectionDialog();
+      dialog.show(card.getEnergy(), 2).then(function(res) {
+        $defer.resolve({
+          'target':response,
+          'energy': res
+        });
+      });
+      return $defer.promise();
+    }).then(function(response) {
+      var $defer = $.Deferred();
+      var target = rivalField.selectFrom(response.target.area, response.target.trnId);
+      response.energy.forEach(function(e) {
+        target.removeEnergy(e);
+      });
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    var targets = [];
+    targets.push(myField.getBattleMonster());
+    myField.getBench().forEach(function(b) {
+      targets.push(b);
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets.filter(function(card) {
+      return card.getEnergy().length > 0;
+    })), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1017 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var targets = [];
+    field = model.getField(viewpoint);
+    targets = [];
+    targets.push(field.getBattleMonster());
+    field.getBench().forEach(function(b) {
+      targets.push(b);
+    });
+    var mineCondition = targets.filter(function(card) {
+      return card.getEnergy().length > 0;
+    }).length > 0;
+
+    viewpoint = UtilFunc.reverseViewpoint(model.getTurn().whoseTurn());
+    field = model.getField(viewpoint);
+    targets = [];
+    targets.push(field.getBattleMonster());
+    field.getBench().forEach(function(b) {
+      targets.push(b);
+    });
+    var rivalCondition = targets.filter(function(card) {
+      return card.getEnergy().length >= 2;
+    }).length > 0;
+
+    return mineCondition && rivalCondition;
+  };
+  Effects.trainer_target_1017 = null;
+
+  Effects.trainer_effect_1019 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var deck = field.getDeck();
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var $defer = $.Deferred();
+      var hand = hands.pick(response.trnId);
+      deck.add(hand);
+
+      Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
+      return $defer.promise();
+    }).then(function(response) {
+      var hand = hands.pick(response.trnId);
+      deck.add(hand);
+
+      deck.shuffle();
+      hands.add(deck.draw());
+
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1019 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getHands().size() > 2;
+  };
+  Effects.trainer_target_1019 = null;
+
+  Effects.trainer_effect_1020 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
+    var field = model.getField(viewpoint);
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var monster = field.getBattleMonster();
+      field.setBattleMonster(field.pickBench(response.trnId));
+      field.putBench(monster);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1020 = function(model) {
+    var viewpoint = UtilFunc.reverseViewpoint(model.getTurn().whoseTurn());
+    var field = model.getField(viewpoint);
+    return field.getBench().length > 0;
+  };
+  Effects.trainer_target_1020 = null;
+
 
 
 
@@ -153,10 +658,10 @@
   Effects.trainer_effect_8001 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
     var field = model.getField(viewpoint);
-    field.getHands().map(function(c){
+    field.getHands().getAll().map(function(c){
       return c.trnId;
     }).forEach(function(trnId) {
-      field.trush(field.pickHand(trnId));
+      field.getTrush().trush(field.pickHand(trnId));
     });
     for (var i = 0; i < 7; i++) {
       field.addHand(field.getDeck().draw());
@@ -182,4 +687,99 @@
     return field.getDeck().size() >= 2;
   };
   Effects.trainer_target_8002 = null;
+
+  Effects.trainer_effect_8003 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    // TODO
+  };
+  Effects.trainer_condition_8003 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    // TODO
+  };
+  Effects.trainer_target_8003 = null;
+
+  Effects.trainer_effect_8004 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var mst = new CardMstDao();
+    var evolutionTrnId;
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var $defer = $.Deferred();
+      evolutionTrnId = response.trnId;
+      var secondEvo = field.selectFrom(response.area, response.trnId);
+      var firstEvo = CardFactory.create({}, mst.get(secondEvo.baseCardCode));
+      var bases = UtilFunc.findEvolutionBase(firstEvo, field, turn);
+      Effects.dispatchSelectRequestEvent(bases, $defer);
+      return $defer.promise();
+    }).then(function(response) {
+      var base = field.selectFrom(response.area, response.trnId);
+      var evoluted = field.pickHand(evolutionTrnId);
+      evoluted.evolute(base);
+      field.override(response.area, base, evoluted);
+      turn.newAssign(evolutionTrnId);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    var secondEvos = field.getHands().getAll().filter(function(card) {
+      return card.kind === '3';
+    }).filter(function(secondEvo) {
+      var firstEvo = CardFactory.create({}, mst.get(secondEvo.baseCardCode));
+      var bases = UtilFunc.findEvolutionBase(firstEvo, field, turn);
+      return bases.length > 0;
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(secondEvos), $defer);
+    return false;
+  };
+  Effects.trainer_condition_8004 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var mst = new CardMstDao();
+    var targets = field.getHands().filter(function(card) {
+      return card.kind === '3';
+    }).filter(function(secondEvo) {
+      var firstEvo = CardFactory.create({}, mst.get(secondEvo.baseCardCode));
+      var bases = UtilFunc.findEvolutionBase(firstEvo, field, turn);
+      return bases.length > 0;
+    });
+    return targets.length > 0;
+  };
+  Effects.trainer_target_8004 = null;
+
+  Effects.trainer_effect_8005 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    // TODO
+  };
+  Effects.trainer_condition_8005 = function(model) {
+    // TODO
+  };
+  Effects.trainer_target_8005 = null;
+
+  Effects.trainer_effect_8006 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
+    var field = model.getField(viewpoint);
+    var deck = field.getDeck();
+    field.getHands().getAll().map(function(hand) {
+      return hand.trnId;
+    }).forEach(function(trnId) {
+      deck.add(field.pickHand(trnId));
+    });
+    deck.shuffle();
+    for (var i = 0; i < 7; i++) {
+      field.addHand(deck.draw());
+    }
+  };
+  Effects.trainer_condition_8006 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
+    var field = model.getField(viewpoint);
+    return !field.getHands().isEmpty();
+  };
+  Effects.trainer_target_8006 = null;
 })(jQuery);

@@ -111,14 +111,14 @@
     var count = 0;
     var monster = field.getBattleMonster();
     if (isDead(monster)) {
-      field.trush(monster);
+      monster.trush();
       field.setBattleMonster(null);
       count++;
       MessageDisplay.println(monster.name + ' はたおれた！');
     }
     $.each(field.getBench(), function(idx, card) {
       if (isDead(card)) {
-        field.trush(field.pickBench(card.trnId));
+        field.pickBench(card.trnId).trush();
         count++;
         MessageDisplay.println(card.name + ' はたおれた！');
       }

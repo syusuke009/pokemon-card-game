@@ -56,8 +56,8 @@
           '</div>';
     });
     return '<div class="energy-selection-container">' +
-        '<div class="required-area"><span>必要なエネルギー</span>' + requiretypes + '</div>' +
-        html + '</div>';
+        '<div class="required-area"><span class="label">必要なエネルギー</span>' + requiretypes + '</div><div class="list-area">' +
+        html + '</div></div>';
   };
 
   EnergySelectionDialog.prototype.createButtonsDom_ = function() {
@@ -66,6 +66,7 @@
 
   EnergySelectionDialog.prototype.bindEvents_ = function($content, $buttons) {
     $content.on(FormComponents.EventType.CHANGE_CHECKED, this.onChangeChecked_.bind(this));
+    $content.on('click', '.row', this.onClickRow_.bind(this));
     $buttons.on('click', '.clear-btn', this.onClickClear_.bind(this));
     $buttons.on('click', '.ok-btn', this.onClickOk_.bind(this));
   };
@@ -103,6 +104,13 @@
 
   EnergySelectionDialog.prototype.onChangeChecked_ = function(e) {
     this.refreshCheckboxControl_();
+  };
+
+  EnergySelectionDialog.prototype.onClickRow_ = function(e) {
+    if ($(e.target).hasClass('checkbox')) {
+      return;
+    }
+    $(e.currentTarget).find('.checkbox').click();
   };
 
   EnergySelectionDialog.prototype.onClickClear_ = function(e) {
