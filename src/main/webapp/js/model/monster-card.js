@@ -40,6 +40,16 @@
     '3': '2進化ポケモン'
   };
 
+  MonsterCard.EventType = {
+      REMOVE : 'monster-remove'
+  };
+  MonsterCard.getEventTarget = function() {
+    return $(document.body);
+  };
+  MonsterCard.dispatchRemoveEvent = function(arr) {
+    MonsterCard.getEventTarget().trigger(MonsterCard.EventType.REMOVE, [arr]);
+  };
+
   MonsterCard.prototype.addEnergy = function(e) {
     this.energy_.push(e);
   };
@@ -53,7 +63,7 @@
       return e.trnId === c.trnId;
     });
     if (idx >= 0) {
-      this.energy_.splice(idx, 1);
+      MonsterCard.dispatchRemoveEvent(this.energy_.splice(idx, 1));
     }
   };
 
@@ -95,7 +105,7 @@
     this.evolutedBase_ = null;
 
     targets.push(this);
-    return targets;
+    MonsterCard.dispatchRemoveEvent(targets);
   };
 
   MonsterCard.prototype.getDamageCount = function() {

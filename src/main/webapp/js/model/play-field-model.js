@@ -3,15 +3,21 @@
   PlayField = function(deck) {
 
     this.deck_ = deck;
-    this.trush_ = [];
+    this.trush_ = new Trush();
 
     this.side_;
 
     this.battleMonster_ = null;
-    this.bench_ = [];
+    this.bench_ = new Bench();
 
-    this.hands_ = [];
+    this.hands_ = new Hands();
 
+    this.managedIds = {};
+    this.deck_.getAll().forEach(function(card){
+      this.managedIds[card.trnId] = true;
+    }.bind(this));
+
+    this.bindEvents_();
   };
 
   PlayField.prototype.getDeck = function() {
@@ -20,10 +26,6 @@
 
   PlayField.prototype.getTrush = function() {
     return this.trush_;
-  };
-
-  PlayField.prototype.trush = function(card) {
-    this.trush_.push(card);
   };
 
   PlayField.prototype.pickSide = function() {
@@ -50,32 +52,23 @@
   };
 
   PlayField.prototype.putBench = function(card) {
-    card.backToBench();
-    this.bench_.push(card);
+    this.bench_.put(card);
   };
 
   PlayField.prototype.getBench = function() {
-    return this.bench_;
+    return this.bench_.getAll();
   };
 
   PlayField.prototype.selectBench = function(trnId) {
-    return this.bench_.find(function(e){
-      return (e.trnId === trnId);
-    });
+    return this.bench_.select(trnId);
   };
 
   PlayField.prototype.pickBench = function(trnId) {
-    var idx = this.bench_.findIndex(function(e){
-      return (e.trnId === trnId);
-    });
-    if (idx < 0) return null;
-    var selected = this.bench_[idx];
-    this.bench_.splice(idx, 1);
-    return selected;
+    return this.bench_.pick(trnId);
   };
 
   PlayField.prototype.addHand = function(card) {
-    return this.hands_.push(card);
+    return this.hands_.add(card);
   };
 
   PlayField.prototype.getHands = function() {
@@ -83,19 +76,11 @@
   };
 
   PlayField.prototype.selectHand = function(trnId) {
-    return this.hands_.find(function(e){
-      return (e.trnId === trnId);
-    });
+    return this.hands_.select(trnId);
   };
 
   PlayField.prototype.pickHand = function(trnId) {
-    var idx = this.hands_.findIndex(function(e){
-      return (e.trnId === trnId);
-    });
-    if (idx < 0) return null;
-    var selected = this.hands_[idx];
-    this.hands_.splice(idx, 1);
-    return selected;
+    return this.hands_.pick(trnId);
   };
 
   PlayField.prototype.selectFrom = function(area, trnId) {
@@ -120,16 +105,22 @@
       throw 'Unsupport override case: ' + area
       break;
     case Const.Area.BENCH:
-      var idx = this.bench_.findIndex(function(c){
-        return c.trnId === oldCard.trnId;
-      });
-      if (idx >= 0) {
-        this.bench_[idx] = newCard;
-      }
+      this.bench_.replace(oldCard, newCard);
       break;
     case Const.Area.BATTLE_MONSTER:
       this.setBattleMonster(newCard);
       break;
     }
+  };
+
+  PlayField.prototype.bindEvents_ = function() {
+    MonsterCard.getEventTarget().on(MonsterCard.EventType.REMOVE, function(e, arr) {
+      var trush = this.getTrush();
+      arr.filter(function(c) {
+        return this.managedIds[c.trnId];
+      }.bind(this)).forEach(function(c) {
+        trush.trush(c);
+      }.bind(this));
+    }.bind(this));
   };
 })(jQuery);

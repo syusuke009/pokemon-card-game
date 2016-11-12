@@ -121,7 +121,7 @@
       this.onSelectInterceptor_.forUseTrainer(effectFunc);
     } else {
       var bool = this.effectDao_.getTrainerEffect(card.code)(this.model_);
-      field.trush(card);
+      field.getTrush().trush(card);
       if (bool !== false) {
         this.view_.redrawField(this.model_);
       }
