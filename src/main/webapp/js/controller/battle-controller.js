@@ -76,6 +76,7 @@
       param.damage = response.damage;
       param.attacker = response.attacker;
       param.defender = response.defender;
+      param.model = response.model;
       effect(param).then(function(){
         $defer.resolve();
       });

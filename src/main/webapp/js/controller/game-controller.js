@@ -241,9 +241,10 @@
     }
     var $defer = this.pokemonCheck_.check(this.model_);
     $defer.then(function(res){
-      var $deferMyBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.ME);
-      var $deferRivalBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.RIVAL);
-      return $.when($deferMyBattle, $deferRivalBattle);
+      return this.exchangeIfDying_(this.model_, Const.Viewpoint.ME).then(function(my) {
+        var $deferRivalBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.RIVAL);
+        return $.when($.Deferred().resolve(my).promise(), $deferRivalBattle);
+      }.bind(this));
     }.bind(this)).then(function(my, rival){
       // side clear
       var mySide = myField.getSide();
