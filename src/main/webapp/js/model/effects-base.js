@@ -121,6 +121,13 @@
     return $defer.promise();
   };
 
+  EffectsBase.selfDamage = function(damage, param) {
+    var $defer = $.Deferred();
+    param.attacker.hurt(damage);
+    $defer.resolve();
+    return $defer.promise();
+  };
+
   EffectsBase.selfDamageByCoinToss = function(damage, attacker) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
@@ -140,4 +147,28 @@
     $defer.resolve(Math.ceil(rest / 2) * 10);
     return $defer.promise();
   };
+
+  EffectsBase.benchDamage = function(field, damage) {
+    var $defer = $.Deferred();
+    field.getBench().forEach(function(card) {
+      card.hurt(damage);
+    });
+    $defer.resolve();
+    return $defer.promise();
+  };
+
+  EffectsBase.suicideBombing = function(param, benchDamage) {
+    param.attacker.hurt(param.damage);
+    var viewpoint = param.model.getTurn().whoseTurn();
+    var $d1 = EffectsBase.benchDamage(param.model.getField(viewpoint), benchDamage);
+    var $d2 = EffectsBase.benchDamage(param.model.getField(UtilFunc.reverseViewpoint(viewpoint)), benchDamage);
+    return $.when($d1, $d2);
+  };
+
+  EffectsBase.refresh = function(param, cost) {
+    var attacker = param.attacker;
+    return EffectsBase.trushEnergy(attacker, cost).then(function(response) {
+      attacker.hurt(attacker.hp * (-1));
+    });
+  }
 })(jQuery);

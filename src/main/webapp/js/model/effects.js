@@ -72,8 +72,57 @@
     return EffectsBase.selfDamageByCoinToss(30, param.attacker);
   };
 
+  Effects.skill_37_1 = EffectsBase.confusionByCoinToss;
+
+  Effects.skill_38_1 = function(param) {
+    var $defer = $.Deferred();
+    var viewpoint = param.model.getTurn().whoseTurn();
+    var field = param.model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    var bench = field.getBench();
+    if (bench.length === 0) {
+      $defer.resolve();
+      return $defer.promise();
+    }
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(bench), $defer);
+    return $defer.promise().then(function(response) {
+      field.putBench(field.getBattleMonster());
+      var card = field.pickBench(response.trnId);
+      field.setBattleMonster(card);
+      return $.Deferred().resolve().promise();
+    });
+  };
+  Effects.skill_38_2 = Effects.skill_4_2;
+
+  Effects.skill_51_2 = function(param) {
+    var viewpoint = param.model.getTurn().whoseTurn();
+    return EffectsBase.benchDamage(param.model.getField(viewpoint), 10);
+  };
+
+  Effects.skill_59_1 = Effects.skill_4_2;
+  Effects.skill_59_2 = function(param) {
+    return EffectsBase.selfDamage(30, param);
+  };
+
+  Effects.skill_63_1 = EffectsBase.paralysisByCoinToss;
+
+  Effects.skill_64_1 = function(param) {
+    return EffectsBase.refresh(param, ["esper"]);
+  };
+
+  Effects.skill_65_1 = EffectsBase.confusionByCoinToss;
+
   Effects.skill_84_1 = function(param) {
     return EffectsBase.pluralAttack(param, 2);
+  };
+
+  Effects.skill_81_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_81_2 = function(param) {
+    return EffectsBase.suicideBombing(param, 10);
+  };
+
+  Effects.skill_82_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_82_2 = function(param) {
+    return EffectsBase.suicideBombing(param, 20);
   };
 
   Effects.skill_87_2 = EffectsBase.paralysisByCoinToss;
@@ -86,20 +135,14 @@
 
   Effects.skill_113_1 = EffectsBase.damageGuardByCoinToss;
   Effects.skill_113_2 = function(param) {
-    var $defer = $.Deferred();
-    param.attacker.hurt(80);
-    $defer.resolve();
-    return $defer.promise();
+    return EffectsBase.selfDamage(80, param);
   };
 
   Effects.skill_114_1 = EffectsBase.paralysisByCoinToss;
   Effects.skill_114_2 = EffectsBase.poison;
 
   Effects.skill_121_1 = function(param) {
-    var attacker = param.attacker;
-    return EffectsBase.trushEnergy(attacker, ["aqua"]).then(function(response) {
-      attacker.hurt(attacker.hp * (-1));
-    });
+    return EffectsBase.refresh(param, ["aqua"]);
   };
   Effects.skill_121_2 = EffectsBase.paralysisByCoinToss;
 
@@ -126,6 +169,14 @@
   };
 
   Effects.skill_126_2 = Effects.skill_4_2;
+
+  Effects.skill_129_1 = function(param) {
+    var $defer = $.Deferred();
+    $defer.resolve(param.attacker.getDamageCount() * 10);
+    return $defer.promise();
+  };
+
+  Effects.skill_130_2 = EffectsBase.paralysisByCoinToss;
 
 
 
@@ -738,7 +789,7 @@
     var viewpoint = turn.whoseTurn();
     var field = model.getField(viewpoint);
     var mst = new CardMstDao();
-    var targets = field.getHands().filter(function(card) {
+    var targets = field.getHands().getAll().filter(function(card) {
       return card.kind === '3';
     }).filter(function(secondEvo) {
       var firstEvo = CardFactory.create({}, mst.get(secondEvo.baseCardCode));

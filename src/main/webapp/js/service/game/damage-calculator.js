@@ -9,6 +9,7 @@
     result.skill = skill;
     result.attacker = attacker;
     result.defender = defender;
+    result.model = model;
 
     return this.calculateSkillImpact_(skill, attacker, defender, model).then(function(d) {
       var $defer = $.Deferred();
