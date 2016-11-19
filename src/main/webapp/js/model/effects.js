@@ -64,12 +64,12 @@
   Effects.skill_20_2 = EffectsBase.halfHpDamage;
 
   Effects.skill_25_2 = function(param) {
-    return EffectsBase.selfDamageByCoinToss(10, param.attacker);
+    return EffectsBase.selfDamageByCoinToss(10, param);
   };
 
   Effects.skill_26_1 = EffectsBase.matchlessByCoinToss;
   Effects.skill_26_2 = function(param) {
-    return EffectsBase.selfDamageByCoinToss(30, param.attacker);
+    return EffectsBase.selfDamageByCoinToss(30, param);
   };
 
   Effects.skill_37_1 = EffectsBase.confusionByCoinToss;
@@ -110,6 +110,13 @@
   };
 
   Effects.skill_65_1 = EffectsBase.confusionByCoinToss;
+
+  Effects.skill_67_1 = function(param) {
+    return EffectsBase.suppressByDamage(param.attacker, param.skill);
+  };
+  Effects.skill_67_2 = function(param) {
+    return EffectsBase.selfDamage(20, param);
+  };
 
   Effects.skill_84_1 = function(param) {
     return EffectsBase.pluralAttack(param, 2);
@@ -178,7 +185,25 @@
 
   Effects.skill_130_2 = EffectsBase.paralysisByCoinToss;
 
+  Effects.skill_145_1 = function(param) {
+    return EffectsBase.selfDamageByCoinToss(30, param);
+  };
+  Effects.skill_145_2 = EffectsBase.trushAllEnergy;
 
+  Effects.skill_148_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
+  };
+  Effects.skill_148_2 = function(param) {
+    return EffectsBase.burstEnergy(1, param);
+  };
+
+
+  Effects.skill_150_1 = function(param) {
+    return EffectsBase.boostByEnergyCount(param.defender.getEnergy(), param.skill);
+  };
+  Effects.skill_150_2 = function(param) {
+    return EffectsBase.matchlessByTrushEnergy(param, ['esper']);
+  };
 
 
 

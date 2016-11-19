@@ -44,9 +44,9 @@
 "63":{"name":"ケーシィ","kind":"1","base":"","type":"esper","hp":"30","special":"","skill1":"skill_63_1","skill2":"","escape":[],"weak":{"esper":"*2"}},
 "64":{"name":"ユンゲラー","kind":"2","base":"63","type":"esper","hp":"60","special":"","skill1":"skill_64_1","skill2":"skill_64_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
 "65":{"name":"フーディン","kind":"3","base":"64","type":"esper","hp":"80","special":"ダメージスワップ","skill1":"skill_65_1","skill2":"","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
-// "66":{"name":"ワンリキー","kind":"1","base":"","type":"fight","hp":"50","special":"","skill1":"skill_66_1","skill2":"","escape":["normal"],"weak":{"esper":"*2"}},
-// "67":{"name":"ゴーリキー","kind":"2","base":"66","type":"fight","hp":"80","special":"","skill1":"skill_67_1","skill2":"skill_67_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
-// "68":{"name":"カイリキー","kind":"3","base":"67","type":"fight","hp":"100","special":"はんげき","skill1":"skill_68_1","skill2":"","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+"66":{"name":"ワンリキー","kind":"1","base":"","type":"fight","hp":"50","special":"","skill1":"skill_66_1","skill2":"","escape":["normal"],"weak":{"esper":"*2"}},
+"67":{"name":"ゴーリキー","kind":"2","base":"66","type":"fight","hp":"80","special":"","skill1":"skill_67_1","skill2":"skill_67_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+"68":{"name":"カイリキー","kind":"3","base":"67","type":"fight","hp":"100","special":"はんげき","skill1":"skill_68_1","skill2":"","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
 
 "77":{"name":"ポニータ","kind":"1","base":"","type":"fire","hp":"40","special":"","skill1":"skill_77_1","skill2":"skill_77_2","escape":["normal"],"weak":{"aqua":"*2"}},
 
@@ -86,12 +86,12 @@
 
 // "137":{"name":"ポリゴン","kind":"1","base":"","type":"normal","hp":"30","special":"","skill1":"skill_137_1","skill2":"skill_137_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 
-// "145":{"name":"サンダー","kind":"1","base":"","type":"thunder","hp":"90","special":"","skill1":"skill_145_1","skill2":"skill_145_2","escape":["normal","normal","normal"],"regist":{"fight":"-30"}},
+"145":{"name":"サンダー","kind":"1","base":"","type":"thunder","hp":"90","special":"","skill1":"skill_145_1","skill2":"skill_145_2","escape":["normal","normal","normal"],"regist":{"fight":"-30"}},
 
-// "147":{"name":"ミニリュウ","kind":"1","base":"","type":"normal","hp":"40","special":"","skill1":"skill_147_1","skill2":"","escape":["normal"],"regist":{"esper":"-30"}},
-// "148":{"name":"ハクリュー","kind":"2","base":"147","type":"normal","hp":"80","special":"","skill1":"skill_148_1","skill2":"skill_148_2","escape":["normal","normal"],"regist":{"esper":"-30"}},
+"147":{"name":"ミニリュウ","kind":"1","base":"","type":"normal","hp":"40","special":"","skill1":"skill_147_1","skill2":"","escape":["normal"],"regist":{"esper":"-30"}},
+"148":{"name":"ハクリュー","kind":"2","base":"147","type":"normal","hp":"80","special":"","skill1":"skill_148_1","skill2":"skill_148_2","escape":["normal","normal"],"regist":{"esper":"-30"}},
 
-// "150":{"name":"ミュウツー","kind":"1","base":"","type":"esper","hp":"60","special":"","skill1":"skill_150_1","skill2":"skill_150_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+"150":{"name":"ミュウツー","kind":"1","base":"","type":"esper","hp":"60","special":"","skill1":"skill_150_1","skill2":"skill_150_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
 
 "1001":{"name":"きずぐすり","kind":"goods","effect":"1001","description":"自分の場のポケモンにのっているダメージカウンターを2個まで、とりのぞくことができる。"},
 "1002":{"name":"いいきずぐすり","kind":"goods","effect":"1002","description":"自分の場にいるポケモンから、エネルギーカードのついているものを1匹選ぶ。そのポケモンについているエネルギーカードを1枚トラッシュして、そのポケモンにのっているダメージカウンターを最大4個、とりのぞく。"},
