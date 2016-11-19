@@ -49,6 +49,10 @@ SkillList = {
 "64_1":{"name":"じこさいせい","cost":["esper","esper"],"damage":"","description":"自分の「超」エネルギーカードを1枚トラッシュすることによってダメージカウンターを全てとりのぞく。","effect":"skill_64_1","timing":"after-damage"},
 "64_2":{"name":"ちょうねんりき","cost":["esper","esper","normal"],"damage":"50","description":""},
 "65_1":{"name":"あやしいひかり","cost":["esper","esper","esper"],"damage":"30","description":"コインを投げて「おもて」なら、相手を「こんらん」状態にする。","effect":"skill_65_1","timing":"after-damage"},
+"66_1":{"name":"けたぐり","cost":["fight"],"damage":"20","description":"","effect":""},
+"67_1":{"name":"からてチョップ","cost":["fight","fight","normal"],"damage":"50","damageCaption":"50－","description":"自分のダメージカウンター×10だけ、相手にあたえるダメージがへる。","effect":"skill_67_1","timing":"calc-damage"},
+"67_2":{"name":"じごくぐるま","cost":["fight","fight","normal","normal"],"damage":"60","description":"自分にも20ダメージ。","effect":"skill_67_2","timing":"after-damage"},
+"68_1":{"name":"ちきゅうなげ","cost":["fight","fight","fight","normal"],"damage":"60","description":"","effect":""},
 
 "77_1":{"name":"けとばす","cost":["normal","normal"],"damage":"20","description":""},
 "77_2":{"name":"ほのおのしっぽ","cost":["fire","fire"],"damage":"30","description":""},
@@ -96,4 +100,13 @@ SkillList = {
 "130_1":{"name":"りゅうのいかり","cost":["aqua","aqua","aqua"],"damage":"50","description":""},
 "130_2":{"name":"バブルこうせん","cost":["aqua","aqua","aqua","aqua"],"damage":"40","description":"コインを投げて「おもて」なら、相手を「マヒ」状態にする。","effect":"skill_130_2","timing":"after-damage"},
 
+"145_1":{"name":"かみなり","cost":["thunder","thunder","thunder","normal"],"damage":"60","description":"コインを投げて「うら」なら、自分にも30ダメージ。","effect":"skill_145_1","timing":"after-damage"},
+"145_2":{"name":"10まんボルト","cost":["thunder","thunder","thunder","thunder"],"damage":"100","description":"自分のエネルギーカードを全てトラッシュする。","effect":"skill_145_2","timing":"after-damage"},
+
+"147_1":{"name":"はたく","cost":["normal"],"damage":"10","description":"","effect":""},
+"148_1":{"name":"たたきつける","cost":["normal","normal","normal"],"damage":"30","damageCaption":"30×","description":"コインを2枚投げて「おもて」の数×30のダメージを相手にあたえる。","effect":"skill_148_1","timing":"calc-damage"},
+"148_2":{"name":"はかいこうせん","cost":["normal","normal","normal","normal"],"damage":"20","description":"相手の対戦ポケモンのエネルギーカードを1枚はがしてすてる。","effect":"skill_148_2","timing":"after-damage"},
+
+"150_1":{"name":"サイコキネシス","cost":["esper","normal"],"damage":"10","damageCaption":"10＋","description":"相手についているエネルギーカード×10の追加ダメージをあたえる。","effect":"skill_150_1","timing":"calc-damage"},
+"150_2":{"name":"バリアー","cost":["esper","esper"],"damage":"","description":"自分についている「超」エネルギーカードを1枚はがしてすてることによって、次の相手の番の「ワザ」をうけない。","effect":"skill_150_2","timing":"after-damage"},
 };
