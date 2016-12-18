@@ -30,17 +30,24 @@
 
     var $saveBtn = $view.find('.save-btn');
     var $count = $view.find('.deck-card-number .count');
+    var $errorMessage = $view.find('.error-message-area');
     $count.removeClass('less enough much');
     $saveBtn.addClass('disabled');
+    $errorMessage.show();
     var count = deck.length;
     var deckCount = this.regulation_.deckCount();
     if (count < deckCount) {
       $count.addClass('less');
+      $errorMessage.find('.error-message').text('デッキが ' + deckCount + ' 枚に達していません');
     } else if (count > deckCount) {
       $count.addClass('much');
+      $errorMessage.find('.error-message').text('デッキが ' + deckCount + ' 枚を超えています');
+    } else if (!this.containsBaseMonster_(deck)) {
+      $errorMessage.find('.error-message').text('デッキに たねポケモン が入っていません');
     } else {
       $count.addClass('enough');
       $saveBtn.removeClass('disabled');
+      $errorMessage.hide();
     }
     $count.text(count);
   };
@@ -85,6 +92,12 @@
     }
     var data = $target.attr('data-code');
     this.$element_.trigger(DeckEditView.EventType.REMOVE_FROM_DECK, data);
+  };
+
+  DeckEditView.prototype.containsBaseMonster_ = function(deck) {
+    return deck.some(function(card) {
+      return UtilFunc.isBaseMonster(card.kind);
+    });
   };
 
 })(jQuery);

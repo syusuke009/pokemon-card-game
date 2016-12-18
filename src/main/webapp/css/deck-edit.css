@@ -118,3 +118,21 @@
 .count.much {
     color: #e91e63;
 }
+
+.error-message-area {
+    width: 1072px;
+    text-align: right;
+    margin: 8px 0;
+}
+.error-icon {;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    text-align:center;
+    border-radius: 50%;
+    color: #fff;
+    background-color: #e91e63;
+}
+.error-message {;
+    color: #e91e63;
+}

@@ -58,10 +58,10 @@
   DeckEditController.prototype.putOnDeck_ = function(code) {
     this.deck_.push(this.createCard_(code, 'deck', this.idNum_++));
 
-    var limit = this.regulation_.sameCard();
     $.each(this.holding_, function(idx, hold) {
       if (code === hold.code) {
         hold.rest = hold.rest - 1;
+        var limit = this.getSameCardLimit_(hold.card);
         hold.disabled = limit === (hold.total - hold.rest) ? 'disabled' : '';
       }
     }.bind(this));
@@ -89,7 +89,6 @@
     var deckCodes = this.deckDao_.get(this.userId_);
     this.deck_ = [];
 
-    var limit = this.regulation_.sameCard();
     var cardCount = {};
     $.each(deckCodes, function(idx, code) {
       var cnt = cardCount[code] || 0;
@@ -101,8 +100,9 @@
       var code = hold.code;
       var cnt = cardCount[code] || 0;
       hold.rest = hold.total - cnt;
-      hold.disabled = limit === cnt ? 'disabled' : '';
       hold.card = this.createCard_(code, 'holding', code);
+      var limit = this.getSameCardLimit_(hold.card);
+      hold.disabled = limit === cnt ? 'disabled' : '';
     }.bind(this));
 
     this.view_.redraw(this.holding_, this.deck_);
@@ -128,6 +128,13 @@
     this.deck_.sort(function(a, b) {
       return Number(a.code) - Number(b.code);
     });
+  };
+
+  DeckEditController.prototype.getSameCardLimit_ = function(card) {
+    if (card.kind === 'energy') {
+      return 99;
+    }
+    return this.regulation_.sameCard();
   };
 
 })(jQuery);
