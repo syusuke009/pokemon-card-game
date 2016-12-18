@@ -1,0 +1,120 @@
+.card-list-area {
+    display: flex;
+    padding: 8px;
+}
+
+.holding-card-list {
+    margin: 8px;
+    width: 520px;
+    height: 740px;
+    overflow-y: scroll;
+    border: 6px double #dadde0;
+    border-radius: 6px;
+    padding: 8px;
+}
+.deck-card-list {
+    margin: 8px;
+    width: 460px;
+    height: 740px;
+    overflow-y: scroll;
+    border: 6px double #dadde0;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.title-caption {
+    font-size: 24px;
+    padding: 0 8px;
+}
+
+.deck-row,
+.holding-row {
+    display: flex;
+}
+
+.row-card {
+    display: flex;
+    height: 32px;
+    line-height: 32px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.15), 0 -1px 2px -1px rgba(0,0,0,.1);
+}
+
+.deck-row+.deck-row,
+.holding-row+.holding-row {
+    margin-top: 8px;
+}
+
+.row-card .name {
+    width: 200px;
+    padding: 0 8px;
+}
+
+.row-card .kind-caption {
+    width: 100px;
+    padding: 0 4px;
+    font-size: 12px;
+}
+
+.row-card .count {
+    padding: 0 8px;
+}
+
+.row-card .count .total {
+    font-size: 12px;
+}
+
+.holding-row .add-btn,
+.deck-row .remove-btn {
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+.holding-row:hover .add-btn,
+.deck-row:hover .remove-btn {
+    opacity: 1;
+}
+.holding-row:hover .disabled.add-btn,
+.deck-row:hover .disabled.remove-btn {
+    opacity: 0;
+}
+
+.remove-btn {
+    padding: 4px 8px;
+    margin-right: 8px;
+}
+.add-btn {
+    padding: 4px 8px;
+    margin-left: 8px;
+}
+
+.left-arrow {
+    display:inline-block;
+    transform: rotate(-90deg);
+}
+.right-arrow {
+    display:inline-block;
+    transform: rotate(90deg);
+}
+.left-arrow:before,
+.right-arrow:before {
+    content: "▲";
+}
+
+.button-area {
+    padding: 0 8px;
+    text-align: right;
+    width: 1064px;
+}
+.button-area .btn {
+    margin-left: 8px;
+}
+
+.count.less {
+    color: #4285f4;
+}
+.count.enough {
+    color: #00b19d;
+}
+.count.much {
+    color: #e91e63;
+}

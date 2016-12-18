@@ -1,0 +1,18 @@
+.title-area {
+	margin:  64px 0;
+	text-align: center;
+}
+.menues {
+	margin-top: 80px;
+	list-style-type: none;
+	padding: 0;
+	text-align: center;
+}
+.menu-btn {
+	margin: 40px 0;
+}
+.menu-btn .btn {
+	font-size: 18px;
+	height: 40px;
+	width: 25%;
+}
