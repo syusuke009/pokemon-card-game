@@ -1,5 +1,4 @@
 ﻿CardList={
-"0":{"name":"","kind":"","base":"","type":"","hp":"0","special":"","skill1":"","skill2":"","escape":[],"weak":{},"regist":{}},
 "1":{"name":"フシギダネ","kind":"1","base":"","type":"leaf","hp":"40","special":"","skill1":"skill_1_1","skill2":"","escape":["normal"],"weak":{"fire":"*2"}},
 "2":{"name":"フシギソウ","kind":"2","base":"1","type":"leaf","hp":"60","special":"","skill1":"skill_2_1","skill2":"skill_2_2","escape":["normal"],"weak":{"fire":"*2"}},
 "3":{"name":"フシギバナ","kind":"3","base":"2","type":"leaf","hp":"100","special":"エナジートランス","skill1":"skill_3_1","skill2":"","escape":["normal","normal"],"weak":{"fire":"*2"}},

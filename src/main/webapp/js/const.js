@@ -2,6 +2,8 @@
 
   Const = {};
 
+  Const.UserIdKey = 'user';
+
   Const.Viewpoint = {
     ME: 'my',
     RIVAL: 'rival'

@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta charset="UTF-8">
+
+<title>PocketMonster Card Buttle</title>
+
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<link rel="stylesheet" type="text/css" href="css/animation.css">
+<link rel="stylesheet" type="text/css" href="css/deck-edit.css">
+<script type="text/javascript" src="js/lib/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="js/lib/hogan.min.js"></script>
+
+</head>
+
+
+<body>
+	<div id="deck-edit-screen" class="deck-edit-screen">
+		<div class="card-list-area">
+			<div class="holding-area">
+				<span class="title-caption">所持カード</span>
+				<div class="holding-card-list">
+				</div>
+			</div>
+			<div class="deck-area">
+				<div><span class="title-caption">デッキ</span><span class="deck-card-number"><span class="count"></span><span> / 60</span></span></div>
+				<div class="deck-card-list">
+				</div>
+			</div>
+		</div>
+		<div class="button-area">
+			<button class="revert-btn btn">デッキを元に戻す</button>
+			<button class="save-btn btn btn-primary">保存する</button>
+			<button class="exit-btn btn">編集を終了</button>
+		</div>
+	</div>
+
+	<div class="dialog-backdrop"></div>
+	<div class="dialog-window">
+		<div class="dialog-header"></div>
+		<div class="dialog-content"></div>
+		<div class="dialog-buttons"></div>
+	</div>
+
+
+
+	<script type="text/template" id="holding-list-template">
+		{{#list}}
+			<div class="holding-row {{card.type}}" data-code="{{card.code}}">
+				<div class="row-card">
+					<div class="type-mark"></div>
+					<div class="name">{{card.name}}</div>
+					<div class="kind-caption">{{card.kindCaption}}</div>
+					<div class="count"><span class="rest">{{rest}}</span><span class="total"> / {{total}}</span></div>
+				</div>
+				<button class="btn add-btn {{disabled}}" data-code="{{card.code}}"><span class="caption">いれる</span><i class="right-arrow"></i></button>
+			</div>
+		{{/list}}
+	</script>
+	<script type="text/template" id="deck-list-template">
+		{{#list}}
+			<div class="deck-row {{type}}" data-id="{{trnId}}" data-code="{{code}}">
+				<button class="btn remove-btn {{disabled}}" data-code="{{code}}"><i class="left-arrow"></i><span class="caption">はずす</span></button>
+				<div class="row-card">
+					<div class="type-mark"></div>
+					<div class="name">{{name}}</div>
+					<div class="kind-caption">{{kindCaption}}</div>
+				</div>
+			</div>
+		{{/list}}
+	</script>
+
+
+
+	<script type="text/javascript" src="json/card-list.json"></script>
+	<script type="text/javascript" src="json/skill.json"></script>
+	<script type="text/javascript" src="json/my-deck.json"></script>
+
+	<script type="text/javascript" src="js/service/regulation-checker.js"></script>
+	<script type="text/javascript" src="js/model/monster-card.js"></script>
+	<script type="text/javascript" src="js/model/energy-card.js"></script>
+	<script type="text/javascript" src="js/model/trainer-card.js"></script>
+	<script type="text/javascript" src="js/model/skill.js"></script>
+	<script type="text/javascript" src="js/application.js"></script>
+	<script type="text/javascript" src="js/form-components.js"></script>
+	<script type="text/javascript" src="js/card-factory.js"></script>
+	<script type="text/javascript" src="js/const.js"></script>
+	<script type="text/javascript" src="js/util-func.js"></script>
+	<script type="text/javascript" src="js/dao/card-mst-dao.js"></script>
+	<script type="text/javascript" src="js/dao/deck-dao.js"></script>
+	<script type="text/javascript" src="js/dao/skill-dao.js"></script>
+	<script type="text/javascript" src="js/dao/holding-card-dao.js"></script>
+	<script type="text/javascript" src="js/view/detail-area-view.js"></script>
+	<script type="text/javascript" src="js/view/deckedit/deck-edit-view.js"></script>
+	<script type="text/javascript" src="js/view/renderer/card-detail-renderer.js"></script>
+	<script type="text/javascript" src="js/controller/deckedit/deck-edit-controller.js"></script>
+
+	<script type="text/javascript">
+		window.app = new Application('deck');
+	</script>
+</body>
+</html>

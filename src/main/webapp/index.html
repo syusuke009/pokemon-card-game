@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta charset="UTF-8">
+
+<title>PocketMonster Card Buttle</title>
+
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<link rel="stylesheet" type="text/css" href="css/menu.css">
+<script type="text/javascript" src="js/lib/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="js/lib/hogan.min.js"></script>
+
+</head>
+
+
+<body>
+	<div class="main-screen">
+		<div class="title-area"><img alt="ポケモンカードゲーム" src="./img/title.jpg"></div>
+		<div class="menu-area">
+			<ul class="menues">
+				<li class="menu-btn"><button class="btn btn-primary game-btn">ゲーム開始</button></li>
+				<li class="menu-btn"><button class="btn deck-btn">デッキ編集</button></li>
+			</ul>
+		</div>
+	</div>
+
+
+	<script type="text/javascript" src="js/application.js"></script>
+	<script type="text/javascript" src="js/controller/menu/menu-controller.js"></script>
+
+	<script type="text/javascript">
+		window.app = new Application('menu');
+	</script>
+</body>
+</html>
