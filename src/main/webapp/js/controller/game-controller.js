@@ -139,8 +139,10 @@
     });
 
     this.view_.drawSelectable(selectables);
-
-    this.onSelectInterceptor_.forEnergyAttach(trnId);
+    (viewpoint === Const.Viewpoint.ME ? this.view_.myHands : this.view_.rivalHands).call(this.view_, false);
+    this.onSelectInterceptor_.forEnergyAttach(trnId).then(function() {
+      (viewpoint === Const.Viewpoint.ME ? this.view_.myHands : this.view_.rivalHands).call(this.view_, true);
+    }.bind(this));
   };
 
   GameController.prototype.onAttack_ = function(e, trnId) {

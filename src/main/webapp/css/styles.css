@@ -156,6 +156,7 @@
 
 .field {
     display: inline-block;
+    position: relative;
 }
 
 .detail {
@@ -171,7 +172,14 @@
     display: flex;
     height: 332px;
     margin: 8px;
-    width: 880px;
+    width: 920px;
+}
+
+.message-window {
+    height: 160px;
+    margin: 16px;
+    border: 10px double #555;
+    border-radius: 10px;
 }
 
 .deck-area {
@@ -223,10 +231,100 @@
     display: flex;
     justify-content: center;
 }
+.hands-toggle-caption {
+    display: block;
+}
+.hands-toggle-btn {
+    display: block;
+    color: #e8e8e8;
+    background-color: #bdbdbd;
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.hands-toggle-btn:hover {
+    color: #ccc;
+    background-color: #aaa;
+}
+.hands-float-area {
+    position: absolute;
+    background-color: rgba(0,0,0,.75);
+    width: 880px;
+    display: flex;
+    align-items: center;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity .3s ease, z-index .3s ease;
+}
+.hands-float-area.shown {
+    z-index: 1;
+    opacity: 1;
+}
+.hands-operator {
+    display: flex;
+    width: 24px;
+    height: 164px;
+    margin: 4px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s ease;
+}
+.hands-operator:hover {
+	background-color: rgba(255,255,255,.2);
+}
+.hands-operator:before {
+    display:block;
+    content: "dummy";
+    color: transparent;
+    width: 12px;
+    height: 12px;
+    border-color: #aaa;
+    border-style: solid;
+    border-width: 0;
+    transition: all .3s ease;
+}
+.hands-operator:hover:before {
+    border-color: #e8e8e8;
+}
+.hands-operator.disabled:before {
+    opacity: 0.3;
+}
+.left-operator:before {
+    margin-left: 8px;
+    border-top-width: 3px;
+    border-left-width: 3px;
+    transform: rotate(-45deg);
+}
+.right-operator:before {
+    margin-right: 8px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    transform: rotate(45deg);
+}
+.hand-cards-container {
+    max-width: 816px;
+    margin: 12px 0;
+    overflow: hidden;
+    display: inline-block;
+}
+#rival-area .hands-float-area {
+    top: 0;
+}
+#my-area .hands-float-area {
+    bottom: 212px;
+}
 
 .hands {
-    margin: 8px;
-    height: 150px;
+    height: 148px;
+    min-width: 816px;
+    display: flex;
 }
 
 .card {
@@ -279,7 +377,13 @@
 }
 
 .hands .card {
-    display: inline-block
+    margin: 4px 8px;
+}
+.hands .card:first-child {
+    margin-left: 0;
+}
+.hands .card:last-child {
+    margin-right: 0;
 }
 .bench .card {
     margin: 4px 10.5px;

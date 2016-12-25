@@ -17,8 +17,6 @@
 <body>
 	<div id="pray-field" class="field">
 		<div id="rival-area" class="player-area rival">
-			<div id="rival-hand" class="hands">
-			</div>
 			<div id="rival-field" class="player-field">
 				<div id="rival-deck-area" class="deck-area">
 					<div id="rival-trush" class="trush"></div>
@@ -29,6 +27,18 @@
 					<div id="rival-battle-monster" class="battle-monster"></div>
 				</div>
 				<div id="rival-side" class="side"></div>
+				<div id="rival-hands-toggle-btn-area" class="hands-toggle-btn-area">
+					<span class="hands-toggle-caption">手札</span>
+					<i class="hands-toggle-btn">＋</i>
+				</div>
+				<div class="hands-float-area">
+					<span class="left-operator hands-operator"></span>
+					<div class="hand-cards-container">
+						<div id="rival-hand" class="hands">
+						</div>
+					</div>
+					<span class="right-operator hands-operator"></span>
+				</div>
 			</div>
 		</div>
 
@@ -43,9 +53,21 @@
 					<div id="my-deck" class="deck"><div class="card rear"><span class="rest-card-count"></span></div></div>
 					<div id="my-trush" class="trush"></div>
 				</div>
+				<div id="my-hands-toggle-btn-area" class="hands-toggle-btn-area">
+					<span class="hands-toggle-caption">手札</span>
+					<i class="hands-toggle-btn">＋</i></div>
+				<div class="hands-float-area">
+					<span class="left-operator hands-operator"></span>
+					<div class="hand-cards-container">
+						<div id="my-hand" class="hands">
+						</div>
+					</div>
+					<span class="right-operator hands-operator"></span>
+				</div>
 			</div>
-			<div id="my-hand" class="hands">
-			</div>
+		</div>
+
+		<div class="message-window">
 		</div>
 	</div>
 	<div id="detail-area" class="detail">
