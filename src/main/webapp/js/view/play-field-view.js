@@ -73,15 +73,54 @@
   };
 
   PlayFieldView.prototype.enterDocument = function() {
-    this.$element_.find('.hands').on('click', '.card', function(e){
+    this.$element_.on('click', '.hands .card', function(e){
       this.$element_.trigger(PlayFieldView.EventType.SELECT_HAND, e.currentTarget);
     }.bind(this));
-    this.$element_.find('.bench').on('click', '.card', function(e){
+    this.$element_.on('click', '.bench .card', function(e){
       this.$element_.trigger(PlayFieldView.EventType.SELECT_BENCH, e.currentTarget);
     }.bind(this));
-    this.$element_.find('.battle-monster').on('click', '.card', function(e){
+    this.$element_.on('click', '.battle-monster .card', function(e){
       this.$element_.trigger(PlayFieldView.EventType.SELECT_BATTLE_MONSTER, e.currentTarget);
+    }.bind(this));
+    this.$element_.on('click', '.hands-toggle-btn', function(e) {
+      var $field = $(e.currentTarget).parents('.player-field');
+      var isShownHands = $field.find('.hands-float-area').hasClass('shown');
+      var func = isShownHands ? this.hideHands_ : this.showHands_;
+      func.call(this, $field);
+    }.bind(this));
+    this.$element_.on('click', '.hands-operator', function(e) {
+      this.scrollHands_($(e.currentTarget));
     }.bind(this));
   };
 
+  PlayFieldView.prototype.myHands = function(isShownHands) {
+    var $field = this.$element_.find('#my-field');
+    var isShownHands = $field.find('.hands-float-area').hasClass('shown');
+    var func = isShownHands ? this.hideHands_ : this.showHands_;
+    func.call(this, $field);
+  };
+
+  PlayFieldView.prototype.rivalHands = function(isShownHands) {
+    var $field = this.$element_.find('#rival-field');
+    var isShownHands = $field.find('.hands-float-area').hasClass('shown');
+    var func = isShownHands ? this.hideHands_ : this.showHands_;
+    func.call(this, $field);
+  };
+
+  PlayFieldView.prototype.showHands_ = function($field) {
+    $field.find('.hands-toggle-btn').text('－');
+    $field.find('.hands-float-area').addClass('shown');
+  };
+
+  PlayFieldView.prototype.hideHands_ = function($field) {
+    $field.find('.hands-toggle-btn').text('＋');
+    $field.find('.hands-float-area').removeClass('shown');
+  };
+
+  PlayFieldView.prototype.scrollHands_ = function($target) {
+    var $field = $target.parents('.player-field');
+    var isLeft = $target.hasClass('left-operator');
+    var $container = $field.find('.hand-cards-container');
+    $container.animate({scrollLeft:$container.scrollLeft() + (isLeft ? - 336 : 336)}, 300);
+  };
 })(jQuery);

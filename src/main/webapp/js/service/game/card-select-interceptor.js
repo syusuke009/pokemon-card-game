@@ -3,6 +3,7 @@
   CardSelectInterceptor =  function(){
     this.obj_ = null;
     this.func_ = null;
+    this.defer_ = null;
   };
 
   CardSelectInterceptor.prototype.canIntercept = function() {
@@ -12,16 +13,25 @@
   CardSelectInterceptor.prototype.clear = function() {
     this.obj_ = null;
     this.func_ = null;
+    if (!!this.defer_) {
+      this.defer_.reject();
+      this.defer_ = null;
+    }
   };
 
   CardSelectInterceptor.prototype.intercept = function(eventdata, model) {
     if (this.canIntercept()) {
-      return this.func_(this.obj_, eventdata, model);
+      var result = this.func_(this.obj_, eventdata, model);
+      if (!!this.defer_) {
+        this.defer_.resolve();
+      }
+      return result;
     }
     return true;
   };
 
   CardSelectInterceptor.prototype.forEnergyAttach = function(energyTrnId) {
+    this.defer_ = $.Deferred();
     this.obj_ = energyTrnId;
     this.func_ = function(energyTrnId, eventdata, model) {
       var viewpoint = UtilFunc.getViewpoint(eventdata.trnId);
@@ -32,6 +42,7 @@
       model.getTurn().attachEnergy();
       return true;
     };
+    return this.defer_.promise();
   };
 
   CardSelectInterceptor.prototype.forEvolution = function(evolutionTrnId) {

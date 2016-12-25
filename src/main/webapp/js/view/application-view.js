@@ -94,4 +94,12 @@
   ApplicationView.prototype.onToBench_ = function(e, trnId) {
     this.$element_.trigger(ApplicationView.EventType.ASSIGN_BENCH, trnId);
   };
+
+  ApplicationView.prototype.myHands = function(isShownHands) {
+    this.field_.myHands(isShownHands);
+  };
+
+  ApplicationView.prototype.rivalHands = function(isShownHands) {
+    this.field_.rivalHands(isShownHands);
+  };
 })(jQuery);
