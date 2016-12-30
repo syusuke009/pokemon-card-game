@@ -27,6 +27,7 @@
 
       d = this.effectDefenderEffect_(defender, d);
 
+      MessageDisplay.println(defender.name + 'に' + d + 'のダメージ！');
       result.damage = d;
       $defer.resolve(result);
       return $defer.promise();
@@ -60,6 +61,7 @@
     var weakValue = defender.weak[attacker.type];
     switch (weakValue) {
     case '*2':
+      MessageDisplay.println('こうかはばつぐんだ！');
       return d * 2;
     }
     return d;
@@ -71,6 +73,7 @@
     }
     var registValue = defender.regist[attacker.type];
     if (!isNaN(Number(registValue))) {
+      MessageDisplay.println('こうかはいまひとつのようだ');
       return d + Number(registValue);
     }
     return d;
