@@ -25,6 +25,9 @@
     this.view_.renderField(this.model_);
     this.view_.renderDetail();
 
+    this.view_.myHands(true);
+    this.view_.rivalHands(true);
+
     this.bindEvents_();
   };
 
@@ -100,7 +103,11 @@
 
     this.view_.drawSelectable(selectables);
 
-    this.onSelectInterceptor_.forEvolution(trnId);
+    this.view_.drawSelectable(selectables);
+    (viewpoint === Const.Viewpoint.ME ? this.view_.myHands : this.view_.rivalHands).call(this.view_, false);
+    this.onSelectInterceptor_.forEvolution(trnId).then(function() {
+      (viewpoint === Const.Viewpoint.ME ? this.view_.myHands : this.view_.rivalHands).call(this.view_, true);
+    }.bind(this));
   };
 
   GameController.prototype.onUseTrainer_ = function(e, trnId) {
@@ -222,6 +229,14 @@
     var card = deck.draw();
     field.addHand(card);
     this.view_.redrawField(this.model_);
+
+    if (viewpoint === Const.Viewpoint.ME) {
+      MessageDisplay.println('あなたのターンです');
+    } else {
+      MessageDisplay.println('あいてのターンです');
+    }
+    (viewpoint === Const.Viewpoint.ME ? this.view_.myHands : this.view_.rivalHands).call(this.view_, true);
+    (viewpoint === Const.Viewpoint.ME ? this.view_.rivalHands : this.view_.myHands).call(this.view_, false);
   };
 
   GameController.prototype.turnEnd = function() {
@@ -230,19 +245,18 @@
     var rivalField = this.model_.getField(Const.Viewpoint.RIVAL);
     if (turn.isSetupTurn()) {
       if (!myField.getBattleMonster()) {
-        MessageDisplay.println('自分のバトルモンスターを出してください');
+        alert('自分の場にバトルポケモンがいません');
         return;
       }
       if (!rivalField.getBattleMonster()) {
-        MessageDisplay.println('相手のバトルモンスターを出してください');
+        alert('相手の場にバトルポケモンがいません');
         return;
       }
       this.model_.nextTurn();
       this.turnStart();
       return;
     }
-    var $defer = this.pokemonCheck_.check(this.model_);
-    $defer.then(function(res){
+    this.pokemonCheck_.check(this.model_).then(function(res){
       return this.exchangeIfDying_(this.model_, Const.Viewpoint.ME).then(function(my) {
         var $deferRivalBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.RIVAL);
         return $.when($.Deferred().resolve(my).promise(), $deferRivalBattle);
@@ -259,6 +273,7 @@
       if (!my) this.gameset(Const.Viewpoint.RIVAL);
       if (!rival) this.gameset(Const.Viewpoint.ME);
 
+      this.view_.hideDetail();
       this.model_.nextTurn();
       this.turnStart();
     }.bind(this));
@@ -283,7 +298,7 @@
   };
 
   GameController.prototype.gameset = function(winner, reason) {
-    var message = !!winner ? winner + 'の勝利！' : '引き分け';
+    var message = !!winner ? (winner === Const.Viewpoint.ME ? 'あなた' : 'あいて') + 'の勝利！' : '引き分け';
     MessageDisplay.println(message);
     throw message;
   };

@@ -40,6 +40,7 @@
       return $defer.promise();
     }
 
+    MessageDisplay.newSentence(attacker.name + 'の' + skill.name + '！');
     return this.processBeforeDamage_(skill, attacker, defender)
     .then(function(){
       return this.calculator_.calculate(skill, attacker, defender, model);

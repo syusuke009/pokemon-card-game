@@ -46,6 +46,7 @@
   };
 
   CardSelectInterceptor.prototype.forEvolution = function(evolutionTrnId) {
+    this.defer_ = $.Deferred();
     this.obj_ = evolutionTrnId;
     this.func_ = function(evolutionTrnId, eventdata, model) {
       var viewpoint = UtilFunc.getViewpoint(eventdata.trnId);
@@ -57,6 +58,7 @@
       model.getTurn().newAssign(evolutionTrnId);
       return true;
     };
+    return this.defer_.promise();
   };
 
   CardSelectInterceptor.prototype.forGoBattle = function($defer) {

@@ -95,15 +95,13 @@
 
   PlayFieldView.prototype.myHands = function(isShownHands) {
     var $field = this.$element_.find('#my-field');
-    var isShownHands = $field.find('.hands-float-area').hasClass('shown');
-    var func = isShownHands ? this.hideHands_ : this.showHands_;
+    var func = isShownHands ? this.showHands_ : this.hideHands_;
     func.call(this, $field);
   };
 
   PlayFieldView.prototype.rivalHands = function(isShownHands) {
     var $field = this.$element_.find('#rival-field');
-    var isShownHands = $field.find('.hands-float-area').hasClass('shown');
-    var func = isShownHands ? this.hideHands_ : this.showHands_;
+    var func = isShownHands ? this.showHands_ : this.hideHands_;
     func.call(this, $field);
   };
 

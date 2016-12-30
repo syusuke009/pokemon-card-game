@@ -176,10 +176,14 @@
 }
 
 .message-window {
-    height: 160px;
-    margin: 16px;
+    height: 162px;
+    margin: 16px 16px 4px 16px;
+    padding: 8px;
     border: 10px double #555;
     border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    overflow-y: auto;
 }
 
 .deck-area {

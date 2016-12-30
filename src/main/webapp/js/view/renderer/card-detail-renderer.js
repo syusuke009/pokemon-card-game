@@ -4,8 +4,14 @@
     this.$element_ = $elm;
   };
 
+  CardDetailRenderer.prototype.hide = function(){
+    var $content = this.$element_.find('.detail-content');
+    $content.hide();
+  };
+
   CardDetailRenderer.prototype.render = function(card){
     var $content = this.$element_.find('.detail-content');
+    $content.show();
     $content.removeClass();
     $content.addClass('detail-content')
     $content.addClass(card.type);

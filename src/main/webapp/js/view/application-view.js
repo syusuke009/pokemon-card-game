@@ -46,6 +46,10 @@
     this.detail_.render();
   };
 
+  ApplicationView.prototype.hideDetail = function() {
+    this.detail_.hide();
+  };
+
   ApplicationView.prototype.redrawDetail = function(card, area, control) {
     this.detail_.redraw(card, area, control);
   };

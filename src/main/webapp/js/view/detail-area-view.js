@@ -24,6 +24,11 @@
     this.enterDocument();
   };
 
+  DetailAreaView.prototype.hide = function(){
+    this.cardDetailRenderer_.hide();
+    this.renderButtons_({kind:'none'});
+  };
+
   DetailAreaView.prototype.redraw = function(card, area, control){
     this.cardDetailRenderer_.render(card);
     this.renderButtons_(control, area);

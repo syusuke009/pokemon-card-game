@@ -22,6 +22,10 @@
     this.stanbyHands_();
 
     this.stanbySide_();
+
+    MessageDisplay.println('ゲームを開始の準備をします');
+    MessageDisplay.println('・たねポケモンを１枚選んでバトルに出してください');
+    MessageDisplay.println('・たねポケモンをベンチに出すことができます');
   };
 
   GameSetupper.prototype.stanbyHands_ = function() {
@@ -35,13 +39,13 @@
       this.stanbyHands_();
     }
     while (!UtilFunc.existsBaseMonster(this.myField_.getHands())) {
-      MessageDisplay.println('プレイヤーの手札にたねモンスターがいないので引き直し、相手はさらに一枚引きます');
+      MessageDisplay.println('プレイヤーの手札にたねポケモンがいないので引き直し、相手はさらに一枚引きます');
       this.revertHands_(this.myField_);
       this.drawHand_(this.myField_);
       this.drawHand_(this.rivalField_, 1);
     }
     while (!UtilFunc.existsBaseMonster(this.rivalField_.getHands())) {
-      MessageDisplay.println('相手の手札にたねモンスターがいないので引き直し、プレイヤーはさらに一枚引きます');
+      MessageDisplay.println('相手の手札にたねポケモンがいないので引き直し、プレイヤーはさらに一枚引きます');
       this.revertHands_(this.rivalField_);
       this.drawHand_(this.rivalField_);
       this.drawHand_(this.myField_, 1);
