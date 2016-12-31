@@ -14,19 +14,20 @@
     return this.$element_;
   };
 
-  PlayFieldView.prototype.render = function(myModel, rivalModel){
-    this.redraw(myModel, rivalModel);
+  PlayFieldView.prototype.render = function(myModel, rivalModel, turn){
+    this.redraw(myModel, rivalModel, turn);
 
     this.enterDocument();
   };
 
-  PlayFieldView.prototype.redraw = function(myModel, rivalModel){
-    this.renderInner_(this.$element_.find('#my-area'), myModel);
-    this.renderInner_(this.$element_.find('#rival-area'), rivalModel);
+  PlayFieldView.prototype.redraw = function(myModel, rivalModel, turn){
+    var viewpoint = turn.whoseTurn();
+    this.renderInner_(this.$element_.find('#my-area'), myModel, viewpoint === Const.Viewpoint.ME);
+    this.renderInner_(this.$element_.find('#rival-area'), rivalModel, viewpoint === Const.Viewpoint.RIVAL);
   };
 
 
-  PlayFieldView.prototype.renderInner_ = function($view, model){
+  PlayFieldView.prototype.renderInner_ = function($view, model, isSelfTurn){
     $view.find('.rest-card-count').text('残 ' + model.getDeck().size());
 
     var sideTmpl = Hogan.compile($('#card-list-template').text());
@@ -46,6 +47,12 @@
     var trush = model.getTrush();
     if (!trush.isEmpty()) {
       $view.find('.trush').html(openedTmpl.render({'list':[trush.getTop()]}));
+    }
+
+    if (isSelfTurn) {
+      $view.find('.turn-indicator').removeClass('hidden');
+    } else {
+      $view.find('.turn-indicator').addClass('hidden');
     }
   };
 

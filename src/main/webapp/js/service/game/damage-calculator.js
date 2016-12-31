@@ -74,7 +74,7 @@
     var registValue = defender.regist[attacker.type];
     if (!isNaN(Number(registValue))) {
       MessageDisplay.println('こうかはいまひとつのようだ');
-      return d + Number(registValue);
+      return Math.max(d + Number(registValue), 0);
     }
     return d;
   };
@@ -82,6 +82,7 @@
   DamageCalculator.prototype.effectDefenderEffect_ = function(defender, d) {
     var effect = defender.getDefenceEffect();
     if (effect[Const.Status.DAMAGE_GUARD]) {
+      MessageDisplay.println(defender.name + 'はぼうぎょしている！');
       return 0;
     }
     return d;

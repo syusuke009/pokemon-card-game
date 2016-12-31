@@ -25,13 +25,15 @@
   ApplicationView.prototype.renderField = function(model) {
     var myField = model.getField(Const.Viewpoint.ME);
     var rivalField = model.getField(Const.Viewpoint.RIVAL);
-    this.field_.render(myField, rivalField);
+    var turn = model.getTurn();
+    this.field_.render(myField, rivalField, turn);
   };
 
   ApplicationView.prototype.redrawField = function(model) {
     var myField = model.getField(Const.Viewpoint.ME);
     var rivalField = model.getField(Const.Viewpoint.RIVAL);
-    this.field_.redraw(myField, rivalField);
+    var turn = model.getTurn();
+    this.field_.redraw(myField, rivalField, turn);
   };
 
   ApplicationView.prototype.drawSelectable = function(selectable) {
