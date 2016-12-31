@@ -1,8 +1,8 @@
 .hidden {
-    display: none;
+    display: none !important;
 }
 .invisible {
-    visibility: hidden;
+    visibility: hidden !important;
 }
 
 .btn {
@@ -229,11 +229,43 @@
     display: flex;
 }
 
+.battle-area {
+    display: flex;
+}
+.turn-indicator-area {
+    margin: 8px;
+    width: 224px;
+    text-align: center;
+    position: relative;
+}
+.turn-indicator {
+    padding: 4px 8px;
+    color: #fff;
+    border-radius: 16px;
+    display: inline-block;
+    width: 120px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.my-turn {
+    background-color: #4285f4;
+    top: 0;
+}
+.rival-turn {
+    background-color: #e91e63;
+    bottom: 0;
+}
 .battle-monster {
     height: 150px;
     margin: 8px;
     display: flex;
     justify-content: center;
+}
+.barometer {
+    margin: 8px;
+    width: 224px;
 }
 .hands-toggle-caption {
     display: block;

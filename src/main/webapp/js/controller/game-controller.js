@@ -230,11 +230,6 @@
     field.addHand(card);
     this.view_.redrawField(this.model_);
 
-    if (viewpoint === Const.Viewpoint.ME) {
-      MessageDisplay.println('あなたのターンです');
-    } else {
-      MessageDisplay.println('あいてのターンです');
-    }
     (viewpoint === Const.Viewpoint.ME ? this.view_.myHands : this.view_.rivalHands).call(this.view_, true);
     (viewpoint === Const.Viewpoint.ME ? this.view_.rivalHands : this.view_.myHands).call(this.view_, false);
   };
