@@ -14,6 +14,9 @@
     return this.calculateSkillImpact_(skill, attacker, defender, model).then(function(d) {
       var $defer = $.Deferred();
       if (d <= 0) {
+        if (skill.damage > 0) {
+          MessageDisplay.println('しかし こうげきははずれた！');
+        }
         result.damage = 0;
         $defer.resolve(result);
         return $defer.promise();
@@ -27,7 +30,7 @@
 
       d = this.effectDefenderEffect_(defender, d);
 
-      MessageDisplay.println(defender.name + 'に' + d + 'のダメージ！');
+      MessageDisplay.println(defender.name + ' に ' + d + ' のダメージ！');
       result.damage = d;
       $defer.resolve(result);
       return $defer.promise();
@@ -61,7 +64,7 @@
     var weakValue = defender.weak[attacker.type];
     switch (weakValue) {
     case '*2':
-      MessageDisplay.println('こうかはばつぐんだ！');
+      MessageDisplay.println('こうかは ばつぐんだ！');
       return d * 2;
     }
     return d;
@@ -73,7 +76,7 @@
     }
     var registValue = defender.regist[attacker.type];
     if (!isNaN(Number(registValue))) {
-      MessageDisplay.println('こうかはいまひとつのようだ');
+      MessageDisplay.println('こうかは いまひとつのようだ');
       return Math.max(d + Number(registValue), 0);
     }
     return d;
@@ -82,7 +85,7 @@
   DamageCalculator.prototype.effectDefenderEffect_ = function(defender, d) {
     var effect = defender.getDefenceEffect();
     if (effect[Const.Status.DAMAGE_GUARD]) {
-      MessageDisplay.println(defender.name + 'はぼうぎょしている！');
+      MessageDisplay.println(defender.name + ' は ぼうぎょしている！');
       return 0;
     }
     return d;

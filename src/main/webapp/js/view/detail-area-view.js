@@ -26,12 +26,11 @@
 
   DetailAreaView.prototype.hide = function(){
     this.cardDetailRenderer_.hide();
-    this.renderButtons_({kind:'none'});
+    this.hideButtons();
   };
 
-  DetailAreaView.prototype.redraw = function(card, area, control){
+  DetailAreaView.prototype.redraw = function(card, area){
     this.cardDetailRenderer_.render(card);
-    this.renderButtons_(control, area);
   };
 
   DetailAreaView.prototype.enterDocument = function(){
@@ -78,7 +77,11 @@
     }.bind(this));
   };
 
-  DetailAreaView.prototype.renderButtons_ = function(control, area){
+  DetailAreaView.prototype.hideButtons = function(){
+    this.renderButtons({kind:'none'});
+  };
+
+  DetailAreaView.prototype.renderButtons = function(control, area){
     var $fromHandButtons = this.$element_.find('.from-hand');
     var $fromBattleButtons = this.$element_.find('.from-battle');
     var $trainerButtons = this.$element_.find('.trainer-buttons');

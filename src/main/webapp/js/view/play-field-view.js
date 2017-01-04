@@ -7,7 +7,9 @@
   PlayFieldView.EventType = {
     SELECT_HAND: 'select-hand',
     SELECT_BENCH: 'select-bench',
-    SELECT_BATTLE_MONSTER: 'select-battle-monster'
+    SELECT_BATTLE_MONSTER: 'select-battle-monster',
+    HOVER_CARD: 'hover-card',
+    LEAVE_CARD: 'leave-card'
   };
 
   PlayFieldView.prototype.getElement = function(){
@@ -37,11 +39,12 @@
     $view.find('.hands').html(openedTmpl.render({'list':model.getHands().getAll()}));
 
     var battleMonster = model.getBattleMonster();
-    if (battleMonster !== null) {
+    if (battleMonster === null) {
+      $view.find('.battle-monster').html('');
+    } else {
       $view.find('.battle-monster').html(openedTmpl.render({'list':[battleMonster]}));
     }
 
-    var battleMonster = model.getBattleMonster();
     $view.find('.bench').html(openedTmpl.render({'list':model.getBench()}));
 
     var trush = model.getTrush();
@@ -79,6 +82,25 @@
     $unselectables.removeClass('unselectable');
   };
 
+  PlayFieldView.prototype.renderSelecting = function(trnId) {
+    var $cards = this.$element_.find('.card');
+    $.each($cards, function(idx, c) {
+      var $card = $(c);
+      if ($card.hasClass('rear')) {
+        return;
+      }
+      if (trnId === $card.attr('data-id')) {
+        $card.addClass('selecting');
+      } else {
+        $card.removeClass('selecting');
+      }
+    });
+  };
+
+  PlayFieldView.prototype.clearSelecting = function() {
+    this.$element_.find('.selecting').removeClass('selecting');
+  };
+
   PlayFieldView.prototype.enterDocument = function() {
     this.$element_.on('click', '.hands .card', function(e){
       this.$element_.trigger(PlayFieldView.EventType.SELECT_HAND, e.currentTarget);
@@ -88,6 +110,28 @@
     }.bind(this));
     this.$element_.on('click', '.battle-monster .card', function(e){
       this.$element_.trigger(PlayFieldView.EventType.SELECT_BATTLE_MONSTER, e.currentTarget);
+    }.bind(this));
+    this.$element_.on('mouseenter', '.card', function(e) {
+      var $target = $(e.currentTarget);
+      if ($target.hasClass('rear') || $target.hasClass('unselectable')) {
+        return;
+      }
+      var data = {};
+      data.trnId = $target.attr('data-id');
+      data.element = e.currentTarget;
+      if ($target.parents('.hands').length > 0) {
+        data.area = Const.Area.HAND;
+      } else if ($target.parents('.bench').length > 0) {
+        data.area = Const.Area.BENCH;
+      } else if ($target.parents('.battle-monster').length > 0) {
+        data.area = Const.Area.BATTLE_MONSTER;
+      } else {
+        return;
+      }
+      this.$element_.trigger(PlayFieldView.EventType.HOVER_CARD, data);
+    }.bind(this));
+    this.$element_.on('mouseleave', '.card', function(e) {
+      this.$element_.trigger(PlayFieldView.EventType.LEAVE_CARD);
     }.bind(this));
     this.$element_.on('click', '.hands-toggle-btn', function(e) {
       var $field = $(e.currentTarget).parents('.player-field');
