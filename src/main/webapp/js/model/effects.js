@@ -23,6 +23,7 @@
     var $defer = $.Deferred();
     var d = param.attacker.getDamageCount();
     if (d > 0) {
+      MessageDisplay.println(param.attacker.name + ' は 10 かいふくした！');
       param.attacker.hurt(-10);
     }
     $defer.resolve();
@@ -169,7 +170,7 @@
         $defer.resolve(param.skill.damage + 10);
       } else {
         $defer.resolve(param.skill.damage);
-        param.attacker.hurt(10);
+        EffectsBase.selfDamage(10, param);
       }
     });
     return $defer.promise();

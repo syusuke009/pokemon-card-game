@@ -238,6 +238,7 @@
   EffectsBase.benchDamage = function(field, damage) {
     var $defer = $.Deferred();
     field.getBench().forEach(function(card) {
+      MessageDisplay.println(card.name + ' に ' + damage + ' ダメージ！');
       card.hurt(damage);
     });
     $defer.resolve();
