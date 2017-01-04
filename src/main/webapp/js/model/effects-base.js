@@ -4,6 +4,7 @@
 
   EffectsBase.poison = function(param) {
     var $defer = $.Deferred();
+    MessageDisplay.println(param.defender.name + ' は どく になった！');
     param.defender.addStatus(Const.Status.POISON);
     $defer.resolve();
     return $defer.promise();
@@ -14,6 +15,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は どく になった！');
         param.defender.addStatus(Const.Status.POISON);
       }
       $defer.resolve();
@@ -26,6 +28,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は マヒ になった！');
         param.defender.addStatus(Const.Status.PARALYSIS);
       }
       $defer.resolve();
@@ -38,6 +41,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は こんらんした！');
         param.defender.addStatus(Const.Status.CONFUSION);
       }
       $defer.resolve();
@@ -50,8 +54,10 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は どく になった！');
         param.defender.addStatus(Const.Status.POISON);
       } else {
+        MessageDisplay.println(param.defender.name + ' は こんらんした！');
         param.defender.addStatus(Const.Status.CONFUSION);
       }
       $defer.resolve();
@@ -202,6 +208,7 @@
 
   EffectsBase.selfDamage = function(damage, param) {
     var $defer = $.Deferred();
+    MessageDisplay.println(param.attacker.name + ' にも はんどうで ' + damage + ' ダメージ！');
     param.attacker.hurt(damage);
     $defer.resolve();
     return $defer.promise();
@@ -212,6 +219,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (!response[0]) {
+        MessageDisplay.println(param.attacker.name + ' にも はんどうで ' + damage + ' ダメージ！');
         param.attacker.hurt(damage);
       }
       $defer.resolve();

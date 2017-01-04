@@ -12,8 +12,8 @@
   Const.Area = {
     HAND: 'hand',
     BENCH: 'bench',
+    BATTLE_MONSTER: 'battle-monster'
   };
-  BATTLE_MONSTER: 'battle-monster'
 
   Const.Status = {
     POISON: 'poison',

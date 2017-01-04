@@ -40,6 +40,7 @@
     var monster = field.getBattleMonster();
     var status = monster.getStatus();
     if (status.indexOf(Const.Status.POISON) >= 0) {
+      MessageDisplay.println(monster.name + ' は どく で 10 ダメージ！');
       monster.hurt(10);
     }
   };
@@ -52,6 +53,7 @@
       var dialog = new CoinTossDialog();
       dialog.show().then(function(response){
         if (response[0]) {
+          MessageDisplay.println(monster.name + ' は やけど で 20 ダメージ！');
           monster.hurt(20);
         }
         $defer.resolve();
@@ -70,7 +72,10 @@
       var dialog = new CoinTossDialog();
       dialog.show().then(function(response){
         if (response[0]) {
+          MessageDisplay.println(monster.name + ' は めをさました！');
           status.splice(status.indexOf(Const.Status.SLEEP), 1);
+        } else {
+          MessageDisplay.println(monster.name + ' は ねむっている');
         }
         $defer.resolve();
       });
@@ -84,6 +89,7 @@
     var monster = field.getBattleMonster();
     var status = monster.getStatus();
     if (status.indexOf(Const.Status.PARALYSIS) >= 0) {
+      MessageDisplay.println(monster.name + ' は マヒ がとけた！');
       status.splice(status.indexOf(Const.Status.PARALYSIS), 1);
     }
   };
@@ -114,13 +120,13 @@
       monster.trush();
       field.setBattleMonster(null);
       count++;
-      MessageDisplay.println(monster.name + ' はたおれた！');
+      MessageDisplay.println(monster.name + ' は たおれた！');
     }
     $.each(field.getBench(), function(idx, card) {
       if (isDead(card)) {
         field.pickBench(card.trnId).trush();
         count++;
-        MessageDisplay.println(card.name + ' はたおれた！');
+        MessageDisplay.println(card.name + ' は たおれた！');
       }
     });
     return count;

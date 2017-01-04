@@ -10,6 +10,8 @@
     SELECT_CARD: 'select-card',
     ASSIGN_BATTLE: 'assign-battle',
     ASSIGN_BENCH: 'assign-bench',
+    HOVER_CARD: PlayFieldView.EventType.HOVER_CARD,
+    LEAVE_CARD: PlayFieldView.EventType.LEAVE_CARD,
     EVOLUTE: DetailAreaView.EventType.EVOLUTE,
     USE: DetailAreaView.EventType.USE,
     ATTACH_ENERGY: DetailAreaView.EventType.ATTACH,
@@ -44,6 +46,14 @@
     this.field_.resetSelectable();
   };
 
+  ApplicationView.prototype.renderSelecting = function(trnId) {
+    this.field_.renderSelecting(trnId);
+  };
+
+  ApplicationView.prototype.clearSelecting = function() {
+    this.field_.clearSelecting();
+  };
+
   ApplicationView.prototype.renderDetail = function() {
     this.detail_.render();
   };
@@ -52,8 +62,16 @@
     this.detail_.hide();
   };
 
-  ApplicationView.prototype.redrawDetail = function(card, area, control) {
-    this.detail_.redraw(card, area, control);
+  ApplicationView.prototype.redrawDetail = function(card, area) {
+    this.detail_.redraw(card, area);
+  };
+
+  ApplicationView.prototype.redrawButtons = function(area, control) {
+    this.detail_.renderButtons(control, area);
+  };
+
+  ApplicationView.prototype.hideButtons = function() {
+    this.detail_.hideButtons();
   };
 
   ApplicationView.prototype.enterDocument = function() {
@@ -64,6 +82,7 @@
     this.field_.getElement().on(PlayFieldView.EventType.SELECT_HAND, this.onSelectHand_.bind(this));
     this.field_.getElement().on(PlayFieldView.EventType.SELECT_BENCH, this.onSelectBench_.bind(this));
     this.field_.getElement().on(PlayFieldView.EventType.SELECT_BATTLE_MONSTER, this.onSelectBattleMonster_.bind(this));
+    this.field_.getElement().on(PlayFieldView.EventType.HOVER_CARD, this.onHoverCard_.bind(this));
 
     this.detail_.getElement().on(DetailAreaView.EventType.TO_BATTLE, this.onToBattle_.bind(this));
     this.detail_.getElement().on(DetailAreaView.EventType.TO_BENCH, this.onToBench_.bind(this));
@@ -91,6 +110,14 @@
     data.area = Const.Area.BATTLE_MONSTER;
     data.element = target;
     this.$element_.trigger(ApplicationView.EventType.SELECT_CARD, data);
+  };
+
+  ApplicationView.prototype.onHoverCard_ = function(e, data) {
+    this.$element_.trigger(ApplicationView.EventType.HOVER_CARD, data);
+  };
+
+  ApplicationView.prototype.onLeaveCard_ = function(e) {
+    this.$element_.trigger(ApplicationView.EventType.LEAVE_CARD);
   };
 
   ApplicationView.prototype.onToBattle_ = function(e, trnId) {

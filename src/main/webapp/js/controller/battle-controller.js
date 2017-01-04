@@ -23,6 +23,8 @@
         if (response[0]) {
           return this.battle_(skill, attacker, defender, model);
         } else {
+          MessageDisplay.newSentence(attacker.name + ' は こんらんしてじぶんをこうげきした！');
+          MessageDisplay.println(attacker.name + ' に 30 ダメージ！');
           attacker.hurt(30);
           $defer.resolve();
           return $defer.promise();
@@ -40,7 +42,7 @@
       return $defer.promise();
     }
 
-    MessageDisplay.newSentence(attacker.name + 'の' + skill.name + '！');
+    MessageDisplay.newSentence(attacker.name + ' の ' + skill.name + '！');
     return this.processBeforeDamage_(skill, attacker, defender)
     .then(function(){
       return this.calculator_.calculate(skill, attacker, defender, model);

@@ -346,7 +346,7 @@
 }
 .hand-cards-container {
     max-width: 816px;
-    margin: 12px 0;
+    margin: 4px 0;
     overflow: hidden;
     display: inline-block;
 }
@@ -359,7 +359,8 @@
 
 .hands {
     height: 148px;
-    min-width: 816px;
+    min-width: 800px;
+    padding: 4px 8px;
     display: flex;
 }
 
@@ -729,7 +730,7 @@
 	font-size: 12px;
 }
 .status.poison:before {
-	content: 'どく';
+	content: 'どく';
 	color: #fff;
 	background-color: #c44ad9;
 	padding: 2px 8px;
