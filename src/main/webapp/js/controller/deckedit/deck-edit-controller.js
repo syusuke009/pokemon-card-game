@@ -5,6 +5,7 @@
     this.cardMstDao_ = new CardMstDao();
     this.skillDao_ = new SkillDao();
     this.deckDao_ = new DeckDao();
+    this.deckTemplateDao_ = new DeckTemplateDao();
 
     this.regulation_ = new RegulationChecker();
     this.view_ = new DeckEditView(this.regulation_);
@@ -30,6 +31,7 @@
     this.view_.getElement().on(DeckEditView.EventType.EXIT, this.onExit_.bind(this));
     this.view_.getElement().on(DeckEditView.EventType.ADD_TO_DECK, this.onAdd_.bind(this));
     this.view_.getElement().on(DeckEditView.EventType.REMOVE_FROM_DECK, this.onRemove_.bind(this));
+    this.view_.getElement().on(DeckEditView.EventType.REFLECT_DECK_TEMPLATE, this.onReflectDeckTemplate_.bind(this));
   };
 
   DeckEditController.prototype.onAdd_ = function(e, code) {
@@ -86,7 +88,12 @@
   };
 
   DeckEditController.prototype.reset_ = function() {
+    this.initDeckTemplateSelect_();
     var deckCodes = this.deckDao_.get(this.userId_);
+    this.setDeck_(deckCodes);
+  };
+
+  DeckEditController.prototype.setDeck_ = function(deckCodes) {
     this.deck_ = [];
 
     var cardCount = {};
@@ -135,6 +142,26 @@
       return 99;
     }
     return this.regulation_.sameCard();
+  };
+
+  DeckEditController.prototype.initDeckTemplateSelect_ = function() {
+    this.deckTemplateDao_.getTemplates()
+      .done(function(deckTemplates) {
+        this.view_.redrawTemplateSelect(deckTemplates);
+      }.bind(this))
+      .fail(function(error) {
+        console.error(error);
+      });
+  };
+
+  DeckEditController.prototype.onReflectDeckTemplate_ = function(e, deckCode) {
+    this.deckTemplateDao_.getTemplateCards(deckCode)
+      .done(function(deckCodes) {
+        this.setDeck_(deckCodes);
+      }.bind(this))
+      .fail(function(error) {
+        console.error(error);
+      });
   };
 
 })(jQuery);
