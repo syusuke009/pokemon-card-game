@@ -10,7 +10,8 @@
       REMOVE_FROM_DECK: 'remove-from-deck',
       SAVE: 'save',
       REVERT: 'revert',
-      EXIT: 'exit'
+      EXIT: 'exit',
+      REFLECT_DECK_TEMPLATE: 'reflect-deck-template'
   };
 
   DeckEditView.prototype.getElement = function(){
@@ -50,6 +51,16 @@
       $errorMessage.hide();
     }
     $count.text(count);
+  };
+
+  DeckEditView.prototype.redrawTemplateSelect = function(deckTemplates) {
+    if (!deckTemplates || deckTemplates.length < 1) {
+      return;
+    }
+    var $view = this.$element_;
+    var holdingTmpl = Hogan.compile($('#deck-template-select-template').text());
+    $view.find('.deck-template-select').html(holdingTmpl.render({'list':deckTemplates}));
+    this.$element_.on('click', '.deck-template-reflect-btn', this.onDeckTemplateReflectClick_.bind(this));
   };
 
   DeckEditView.prototype.enterDocument = function(){
@@ -92,6 +103,11 @@
     }
     var data = $target.attr('data-code');
     this.$element_.trigger(DeckEditView.EventType.REMOVE_FROM_DECK, data);
+  };
+
+  DeckEditView.prototype.onDeckTemplateReflectClick_ = function(e) {
+    var selectedDeckCode = $('#deck-template-select').val();
+    this.$element_.trigger(DeckEditView.EventType.REFLECT_DECK_TEMPLATE, selectedDeckCode);
   };
 
   DeckEditView.prototype.containsBaseMonster_ = function(deck) {
