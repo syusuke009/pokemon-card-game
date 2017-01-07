@@ -6,11 +6,17 @@
 
   MessageDisplay.println = function(message) {
     view.println(message);
+    RequestSignalSender.displayPrintln(message);
+  };
+
+  MessageDisplay.clear = function() {
+    view.clear();
+    RequestSignalSender.displayClear();
   };
 
   MessageDisplay.newSentence = function(message) {
-    view.clear();
-    view.println(message);
+    MessageDisplay.clear();
+    MessageDisplay.println(message);
   };
 
 })(jQuery);

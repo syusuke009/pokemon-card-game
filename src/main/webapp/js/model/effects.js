@@ -58,7 +58,7 @@
   Effects.skill_14_2 = EffectsBase.poisonByCoinToss;
 
   Effects.skill_15_1 = function(param) {
-    return EffectBase.pluralAttack(param, 2);
+    return EffectsBase.pluralAttack(param, 2);
   };
   Effects.skill_15_2 = EffectsBase.poisonByCoinToss;
 
