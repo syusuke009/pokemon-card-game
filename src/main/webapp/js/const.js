@@ -17,7 +17,7 @@
 
   Const.Status = {
     POISON: 'poison',
-    BI_POISON: 'bi-poison',
+    DOUBLE_POISON: 'double-poison',
     BURN: 'burn',
     SLEEP: 'sleep',
     PARALYSIS: 'paralysis',

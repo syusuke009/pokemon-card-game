@@ -32,6 +32,12 @@ SkillList = {
 "26_1":{"name":"こうそくいどう","cost":["thunder","normal","normal"],"damage":"20","description":"コインを投げて「おもて」なら、次の相手の番の「ワザ」をうけない。","effect":"skill_26_1","timing":"after-damage"},
 "26_2":{"name":"かみなり","cost":["thunder","thunder","thunder","normal"],"damage":"60","description":"コインを投げて「うら」なら、自分にも30ダメージ。","effect":"skill_26_2","timing":"after-damage"},
 
+"32_1":{"name":"つのでつく","cost":["leaf"],"damage":"30","description":"コインを投げて「うら」なら、相手にダメージをあたえることができない。","effect":"skill_32_1","timing":"calc-damage"},
+"33_1":{"name":"にどげり","cost":["leaf","normal","normal"],"damage":"30","damageCaption":"30×","description":"コインを2枚投げて「おもて」の出た数×30のダメージ。","effect":"skill_33_1","timing":"calc-damage"},
+"33_2":{"name":"つのドリル","cost":["leaf","leaf","normal","normal"],"damage":"50","description":"","effect":""},
+"34_1":{"name":"あばれる","cost":["leaf","normal","normal"],"damage":"30","damageCaption":"30＋","description":"コインを投げて「おもて」なら相手に追加10ダメージ、「うら」なら自分に10ダメージ。","effect":"skill_34_1","timing":"calc-damage"},
+"34_2":{"name":"どくどく","cost":["leaf","leaf","leaf"],"damage":"20","description":"相手を「どくどく」状態にし、ポケモンチェックごとに20の「どく」ダメージ。","effect":"skill_34_2","timing":"after-damage"},
+
 "37_1":{"name":"あやしいひかり","cost":["fire","fire"],"damage":"10","description":"コインを投げて「おもて」なら、相手を「こんらん」状態にする。","effect":"skill_37_1","timing":"after-damage"},
 "38_1":{"name":"かどわかす","cost":["normal","normal"],"damage":"","description":"相手の控えポケモンを選んで、相手の対戦ポケモンと入れ替える。","effect":"skill_38_1","timing":"after-damage"},
 "38_2":{"name":"だいもんじ","cost":["fire","fire","fire","fire"],"damage":"80","description":"自分の「炎」エネルギーカードを1枚トラッシュする。","effect":"skill_38_2","timing":"before-damage"},

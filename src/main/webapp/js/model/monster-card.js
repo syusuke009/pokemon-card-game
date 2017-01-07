@@ -124,14 +124,26 @@
     if (this.status_.indexOf(status) >= 0) {
       return;
     }
+    var idx;
     switch(status) {
     case Const.Status.POISON:
+      idx = this.status_.indexOf(Const.Status.DOUBLE_POISON);
+      if (idx >= 0) {
+        return;
+      }
+      break;
+    case Const.Status.DOUBLE_POISON:
+      idx = this.status_.indexOf(Const.Status.POISON);
+      if (idx >= 0) {
+        this.status_.splice(idx, 1);
+      }
+      break;
     case Const.Status.BURN:
       break;
     case Const.Status.SLEEP:
     case Const.Status.PARALYSIS:
     case Const.Status.CONFUSION:
-      var idx = this.status_.indexOf(Const.Status.SLEEP);
+      idx = this.status_.indexOf(Const.Status.SLEEP);
       if (idx >= 0) {
         this.status_.splice(idx, 1);
       }

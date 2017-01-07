@@ -24,9 +24,9 @@
 "26":{"name":"ライチュウ","kind":"2","base":"25","type":"thunder","hp":"80","special":"","skill1":"skill_26_1","skill2":"skill_26_2","escape":["normal"],"weak":{"fight":"*2"}},
 // "27":{"name":"サンド","kind":"1","base":"","type":"fight","hp":"40","special":"","skill1":"skill_27_1","skill2":"","escape":["normal"],"weak":{"leaf":"*2"},"regist":{"thunder":"-30"}},
 
-// "32":{"name":"ニドラン♂","kind":"1","base":"","type":"leaf","hp":"40","special":"","skill1":"skill_32_1","skill2":"","escape":["normal"],"weak":{"esper":"*2"}},
-// "33":{"name":"ニドリーノ","kind":"2","base":"32","type":"leaf","hp":"60","special":"","skill1":"skill_33_1","skill2":"skill_33_2","escape":["normal"],"weak":{"esper":"*2"}},
-// "34":{"name":"ニドキング","kind":"3","base":"33","type":"leaf","hp":"90","special":"","skill1":"skill_34_1","skill2":"skill_34_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
+"32":{"name":"ニドラン♂","kind":"1","base":"","type":"leaf","hp":"40","special":"","skill1":"skill_32_1","skill2":"","escape":["normal"],"weak":{"esper":"*2"}},
+"33":{"name":"ニドリーノ","kind":"2","base":"32","type":"leaf","hp":"60","special":"","skill1":"skill_33_1","skill2":"skill_33_2","escape":["normal"],"weak":{"esper":"*2"}},
+"34":{"name":"ニドキング","kind":"3","base":"33","type":"leaf","hp":"90","special":"","skill1":"skill_34_1","skill2":"skill_34_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
 // "35":{"name":"ピッピ","kind":"1","base":"","type":"normal","hp":"40","special":"","skill1":"skill_35_1","skill2":"skill_35_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 
 "37":{"name":"ロコン","kind":"1","base":"","type":"fire","hp":"50","special":"","skill1":"skill_37_1","skill2":"","escape":["normal"],"weak":{"aqua":"*2"}},
