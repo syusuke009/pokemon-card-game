@@ -87,6 +87,8 @@
   };
 
   ApplicationView.prototype.enterDocument = function() {
+    this.field_.enterDocument();
+    this.detail_.enterDocument();
     this.bindEvents_();
   };
 

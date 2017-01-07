@@ -18,9 +18,10 @@
   };
 
   GameController.prototype.ready = function() {
-    this.setupGame_();
-
+    this.view_.enterDocument();
     this.bindEvents_();
+
+    this.setupGame_();
   };
 
   GameController.prototype.setupGame_ = function() {
@@ -32,9 +33,8 @@
 
     new GameSetupper(false).setup(this.model_);
 
-    this.view_.enterDocument();
-    this.view_.renderField(this.model_);
-    this.view_.renderDetail();
+    this.view_.redrawField(this.model_);
+//    this.view_.redrawDetail();
 
     this.view_.myHands(true);
     this.view_.rivalHands(true);
@@ -72,6 +72,7 @@
       this.onSelectInterceptor_.clear();
       this.view_.resetSelectable();
       this.view_.redrawField(this.model_);
+      this.view_.redrawDetail(card, data.area);
       if (!bool) {
         return;
       }
@@ -162,22 +163,13 @@
       this.model_.getTurn().useSupporter();
     }
 
-    var func = this.effectDao_.getTrainerTarget(card.code);
-    if (!!func) {
-      var selectables = func(this.model_);
-      this.view_.drawSelectable(selectables);
+    var bool = this.effectDao_.getTrainerEffect(card.code)(this.model_);
+    field.getTrush().trush(card);
 
-      var effectFunc = this.effectDao_.getTrainerEffect(card.code);
-      this.onSelectInterceptor_.forUseTrainer(effectFunc);
-    } else {
-      var bool = this.effectDao_.getTrainerEffect(card.code)(this.model_);
-      field.getTrush().trush(card);
-
-      this.view_.clearSelecting();
-      this.selectingData_ = null;
-      if (bool !== false) {
-        this.view_.redrawField(this.model_);
-      }
+    this.view_.clearSelecting();
+    this.selectingData_ = null;
+    if (bool !== false) {
+      this.view_.redrawField(this.model_);
     }
   };
 
@@ -307,12 +299,12 @@
       var mySide = myField.getSide();
       var rivalSide = rivalField.getSide();
       if (mySide.length === 0 && rivalSide.length === 0) this.gameset(null, 'おたがいのサイドを全てとりました');
-      if (mySide.length === 0) this.gameset(Const.Viewpoint.ME, 'サイドを全てとりました');
-      if (rivalSide.length === 0) this.gameset(Const.Viewpoint.RIVAL, 'サイドを全てとりました');
+      if (mySide.length === 0) this.gameset(Const.Viewpoint.ME, 'じぶんのサイドを全てとりました');
+      if (rivalSide.length === 0) this.gameset(Const.Viewpoint.RIVAL, 'あいてがサイドを全てとりました');
       // no monster
       if (!my && !rival) this.gameset(null, 'おたがいのポケモンが全滅しました');
-      if (!my) this.gameset(Const.Viewpoint.RIVAL, 'あいてのポケモンを全滅させました');
-      if (!rival) this.gameset(Const.Viewpoint.ME, 'あいてのポケモンを全滅させました');
+      if (!my) this.gameset(Const.Viewpoint.RIVAL, 'あなたのポケモンが全滅しました');
+      if (!rival) this.gameset(Const.Viewpoint.ME, 'あいてのポケモンが全滅しました');
 
       this.view_.hideDetail();
       this.model_.nextTurn();
@@ -345,7 +337,7 @@
   GameController.prototype.gameset = function(winner, reason) {
     this.view_.redrawField(this.model_);
     this.view_.gameset();
-    MessageDisplay.println('---');
+    MessageDisplay.println('　');
     MessageDisplay.println(reason);
     var message = !!winner ? (winner === Const.Viewpoint.ME ? 'あなた' : 'あいて') + ' の勝利！' : '引き分け';
     MessageDisplay.println(message);

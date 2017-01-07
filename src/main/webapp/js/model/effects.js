@@ -221,16 +221,7 @@
 
 
 
-  Effects.trainer_effect_1001 = function(eventdata, model) {
-    var viewpoint = UtilFunc.getViewpoint(eventdata.trnId);
-    var field = model.getField(viewpoint);
-    var target = field.selectFrom(eventdata.area, eventdata.trnId);
-    target.hurt(-20);
-  };
-  Effects.trainer_condition_1001 = function(model) {
-    return Effects.trainer_target_1001(model).length > 0;
-  };
-  Effects.trainer_target_1001 = function(model) {
+  Effects.trainer_effect_1001 = function(model) {
     var turn = model.getTurn();
     var viewpoint = turn.whoseTurn();
     var field = model.getField(viewpoint);
@@ -242,29 +233,71 @@
     field.getBench().forEach(function(c) {
       arr.push(c);
     });
-    return arr.filter(function(c) {
+    var targets = arr.filter(function(c) {
       return c.getDamageCount() > 0;
-    }).map(function(c) {
-      return c.trnId;
     });
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var target = field.selectFrom(response.area, response.trnId);
+      target.hurt(-20);
+      MessageDisplay.newSentence('きずぐすり を つかった！');
+      MessageDisplay.println(target.name + ' は 20 かいふくした！');
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1001 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+
+    var arr = [];
+    if (field.getBattleMonster() !== null) {
+      arr.push(field.getBattleMonster());
+    }
+    field.getBench().forEach(function(c) {
+      arr.push(c);
+    });
+    var targets = arr.filter(function(c) {
+      return c.getDamageCount() > 0;
+    });
+    return targets.length > 0;
   };
 
-  Effects.trainer_effect_1002 = function(eventdata, model) {
-    var viewpoint = UtilFunc.getViewpoint(eventdata.trnId);
+  Effects.trainer_effect_1002 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
     var field = model.getField(viewpoint);
-    var target = field.selectFrom(eventdata.area, eventdata.trnId);
-    var dialog = new EnergySelectionDialog();
-    dialog.show(target.getEnergy(), ['normal']).then(function(response){
+
+    var arr = [];
+    if (field.getBattleMonster() !== null) {
+      arr.push(field.getBattleMonster());
+    }
+    field.getBench().forEach(function(c) {
+      arr.push(c);
+    });
+    var targets = arr.filter(function(c) {
+      return c.getDamageCount() > 0 && c.getEnergy().length > 0;
+    })
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var target = field.selectFrom(response.area, response.trnId);
+      var dialog = new EnergySelectionDialog();
+      return $.when(dialog.show(target.getEnergy(), ['normal']), $.Deferred().resolve(target).promise());
+    }).then(function(response, target){
       response.forEach(function(trushed){
         target.removeEnergy(trushed);
       })
       target.hurt(-40);
+      MessageDisplay.newSentence('いいきずぐすり を つかった！');
+      MessageDisplay.println(target.name + ' は 40 かいふくした！');
     });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
+    return false;
   };
   Effects.trainer_condition_1002 = function(model) {
-    return Effects.trainer_target_1002(model).length > 0;
-  };
-  Effects.trainer_target_1002 = function(model) {
     var turn = model.getTurn();
     var viewpoint = turn.whoseTurn();
     var field = model.getField(viewpoint);
@@ -278,9 +311,7 @@
     });
     return arr.filter(function(c) {
       return c.getDamageCount() > 0 && c.getEnergy().length > 0;
-    }).map(function(c) {
-      return c.trnId;
-    });
+    }).length > 0;
   };
 
   Effects.trainer_effect_1003 = function(model) {
@@ -294,6 +325,8 @@
       if (idx >= 0) {
         status.splice(idx, 1);
       }
+      MessageDisplay.newSentence('なんでもなおし を つかった！');
+      MessageDisplay.println(target.name + ' のステータスがかいふくした！');
     });
   };
   Effects.trainer_condition_1003 = function(model) {
@@ -307,7 +340,6 @@
       return idx >= 0;
     });
   };
-  Effects.trainer_target_1003 = null;
 
   Effects.trainer_effect_1004 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
@@ -321,6 +353,8 @@
       card.hurt(Math.floor(card.hp / 2 / 10) * 10);
       field.putBench(card);
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('げんきのかけら を つかった！');
+      MessageDisplay.println(card.name + ' は げんきをとりもどした！');
     });
   };
   Effects.trainer_condition_1004 = function(model) {
@@ -331,7 +365,6 @@
       return c.kind === '1';
     });
   };
-  Effects.trainer_target_1004 = null;
 
   Effects.trainer_effect_1007 = function(model) {
     var viewpoint = UtilFunc.reverseViewpoint(model.getTurn().whoseTurn());
@@ -344,6 +377,9 @@
       var card = field.getTrush().pick(response[0].trnId);
       field.putBench(card);
       Effects.dispatchRedrawFieldRequestEvent();
+      Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('ポケモンの笛 を つかった！');
+      MessageDisplay.println(card.name + ' は ベンチによみがえった！');
     });
   };
   Effects.trainer_condition_1007 = function(model) {
@@ -354,7 +390,6 @@
       return c.kind === '1';
     });
   };
-  Effects.trainer_target_1007 = null;
 
   Effects.trainer_effect_1009 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
@@ -381,6 +416,8 @@
       var card = trush.pick(response[0].trnId);
       hands.add(card);
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('ダウジングマシーン を つかった！');
+      MessageDisplay.println(card.name + ' を みつけた！');
     });
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
     return false;
@@ -392,7 +429,6 @@
       return UtilFunc.isTrainer(card.kind);
     });
   };
-  Effects.trainer_target_1009 = null;
 
   Effects.trainer_effect_1010 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
@@ -419,6 +455,7 @@
       hands.add(card);
       deck.shuffle();
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('パソコン通信 を つかった！');
     });
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
     return false;
@@ -428,7 +465,6 @@
     var field = model.getField(viewpoint);
     return (field.getHands().size() > 2) && (!field.getDeck().isEmpty());
   };
-  Effects.trainer_target_1010 = null;
 
   Effects.trainer_effect_1011 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
@@ -452,6 +488,8 @@
         });
       }
     });
+    MessageDisplay.newSentence('ポケモンセンター を つかった！');
+    MessageDisplay.println('すべてのポケモン が かいふくし、かいふくしたポケモン の エネルギーは うしなわれた！');
   };
   Effects.trainer_condition_1011 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
@@ -477,7 +515,6 @@
     }
     return false;
   };
-  Effects.trainer_target_1011 = null;
 
 
 
@@ -491,6 +528,8 @@
       field.setBattleMonster(field.pickBench(response.trnId));
       field.putBench(monster);
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('ポケモンいれかえ を つかった！');
+      MessageDisplay.println('『いけっ！ ' + card.name + '！』', 'あいては ' + card.name + ' を くりだした！');
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
@@ -501,7 +540,6 @@
     var field = model.getField(viewpoint);
     return field.getBench().length > 0;
   };
-  Effects.trainer_target_1013 = null;
 
   Effects.trainer_effect_1015 = function(model) {
     var turn = model.getTurn();
@@ -525,6 +563,10 @@
         hands.add(card);
       });
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('エネルギー回収 を つかった！');
+      MessageDisplay.println(response.map(function(c){
+        return c.name;
+      }).join(' と ') + ' を かいしゅうした！');
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
@@ -537,7 +579,6 @@
       return card.kind === 'energy';
     }).length >= 2);
   };
-  Effects.trainer_target_1015 = null;
 
   Effects.trainer_effect_1016 = function(model) {
     var turn = model.getTurn();
@@ -560,11 +601,15 @@
       });
       return $defer.promise();
     }).then(function(response) {
+      var target = field.selectFrom(response.target.area, response.target.trnId);
       response.energy.forEach(function(e) {
-        var target = field.selectFrom(response.target.area, response.target.trnId);
         target.removeEnergy(e);
       });
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('エネルギーリムーブ を つかった！');
+      MessageDisplay.println(target.name + ' は ' + response.energy.map(function(c){
+        return c.name;
+      }).join(' と ') + ' を うしなった！');
     });
 
     var targets = [];
@@ -589,7 +634,6 @@
       return card.getEnergy().length > 0;
     }).length > 0;
   };
-  Effects.trainer_target_1016 = null;
 
   Effects.trainer_effect_1017 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
@@ -644,6 +688,10 @@
         target.removeEnergy(e);
       });
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('超エネルギーリムーブ を つかった！');
+      MessageDisplay.println(target.name + ' は ' + response.energy.map(function(c){
+        return c.name;
+      }).join(' と ') + ' を うしなった！');
     });
 
     var targets = [];
@@ -683,7 +731,6 @@
 
     return mineCondition && rivalCondition;
   };
-  Effects.trainer_target_1017 = null;
 
   Effects.trainer_effect_1019 = function(model) {
     var turn = model.getTurn();
@@ -707,6 +754,7 @@
       hands.add(deck.draw());
 
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('メンテナンス を つかった！');
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
@@ -717,7 +765,6 @@
     var field = model.getField(viewpoint);
     return field.getHands().size() > 2;
   };
-  Effects.trainer_target_1019 = null;
 
   Effects.trainer_effect_1020 = function(model) {
     var turn = model.getTurn();
@@ -725,10 +772,13 @@
     var field = model.getField(viewpoint);
     var $defer = $.Deferred();
     $defer.promise().then(function(response) {
-      var monster = field.getBattleMonster();
-      field.setBattleMonster(field.pickBench(response.trnId));
-      field.putBench(monster);
+      var oldMonster = field.getBattleMonster();
+      var newMonster = field.pickBench(response.trnId);
+      field.setBattleMonster(newMonster);
+      field.putBench(oldMonster);
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('突風 を つかった！');
+      MessageDisplay.println(oldMonster.name + ' は もどされ ' + newMonster.name + ' が でてきた！');
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
@@ -739,7 +789,6 @@
     var field = model.getField(viewpoint);
     return field.getBench().length > 0;
   };
-  Effects.trainer_target_1020 = null;
 
 
 
@@ -756,13 +805,13 @@
     for (var i = 0; i < 7; i++) {
       field.addHand(field.getDeck().draw());
     }
+    MessageDisplay.newSentence('オーキドはかせ が たすけにきた！');
   };
   Effects.trainer_condition_8001 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
     var field = model.getField(viewpoint);
     return field.getDeck().size() >= 7;
   };
-  Effects.trainer_target_8001 = null;
 
   Effects.trainer_effect_8002 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
@@ -770,25 +819,25 @@
     for (var i = 0; i < 2; i++) {
       field.addHand(field.getDeck().draw());
     }
+    MessageDisplay.newSentence('マサキ が たすけにきた！');
   };
   Effects.trainer_condition_8002 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
     var field = model.getField(viewpoint);
     return field.getDeck().size() >= 2;
   };
-  Effects.trainer_target_8002 = null;
 
   Effects.trainer_effect_8003 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
     var field = model.getField(viewpoint);
     // TODO
+    MessageDisplay.newSentence('ポケモン交換おじさん が たすけにきた！');
   };
   Effects.trainer_condition_8003 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
     var field = model.getField(viewpoint);
     // TODO
   };
-  Effects.trainer_target_8003 = null;
 
   Effects.trainer_effect_8004 = function(model) {
     var turn = model.getTurn();
@@ -812,6 +861,8 @@
       field.override(response.area, base, evoluted);
       turn.newAssign(evolutionTrnId);
       Effects.dispatchRedrawFieldRequestEvent();
+      MessageDisplay.newSentence('ポケモン育て屋さん が たすけにきた！');
+      MessageDisplay.println(base.name + ' は ' + evoluted.name + ' に しんかした！');
     });
     var secondEvos = field.getHands().getAll().filter(function(card) {
       return card.kind === '3';
@@ -837,18 +888,17 @@
     });
     return targets.length > 0;
   };
-  Effects.trainer_target_8004 = null;
 
   Effects.trainer_effect_8005 = function(model) {
     var turn = model.getTurn();
     var viewpoint = turn.whoseTurn();
     var field = model.getField(viewpoint);
     // TODO
+    MessageDisplay.newSentence('ミニスカート が たすけにきた！');
   };
   Effects.trainer_condition_8005 = function(model) {
     // TODO
   };
-  Effects.trainer_target_8005 = null;
 
   Effects.trainer_effect_8006 = function(model) {
     var turn = model.getTurn();
@@ -864,6 +914,7 @@
     for (var i = 0; i < 7; i++) {
       field.addHand(deck.draw());
     }
+    MessageDisplay.newSentence('にせオーキドはかせ が たすけにきた！');
   };
   Effects.trainer_condition_8006 = function(model) {
     var turn = model.getTurn();
@@ -871,5 +922,4 @@
     var field = model.getField(viewpoint);
     return !field.getHands().isEmpty();
   };
-  Effects.trainer_target_8006 = null;
 })(jQuery);
