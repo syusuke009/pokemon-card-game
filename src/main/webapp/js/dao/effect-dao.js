@@ -16,8 +16,4 @@
     return this.mst_['trainer_condition_' + code];
   };
 
-  EffectDao.prototype.getTrainerTarget = function(code) {
-    return this.mst_['trainer_target_' + code];
-  };
-
 })(jQuery);

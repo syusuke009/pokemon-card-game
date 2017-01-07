@@ -40,6 +40,7 @@
       var energy = field.pickHand(energyTrnId);
       monster.addEnergy(energy);
       model.getTurn().attachEnergy();
+      MessageDisplay.newSentence(monster.name + ' に ' + energy.name + ' が つけられた');
       return true;
     };
     return this.defer_.promise();
@@ -56,6 +57,8 @@
       evoluted.evolute(base);
       field.override(eventdata.area, base, evoluted);
       model.getTurn().newAssign(evolutionTrnId);
+      MessageDisplay.newSentence('・・・おや!? ' + base.name + ' の ようすが・・・！');
+      MessageDisplay.println(base.name + ' は ' + evoluted.name + ' に しんかした！');
       return true;
     };
     return this.defer_.promise();
@@ -69,6 +72,8 @@
       var monster = field.pickBench(eventdata.trnId);
       field.setBattleMonster(monster);
       $defer.resolve(true);
+      MessageDisplay.println('　');
+      MessageDisplay.println('『いけっ！ ' + monster.name + '！』', 'あいては ' + monster.name + ' を くりだした！');
       return true;
     };
   };

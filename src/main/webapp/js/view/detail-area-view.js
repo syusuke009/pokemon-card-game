@@ -22,10 +22,6 @@
     return this.$element_;
   };
 
-  DetailAreaView.prototype.render = function(){
-    this.enterDocument();
-  };
-
   DetailAreaView.prototype.hide = function(){
     this.cardDetailRenderer_.hide();
     this.hideButtons();

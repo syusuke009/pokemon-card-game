@@ -16,12 +16,6 @@
     return this.$element_;
   };
 
-  PlayFieldView.prototype.render = function(myModel, rivalModel, turn){
-    this.redraw(myModel, rivalModel, turn);
-
-    this.enterDocument();
-  };
-
   PlayFieldView.prototype.redraw = function(myModel, rivalModel, turn){
     var viewpoint = turn.whoseTurn();
     this.renderInner_(this.$element_.find('#my-area'), myModel, viewpoint === Const.Viewpoint.ME);
@@ -48,7 +42,9 @@
     $view.find('.bench').html(openedTmpl.render({'list':model.getBench()}));
 
     var trush = model.getTrush();
-    if (!trush.isEmpty()) {
+    if (trush.isEmpty()) {
+      $view.find('.trush').html('');
+    } else {
       $view.find('.trush').html(openedTmpl.render({'list':[trush.getTop()]}));
     }
 

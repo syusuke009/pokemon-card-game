@@ -4,9 +4,9 @@
 
   MessageDisplay = {};
 
-  MessageDisplay.println = function(message) {
+  MessageDisplay.println = function(message, opt_msgForSend) {
     view.println(message);
-    RequestSignalSender.displayPrintln(message);
+    RequestSignalSender.displayPrintln(opt_msgForSend || message);
   };
 
   MessageDisplay.clear = function() {
@@ -14,9 +14,9 @@
     RequestSignalSender.displayClear();
   };
 
-  MessageDisplay.newSentence = function(message) {
+  MessageDisplay.newSentence = function(message, opt_msgForSend) {
     MessageDisplay.clear();
-    MessageDisplay.println(message);
+    MessageDisplay.println(message, opt_msgForSend);
   };
 
 })(jQuery);
