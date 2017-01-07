@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .hidden {
     display: none !important;
 }
@@ -5,9 +6,18 @@
     visibility: hidden !important;
 }
 
+.select {
+    height: 32px;
+    border: 1px solid #bdbdbd;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 4px 8px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.3);
+}
 .btn {
     border: 1px solid #f0f0f1;
     background-color: #f0f0f1;
+    height: 32px;
     border-radius: 3px;
     cursor: pointer;
     padding: 4px 16px;
@@ -731,6 +741,14 @@
 }
 .status.poison:before {
 	content: 'どく';
+	color: #fff;
+	background-color: #c44ad9;
+	padding: 2px 8px;
+	border-radius: 24px;
+	margin-right: 4px;
+}
+.status.double-poison:before {
+	content: 'どくどく';
 	color: #fff;
 	background-color: #c44ad9;
 	padding: 2px 8px;

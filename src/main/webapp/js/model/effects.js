@@ -73,6 +73,19 @@
     return EffectsBase.selfDamageByCoinToss(30, param);
   };
 
+  Effects.skill_32_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 1);
+  };
+
+  Effects.skill_33_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
+  };
+
+  Effects.skill_34_1 = function(param) {
+    return EffectsBase.boostOrSelfDamageByCoinToss(10, param);
+  };
+  Effects.skill_34_2 = EffectsBase.doublePoison;
+
   Effects.skill_37_1 = EffectsBase.confusionByCoinToss;
 
   Effects.skill_38_1 = function(param) {
@@ -275,7 +288,7 @@
     var field = model.getField(viewpoint);
     var monster = field.getBattleMonster();
     var status = monster.getStatus();
-    var targets = [ Const.Status.POISON, Const.Status.BURN, Const.Status.SLEEP, Const.Status.PARALYSIS, Const.Status.CONFUSION ];
+    var targets = [ Const.Status.POISON, Const.Status.DOUBLE_POISON, Const.Status.BURN, Const.Status.SLEEP, Const.Status.PARALYSIS, Const.Status.CONFUSION ];
     targets.forEach(function(s) {
       var idx = status.indexOf(s);
       if (idx >= 0) {
@@ -288,7 +301,7 @@
     var field = model.getField(viewpoint);
     var monster = field.getBattleMonster();
     var status = monster.getStatus();
-    var targets = [ Const.Status.POISON, Const.Status.BURN, Const.Status.SLEEP, Const.Status.PARALYSIS, Const.Status.CONFUSION ];
+    var targets = [ Const.Status.POISON, Const.Status.DOUBLE_POISON, Const.Status.BURN, Const.Status.SLEEP, Const.Status.PARALYSIS, Const.Status.CONFUSION ];
     return targets.some(function(s) {
       var idx = status.indexOf(s);
       return idx >= 0;

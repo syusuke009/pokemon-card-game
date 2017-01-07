@@ -10,6 +10,14 @@
     return $defer.promise();
   };
 
+  EffectsBase.doublePoison = function(param) {
+    var $defer = $.Deferred();
+    MessageDisplay.println(param.defender.name + ' は どくどく になった！');
+    param.defender.addStatus(Const.Status.DOUBLE_POISON);
+    $defer.resolve();
+    return $defer.promise();
+  };
+
   EffectsBase.poisonByCoinToss = function(param) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
@@ -227,6 +235,25 @@
     return $defer.promise();
   };
 
+  /**
+   * コイントスでダメージ追加か自分にダメージ
+   */
+  EffectsBase.boostOrSelfDamageByCoinToss = function(damage, param) {
+    var $defer = $.Deferred();
+    var skill = param.skill;
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        $defer.resolve(skill.damage + damage);
+      } else {
+        MessageDisplay.println(param.attacker.name + ' にも はんどうで ' + damage + ' ダメージ！');
+        param.attacker.hurt(damage);
+        $defer.resolve(skill.damage);
+      }
+    });
+    return $defer.promise();
+  };
+
   EffectsBase.halfHpDamage = function(param) {
     var $defer = $.Deferred();
     var defender = param.defender;
@@ -262,6 +289,7 @@
   EffectsBase.refresh = function(param, cost) {
     var attacker = param.attacker;
     return EffectsBase.trushEnergy(attacker, cost).then(function(response) {
+      MessageDisplay.println(attacker.name + ' のダメージがかいふくした！');
       attacker.hurt(attacker.hp * (-1));
     });
   }

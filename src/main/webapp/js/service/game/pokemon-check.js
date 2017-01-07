@@ -43,6 +43,10 @@
       MessageDisplay.println(monster.name + ' は どく で 10 ダメージ！');
       monster.hurt(10);
     }
+    if (status.indexOf(Const.Status.DOUBLE_POISON) >= 0) {
+      MessageDisplay.println(monster.name + ' は どくどく で 20 ダメージ！');
+      monster.hurt(20);
+    }
   };
 
   PokemonChecker.prototype.checkBurn_ = function(field) {
