@@ -17,7 +17,9 @@
     ATTACH_ENERGY: DetailAreaView.EventType.ATTACH,
     ATTACK: DetailAreaView.EventType.ATTACK,
     ESCAPE: DetailAreaView.EventType.ESCAPE,
-    TURN_END: DetailAreaView.EventType.TURN_END
+    TURN_END: DetailAreaView.EventType.TURN_END,
+    SURRENDER: DetailAreaView.EventType.SURRENDER,
+    GAME_START: DetailAreaView.EventType.GAME_START
   };
 
   ApplicationView.prototype.getElement = function() {
@@ -72,6 +74,16 @@
 
   ApplicationView.prototype.hideButtons = function() {
     this.detail_.hideButtons();
+  };
+
+  ApplicationView.prototype.gameset = function() {
+    this.clearSelecting();
+    this.hideButtons();
+    this.detail_.gameset();
+  };
+
+  ApplicationView.prototype.gamestart = function() {
+    this.detail_.gamestart();
   };
 
   ApplicationView.prototype.enterDocument = function() {

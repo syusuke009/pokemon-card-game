@@ -2,7 +2,7 @@
 
   GameModel = function() {
 
-    this.fields = {};
+    this.fields_ = {};
 
     this.turn_ = new TurnModel();
 
@@ -10,11 +10,11 @@
   };
 
   GameModel.prototype.setField = function(key, field) {
-    this.fields[key] = field;
+    this.fields_[key] = field;
   };
 
   GameModel.prototype.getField = function(key) {
-    return this.fields[key];
+    return this.fields_[key];
   };
 
   GameModel.prototype.getTurn = function(key) {

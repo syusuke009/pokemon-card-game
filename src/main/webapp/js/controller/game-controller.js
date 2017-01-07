@@ -11,10 +11,19 @@
     this.effectDao_ = new EffectDao();
     this.onSelectInterceptor_ = new CardSelectInterceptor();
 
+    RequestSignalReceiver.setController(this);
+    RequestSignalSender.setOperation();
+
     this.selectingData_;
   };
 
   GameController.prototype.ready = function() {
+    this.setupGame_();
+
+    this.bindEvents_();
+  };
+
+  GameController.prototype.setupGame_ = function() {
     var supplier = new DeckSupplier(new CardMstDao(), new SkillDao());
     var deckDao = new DeckDao();
 
@@ -29,8 +38,6 @@
 
     this.view_.myHands(true);
     this.view_.rivalHands(true);
-
-    this.bindEvents_();
   };
 
   GameController.prototype.bindEvents_ = function() {
@@ -48,6 +55,9 @@
 
     Effects.getEventTarget().on(Effects.EventType.REQUEST_SELECT, this.onRequestSelect_.bind(this));
     Effects.getEventTarget().on(Effects.EventType.REQUEST_REDRAW_FIELD, this.onRequestRedrawField_.bind(this));
+
+    this.view_.getElement().on(ApplicationView.EventType.SURRENDER, this.onSurrender_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.GAME_START, this.onGameStart_.bind(this));
   };
 
   GameController.prototype.onSelectCard_ = function(e, data) {
@@ -90,6 +100,9 @@
       var viewpoint = UtilFunc.getViewpoint(data.trnId);
       var field = this.model_.getField(viewpoint);
       var card = field.selectFrom(data.area, data.trnId);
+      if (!card) {
+        return;
+      }
       this.view_.redrawDetail(card, data.area);
       var control = this.actionButtonController_.control(card, this.model_, data.area);
       this.view_.redrawButtons(data.area, control);
@@ -110,8 +123,7 @@
       this.model_.getTurn().newAssign(trnId);
     }
     this.view_.redrawField(this.model_);
-    var control = this.actionButtonController_.control(card, this.model_, Const.Area.BATTLE_MONSTER);
-    this.view_.redrawDetail(card, Const.Area.BATTLE_MONSTER, control);
+    this.view_.redrawDetail(card, Const.Area.BATTLE_MONSTER);
   };
 
   GameController.prototype.onAssignBench_ = function(e, trnId) {
@@ -123,8 +135,7 @@
       this.model_.getTurn().newAssign(trnId);
     }
     this.view_.redrawField(this.model_);
-    var control = this.actionButtonController_.control(card, this.model_, Const.Area.BENCH);
-    this.view_.redrawDetail(card, Const.Area.BENCH, control);
+    this.view_.redrawDetail(card, Const.Area.BENCH);
   };
 
   GameController.prototype.onEvolute_ = function(e, trnId) {
@@ -259,7 +270,7 @@
     var field = this.model_.getField(viewpoint || Const.Viewpoint.ME);
     var deck = field.getDeck();
     if (deck.isEmpty()) {
-      this.gameset(UtilFunc.reverseViewpoint(viewpoint));
+      this.gameset(UtilFunc.reverseViewpoint(viewpoint), 'デッキからなくなりドローができなくなりました');
     }
     var card = deck.draw();
     field.addHand(card);
@@ -295,13 +306,13 @@
       // side clear
       var mySide = myField.getSide();
       var rivalSide = rivalField.getSide();
-      if (mySide.length === 0 && rivalSide.length === 0) this.gameset(null);
-      if (mySide.length === 0) this.gameset(Const.Viewpoint.ME);
-      if (rivalSide.length === 0) this.gameset(Const.Viewpoint.RIVAL);
+      if (mySide.length === 0 && rivalSide.length === 0) this.gameset(null, 'おたがいのサイドを全てとりました');
+      if (mySide.length === 0) this.gameset(Const.Viewpoint.ME, 'サイドを全てとりました');
+      if (rivalSide.length === 0) this.gameset(Const.Viewpoint.RIVAL, 'サイドを全てとりました');
       // no monster
-      if (!my && !rival) this.gameset(null);
-      if (!my) this.gameset(Const.Viewpoint.RIVAL);
-      if (!rival) this.gameset(Const.Viewpoint.ME);
+      if (!my && !rival) this.gameset(null, 'おたがいのポケモンが全滅しました');
+      if (!my) this.gameset(Const.Viewpoint.RIVAL, 'あいてのポケモンを全滅させました');
+      if (!rival) this.gameset(Const.Viewpoint.ME, 'あいてのポケモンを全滅させました');
 
       this.view_.hideDetail();
       this.model_.nextTurn();
@@ -322,16 +333,33 @@
       $defer.resolve(false)
       return $defer.promise();
     }
-    this.view_.drawSelectable(selectables);
-    this.onSelectInterceptor_.forGoBattle($defer);
-    return $defer.promise();
+    if (viewpoint === Const.Viewpoint.ME) {
+      this.view_.drawSelectable(selectables);
+      this.onSelectInterceptor_.forGoBattle($defer);
+      return $defer.promise();
+    } else {
+      return RequestSignalSender.selectBattleMonster(selectables);
+    }
   };
 
   GameController.prototype.gameset = function(winner, reason) {
     this.view_.redrawField(this.model_);
-    this.view_.clearSelecting();
+    this.view_.gameset();
+    MessageDisplay.println('---');
+    MessageDisplay.println(reason);
     var message = !!winner ? (winner === Const.Viewpoint.ME ? 'あなた' : 'あいて') + ' の勝利！' : '引き分け';
     MessageDisplay.println(message);
     throw message;
+  };
+
+  GameController.prototype.onSurrender_ = function(e) {
+    this.gameset(Const.Viewpoint.RIVAL, '降参しました');
+  };
+
+  GameController.prototype.onGameStart_ = function(e) {
+    this.view_.gamestart();
+    MessageDisplay.clear();
+    this.model_ = new GameModel();
+    this.setupGame_();
   };
 })(jQuery);

@@ -13,7 +13,9 @@
     ATTACH: 'attach',
     ATTACK: 'attack',
     ESCAPE: 'escape',
-    TURN_END: 'turn-end'
+    TURN_END: 'turn-end',
+    SURRENDER: 'surrender',
+    GAME_START: 'game-start'
   };
 
   DetailAreaView.prototype.getElement = function(){
@@ -31,6 +33,18 @@
 
   DetailAreaView.prototype.redraw = function(card, area){
     this.cardDetailRenderer_.render(card);
+  };
+
+  DetailAreaView.prototype.gamestart = function(){
+    this.$element_.find('.surrender-button').removeClass('disabled');
+    this.$element_.find('.game-start-button').addClass('disabled');
+    this.$element_.find('.exit-button').addClass('disabled');
+  };
+
+  DetailAreaView.prototype.gameset = function(){
+    this.$element_.find('.surrender-button').addClass('disabled');
+    this.$element_.find('.game-start-button').removeClass('disabled');
+    this.$element_.find('.exit-button').removeClass('disabled');
   };
 
   DetailAreaView.prototype.enterDocument = function(){
@@ -74,6 +88,19 @@
     this.$element_.on('click', '.turn-end-button', function(e){
       if ($(e.target).hasClass('disabled')) return;
       this.$element_.trigger(DetailAreaView.EventType.TURN_END);
+    }.bind(this));
+
+    this.$element_.on('click', '.surrender-button', function(e){
+      if ($(e.target).hasClass('disabled')) return;
+      this.$element_.trigger(DetailAreaView.EventType.SURRENDER);
+    }.bind(this));
+    this.$element_.on('click', '.game-start-button', function(e){
+      if ($(e.target).hasClass('disabled')) return;
+      this.$element_.trigger(DetailAreaView.EventType.GAME_START);
+    }.bind(this));
+    this.$element_.on('click', '.exit-button', function(e){
+      if ($(e.target).hasClass('disabled')) return;
+      window.location.href = './index.html';
     }.bind(this));
   };
 
