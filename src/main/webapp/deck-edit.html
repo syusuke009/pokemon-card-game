@@ -19,7 +19,10 @@
 	<div id="deck-edit-screen" class="deck-edit-screen">
 		<div class="card-list-area">
 			<div class="holding-area">
-				<span class="title-caption">所持カード</span>
+				<div class="holding-area-header">
+					<span class="title-caption">所持カード</span>
+					<span class="deck-template-select"></span>
+				</div>
 				<div class="holding-card-list">
 				</div>
 			</div>
@@ -74,12 +77,20 @@
 			</div>
 		{{/list}}
 	</script>
+	<script type="text/template" id="deck-template-select-template">
+		<select name="deck-template-select" id="deck-template-select">
+			{{#list}}
+			<option value="{{deckCode}}">{{deckName}}</option>
+			{{/list}}
+		</select>
+		<button id="deck-template-reflect" class="btn deck-template-reflect-btn">テンプレートをコピー</button>
+	</script>
 
 
 
-	<script type="text/javascript" src="json/card-list.json"></script>
-	<script type="text/javascript" src="json/skill.json"></script>
-	<script type="text/javascript" src="json/my-deck.json"></script>
+	<script type="text/javascript" src="json/card-list.js"></script>
+	<script type="text/javascript" src="json/skill.js"></script>
+	<script type="text/javascript" src="json/my-deck.js"></script>
 
 	<script type="text/javascript" src="js/service/regulation-checker.js"></script>
 	<script type="text/javascript" src="js/model/monster-card.js"></script>
@@ -95,6 +106,8 @@
 	<script type="text/javascript" src="js/dao/deck-dao.js"></script>
 	<script type="text/javascript" src="js/dao/skill-dao.js"></script>
 	<script type="text/javascript" src="js/dao/holding-card-dao.js"></script>
+	<script type="text/javascript" src="js/dao/deck-template-dao.js"></script>
+	<script type="text/javascript" src="js/dao/api-ajax/game-table-api-ajax.js"></script>
 	<script type="text/javascript" src="js/view/detail-area-view.js"></script>
 	<script type="text/javascript" src="js/view/deckedit/deck-edit-view.js"></script>
 	<script type="text/javascript" src="js/view/renderer/card-detail-renderer.js"></script>
