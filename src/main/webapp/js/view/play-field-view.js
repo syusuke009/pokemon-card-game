@@ -8,6 +8,7 @@
     SELECT_HAND: 'select-hand',
     SELECT_BENCH: 'select-bench',
     SELECT_BATTLE_MONSTER: 'select-battle-monster',
+    CLICK_TRUSH: 'click-trush',
     HOVER_CARD: 'hover-card',
     LEAVE_CARD: 'leave-card'
   };
@@ -110,6 +111,9 @@
     }.bind(this));
     this.$element_.on('click', '.battle-monster .card', function(e){
       this.$element_.trigger(PlayFieldView.EventType.SELECT_BATTLE_MONSTER, e.currentTarget);
+    }.bind(this));
+    this.$element_.on('click', '.trush .card', function(e){
+      this.$element_.trigger(PlayFieldView.EventType.CLICK_TRUSH, e.currentTarget);
     }.bind(this));
     this.$element_.on('mouseenter', '.card', function(e) {
       var $target = $(e.currentTarget);

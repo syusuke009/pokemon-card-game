@@ -65,7 +65,7 @@
     setTimeout(function() {
       $coin.removeClass('spin');
       $coin.removeClass('toss');
-      var val = !!Math.floor(Math.random() * 2);
+      var val = !!(Math.floor(Math.random() * 100) % 2);
       $coin.addClass(val ? 'front' : 'rear')
       this.result_.push(val);
       if (this.result_.length === this.times_) {

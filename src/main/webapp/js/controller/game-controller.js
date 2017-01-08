@@ -20,10 +20,10 @@
   };
 
   GameController.prototype.ready = function() {
+    this.setupGame_();
+
     this.view_.enterDocument();
     this.bindEvents_();
-
-    this.setupGame_();
   };
 
   GameController.prototype.setupGame_ = function() {
@@ -43,6 +43,7 @@
     this.view_.getElement().on(ApplicationView.EventType.SELECT_CARD, this.onSelectCard_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.HOVER_CARD, this.onHoverCard_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.LEAVE_CARD, this.onLeaveCard_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.CLICK_TRUSH, this.onClickTrush_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BATTLE, this.onAssignBattle_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ASSIGN_BENCH, this.onAssignBench_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.EVOLUTE, this.onEvolute_.bind(this));
@@ -109,6 +110,12 @@
     } else {
       this.view_.hideDetail();
     }
+  };
+
+  GameController.prototype.onClickTrush_ = function(e, element) {
+    var viewpoint = UtilFunc.getViewpoint($(element).attr('data-id'));
+    var trush = this.model_.getField(viewpoint).getTrush();
+    new CardListDialog().show(trush.getAll(), 'トラッシュのカード');
   };
 
   GameController.prototype.onAssignBattle_ = function(e, trnId) {

@@ -10,6 +10,7 @@
     SELECT_CARD: 'select-card',
     ASSIGN_BATTLE: 'assign-battle',
     ASSIGN_BENCH: 'assign-bench',
+    CLICK_TRUSH: PlayFieldView.EventType.CLICK_TRUSH,
     HOVER_CARD: PlayFieldView.EventType.HOVER_CARD,
     LEAVE_CARD: PlayFieldView.EventType.LEAVE_CARD,
     EVOLUTE: DetailAreaView.EventType.EVOLUTE,
