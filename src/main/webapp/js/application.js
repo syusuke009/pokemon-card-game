@@ -1,6 +1,7 @@
 (function($){
 
   Application = function(mode) {
+    window.app = this;
     switch(mode) {
     case 'menu':
       this.controller_ = new MenuController();

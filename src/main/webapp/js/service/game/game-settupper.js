@@ -1,55 +1,73 @@
 (function($){
 
-  GameSetupper = function(isHalf) {
-    if (isHalf) {
-      this.deckSize_ = 30;
-      this.sideSize_ = 3;
-      this.sameCardLimit_ = 2;
-    } else {
-      this.deckSize_ = 60;
-      this.sideSize_ = 6;
-      this.sameCardLimit_ = 4;
-    }
+  GameSetupper = function(regulation) {
+    this.regulation_ = regulation;
 
-    this.myField_;
-    this.rivalField_
+    this.$rivalDrawnDefer = $.Deferred();
   };
 
-  GameSetupper.prototype.setup = function(model) {
-    this.myField_ = model.getField(Const.Viewpoint.ME);
-    this.rivalField_ = model.getField(Const.Viewpoint.RIVAL);
+  GameSetupper.prototype.setup = function(viewpoint) {
+    var model = new GameModel();
+    var supplier = new DeckSupplier(new CardMstDao(), new SkillDao());
+    var deckDao = new DeckDao();
 
-    this.stanbyHands_();
+    var field = new PlayField(supplier.supply(deckDao.get('user1'), viewpoint));
+    var redrawCnt = this.stanbyHands_(field);
+    model.setField(viewpoint, field);
+    var $defer = $.Deferred();
+    this.resolveDrawn_($defer, field, redrawCnt);
 
-    this.stanbySide_();
+    RequestSignalSender.initialDrawn(field, redrawCnt);
 
-    MessageDisplay.println('ゲームを開始の準備をします');
-    MessageDisplay.println('・たねポケモンを１枚選んでバトルに出してください');
-    MessageDisplay.println('・たねポケモンをベンチに出すことができます');
+    var promise = $.when($defer.promise(), this.$rivalDrawnDefer.promise());
+
+    return promise.then(function(mine, rivals) {
+      this.resolvePenalty_(mine.redrawCount, rivals.redrawCount, mine.field);
+      this.setSide_(mine.field);
+
+
+      this.resolvePenalty_(rivals.redrawCount, mine.redrawCount, rivals.field);
+      this.setSide_(rivals.field);
+
+      MessageDisplay.println('ゲームを開始の準備をします');
+      MessageDisplay.println('・たねポケモンを１枚選んでバトルに出してください');
+      MessageDisplay.println('・たねポケモンをベンチに出すことができます');
+
+      model.setField(Const.Viewpoint.RIVAL, rivals.field);
+      return $.Deferred().resolve(model).promise();
+    }.bind(this));
   };
 
-  GameSetupper.prototype.stanbyHands_ = function() {
-    this.drawHand_(this.myField_);
-    this.drawHand_(this.rivalField_);
-    if (!UtilFunc.existsBaseMonster(this.myField_.getHands()) &&
-        !UtilFunc.existsBaseMonster(this.rivalField_.getHands())) {
-      console.log('2人とも手札にたねモンスターがいないので引き直します');
-      this.revertHands_(this.myField_);
-      this.revertHands_(this.rivalField_);
-      this.stanbyHands_();
+  GameSetupper.prototype.resolveDrawn_ = function($defer, field, redrawCount) {
+    var data = {};
+    data.field = field;
+    data.redrawCount = redrawCount;
+    $defer.resolve(data);
+  };
+
+  GameSetupper.prototype.resolveRivalDrawn = function(field, redrawCount) {
+    this.resolveDrawn_(this.$rivalDrawnDefer, field, redrawCount);
+  };
+
+  GameSetupper.prototype.stanbyHands_ = function(field) {
+    var redrawCount = 0;
+    this.drawHand_(field);
+    while (!UtilFunc.existsBaseMonster(field.getHands())) {
+      MessageDisplay.println('手札にたねポケモンがいないので引き直します');
+      this.revertHands_(field);
+      this.drawHand_(field);
+      redrawCount++;
     }
-    while (!UtilFunc.existsBaseMonster(this.myField_.getHands())) {
-      MessageDisplay.println('プレイヤーの手札にたねポケモンがいないので引き直し、相手はさらに一枚引きます');
-      this.revertHands_(this.myField_);
-      this.drawHand_(this.myField_);
-      this.drawHand_(this.rivalField_, 1);
+    return redrawCount;
+  };
+
+  GameSetupper.prototype.resolvePenalty_ = function(myRedraw, rivalRedraw, field) {
+    var cnt = rivalRedraw - myRedraw;
+    if (cnt <= 0) {
+      return;
     }
-    while (!UtilFunc.existsBaseMonster(this.rivalField_.getHands())) {
-      MessageDisplay.println('相手の手札にたねポケモンがいないので引き直し、プレイヤーはさらに一枚引きます');
-      this.revertHands_(this.rivalField_);
-      this.drawHand_(this.rivalField_);
-      this.drawHand_(this.myField_, 1);
-    }
+    MessageDisplay.println('あいての引き直しが ' + cnt + '回 多かったため、さらに ' + cnt + '枚 引きます');
+    this.drawHand_(field, cnt);
   };
 
   GameSetupper.prototype.drawHand_ = function(field, count) {
@@ -73,15 +91,10 @@
     deck.shuffle();
   };
 
-  GameSetupper.prototype.stanbySide_ = function() {
-    this.setSide_(this.myField_);
-    this.setSide_(this.rivalField_);
-  };
-
   GameSetupper.prototype.setSide_ = function(field) {
     var arr = [];
     var deck = field.getDeck();
-    for(var i = 0; i < this.sideSize_; i++) {
+    for(var i = 0; i < this.regulation_.sideCount(); i++) {
       arr.push(deck.draw());
     }
     field.setSide(arr);

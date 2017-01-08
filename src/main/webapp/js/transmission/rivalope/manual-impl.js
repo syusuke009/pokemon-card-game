@@ -9,6 +9,17 @@
     RequestSignalReceiver.turnChange();
   };
 
+  RivalOperationManualImpl.prototype.initialDrawn = function(f, cnt) {
+    var supplier = new DeckSupplier(new CardMstDao(), new SkillDao());
+    var deckDao = new DeckDao();
+
+    var rivalField = new PlayField(supplier.supply(deckDao.get('user2'), Const.Viewpoint.RIVAL));
+    var controller = app.controller_;
+    var redrawCnt = controller.setupper_.stanbyHands_(rivalField);
+
+    RequestSignalReceiver.initialDrawn(rivalField, redrawCnt);
+  };
+
   RivalOperationManualImpl.prototype.syncModel = function(model) {
     // RequestSignalReceiver.syncModel(model);
   };

@@ -6,14 +6,16 @@
     this.battleController_ = new BattleController();
     this.pokemonCheck_ = new PokemonChecker();
 
-    this.model_ = new GameModel();
-
     this.effectDao_ = new EffectDao();
     this.onSelectInterceptor_ = new CardSelectInterceptor();
+
+    this.regulation_ = new RegulationModel();
+    this.setupper_ = new GameSetupper(this.regulation_);
 
     RequestSignalReceiver.setController(this);
     RequestSignalSender.setOperation();
 
+    this.model_;
     this.selectingData_;
   };
 
@@ -25,19 +27,16 @@
   };
 
   GameController.prototype.setupGame_ = function() {
-    var supplier = new DeckSupplier(new CardMstDao(), new SkillDao());
-    var deckDao = new DeckDao();
 
-    this.model_.setField(Const.Viewpoint.ME ,new PlayField(supplier.supply(deckDao.get('user1'), Const.Viewpoint.ME)));
-    this.model_.setField(Const.Viewpoint.RIVAL, new PlayField(supplier.supply(deckDao.get('user2'), Const.Viewpoint.RIVAL)));
+    this.setupper_.setup(Const.Viewpoint.ME).then(function(model) {
+      this.model_ = model;
 
-    new GameSetupper(false).setup(this.model_);
+      this.view_.redrawField(this.model_);
 
-    this.view_.redrawField(this.model_);
-//    this.view_.redrawDetail();
+      this.view_.myHands(true);
+      this.view_.rivalHands(true);
+    }.bind(this));
 
-    this.view_.myHands(true);
-    this.view_.rivalHands(true);
   };
 
   GameController.prototype.bindEvents_ = function() {
@@ -351,7 +350,6 @@
   GameController.prototype.onGameStart_ = function(e) {
     this.view_.gamestart();
     MessageDisplay.clear();
-    this.model_ = new GameModel();
     this.setupGame_();
   };
 })(jQuery);
