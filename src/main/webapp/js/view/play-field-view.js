@@ -23,25 +23,29 @@
   };
 
 
-  PlayFieldView.prototype.renderInner_ = function($view, model, isSelfTurn){
-    $view.find('.rest-card-count').text('残 ' + model.getDeck().size());
+  PlayFieldView.prototype.renderInner_ = function($view, field, isSelfTurn){
+    $view.find('.rest-card-count').text('残 ' + field.getDeck().size());
 
     var sideTmpl = Hogan.compile($('#card-list-template').text());
-    $view.find('.side').html(sideTmpl.render({'list':model.getSide()}));
+    $view.find('.side').html(sideTmpl.render({'list':field.getSide()}));
 
     var openedTmpl = Hogan.compile($('#opened-card-template').text());
-    $view.find('.hands').html(openedTmpl.render({'list':model.getHands().getAll()}));
+    $view.find('.hands').html(openedTmpl.render({'list':field.getHands().getAll()}));
 
-    var battleMonster = model.getBattleMonster();
+    var battleMonster = field.getBattleMonster();
     if (battleMonster === null) {
       $view.find('.battle-monster').html('');
+      $view.find('.hp-barometer').html('');
+      $view.find('.energy-barometer').html('');
     } else {
       $view.find('.battle-monster').html(openedTmpl.render({'list':[battleMonster]}));
+      $view.find('.hp-barometer').html(this.hpBarometer_(battleMonster));
+      $view.find('.energy-barometer').html(this.energyBarometer_(battleMonster));
     }
 
-    $view.find('.bench').html(openedTmpl.render({'list':model.getBench()}));
+    $view.find('.bench').html(openedTmpl.render({'list':field.getBench()}));
 
-    var trush = model.getTrush();
+    var trush = field.getTrush();
     if (trush.isEmpty()) {
       $view.find('.trush').html('');
     } else {
@@ -167,5 +171,25 @@
     var isLeft = $target.hasClass('left-operator');
     var $container = $field.find('.hand-cards-container');
     $container.animate({scrollLeft:$container.scrollLeft() + (isLeft ? - 336 : 336)}, 300);
+  };
+
+  PlayFieldView.prototype.hpBarometer_ = function(monster) {
+    var barometer = '<div class="barometer-caption">HP:</div><div class="hp-barometer-container">';
+    var rest = (monster.hp / 10) - monster.getDamageCount();
+    for (var i = 0; i < rest; i++) {
+      barometer += '<span class="hp-rest"></span>';
+    }for (var i = 0; i < monster.getDamageCount(); i++) {
+      barometer += '<span class="hp-empty"></span>';
+    }
+    return barometer + '</div>';
+  };
+
+  PlayFieldView.prototype.energyBarometer_ = function(monster) {
+    var barometer = '<div class="barometer-caption">ｴﾈ:</div><div class="hp-barometer-container">';
+    var energies = monster.getEnergy();
+    $.each(UtilFunc.mapEnergyToArray(energies), function(idx, type) {
+      barometer += '<span class="cost ' + type + '"></span>';
+    });
+    return barometer + '</div>';
   };
 })(jQuery);

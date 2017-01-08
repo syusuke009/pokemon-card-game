@@ -277,6 +277,38 @@
     margin: 8px;
     width: 224px;
 }
+.hp-barometer,
+.energy-barometer {
+    margin: 4px 0;
+    display: flex;
+}
+.barometer-caption {
+    margin: 0 4px;
+}
+.hp-barometer-container {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.hp-rest {
+    background: #00b19d;
+    border: 1px solid #aae5de;
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    margin: 2px;
+    border-radius: 50%;
+}
+.hp-empty {
+    background: #fff;
+    border: 1px solid #bdbdbd;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    margin: 2px;
+    border-radius: 50%;
+}
 .hands-toggle-caption {
     display: block;
 }
