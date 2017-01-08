@@ -8,6 +8,10 @@
     RequestSignalReceiver.controller_ = gameController;
   };
 
+  RequestSignalReceiver.initialDrawn = function(field, redrawCount) {
+    RequestSignalReceiver.controller_.setupper_.resolveRivalDrawn(field, redrawCount);
+  };
+
   RequestSignalReceiver.turnChange = function() {
     RequestSignalReceiver.controller_.turnEnd();
   };

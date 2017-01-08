@@ -8,6 +8,10 @@
     RequestSignalSender.operation_ = new RivalOperationManualImpl();
   };
 
+  RequestSignalSender.initialDrawn = function(field, redrawCount) {
+    RequestSignalSender.operation_.initialDrawn(field, redrawCount);
+  };
+
   RequestSignalSender.turnChange = function() {
     RequestSignalSender.operation_.turnChange();
   };

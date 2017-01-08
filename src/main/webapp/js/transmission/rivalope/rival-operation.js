@@ -7,6 +7,8 @@
     throw 'this method is not overridden';
   };
 
+  RivalOperation.prototype.initialDrawn = abstractMethod;
+
   RivalOperation.prototype.turnChange = abstractMethod;
 
   RivalOperation.prototype.selectBattleMonster = abstractMethod;

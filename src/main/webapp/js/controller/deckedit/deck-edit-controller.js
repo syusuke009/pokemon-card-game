@@ -7,7 +7,7 @@
     this.deckDao_ = new DeckDao();
     this.deckTemplateDao_ = new DeckTemplateDao();
 
-    this.regulation_ = new RegulationChecker();
+    this.regulation_ = new RegulationModel();
     this.view_ = new DeckEditView(this.regulation_);
 
     this.idNum_ = 0;
