@@ -52,7 +52,7 @@
               gameCoordinator.startNewGame(data);
             }).fail(function(error) {
               console.log(error);
-              alert('対戦依頼が断れました');
+              alert('対戦依頼が断られました');
             });
           }
         }
