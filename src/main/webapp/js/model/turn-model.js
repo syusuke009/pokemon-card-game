@@ -12,6 +12,7 @@
     this.isUsedSupporter_ = false;
     this.isAttachedEnergy_ = false;
     this.newAssigned_ = [];
+    this.escaped_ = false;
 
     this.turnCount_ = !!opt_turn ? opt_turn.turnCount_ + 1 : 0;
   };
@@ -66,5 +67,13 @@
 
   TurnModel.prototype.isNewAssignedMonster = function(trnId) {
     return this.newAssigned_.indexOf(trnId) >= 0;
+  };
+
+  TurnModel.prototype.escape = function() {
+    return this.escaped_ = true;
+  };
+
+  TurnModel.prototype.wasEscaped = function() {
+    return this.escaped_;
   };
 })(jQuery);

@@ -72,7 +72,6 @@
       var monster = field.pickBench(eventdata.trnId);
       field.setBattleMonster(monster);
       $defer.resolve(true);
-      MessageDisplay.println('　');
       MessageDisplay.println('『いけっ！ ' + monster.name + '！』', 'あいては ' + monster.name + ' を くりだした！');
       return true;
     };

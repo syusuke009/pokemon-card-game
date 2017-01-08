@@ -37,7 +37,7 @@
     case Const.Area.BATTLE_MONSTER:
       result.attack = turn.allowAttack() && card.canAttack();
       result.special;
-      result.escape = !game.wasEscaped(turn.whoseTurn()) && card.canEscape() && field.getBench().length > 0;
+      result.escape = !turn.wasEscaped() && card.canEscape() && field.getBench().length > 0;
       break;
     case Const.Area.BENCH:
       result.special;
@@ -57,7 +57,7 @@
     case Const.Area.BATTLE_MONSTER:
       result.attack = turn.allowAttack() && card.canAttack();
       result.special;
-      result.escape = !game.wasEscaped(turn.whoseTurn()) && card.canEscape() && field.getBench().length > 0;
+      result.escape = !turn.wasEscaped() && card.canEscape() && field.getBench().length > 0;
       break;
     case Const.Area.BENCH:
       result.special;

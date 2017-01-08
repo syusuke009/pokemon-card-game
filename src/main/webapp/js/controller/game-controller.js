@@ -228,10 +228,11 @@
       this.onSelectInterceptor_.forGoBattle($defer);
       $defer.promise().then(function() {
         field.putBench(escaped);
-        this.model_.escape(viewpoint);
+        this.model_.getTurn().escape();
         this.view_.redrawField(this.model_);
       }.bind(this));
 
+      MessageDisplay.println('『もどれっ！ ' + escaped.name + '！』', 'あいては ' + escaped.name + ' を ひっこめた');
     }.bind(this);
 
     if (escaped.escapeCost.length === 0) {
@@ -324,6 +325,7 @@
       $defer.resolve(false)
       return $defer.promise();
     }
+    MessageDisplay.println('　');
     if (viewpoint === Const.Viewpoint.ME) {
       this.view_.drawSelectable(selectables);
       this.onSelectInterceptor_.forGoBattle($defer);

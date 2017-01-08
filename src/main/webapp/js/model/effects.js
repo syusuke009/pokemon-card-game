@@ -326,7 +326,7 @@
         status.splice(idx, 1);
       }
       MessageDisplay.newSentence('なんでもなおし を つかった！');
-      MessageDisplay.println(target.name + ' のステータスがかいふくした！');
+      MessageDisplay.println(monster.name + ' のステータスがかいふくした！');
     });
   };
   Effects.trainer_condition_1003 = function(model) {
@@ -524,12 +524,14 @@
     var field = model.getField(viewpoint);
     var $defer = $.Deferred();
     $defer.promise().then(function(response) {
-      var monster = field.getBattleMonster();
-      field.setBattleMonster(field.pickBench(response.trnId));
-      field.putBench(monster);
+      var oldMonster = field.getBattleMonster();
+      var newMonster = field.pickBench(response.trnId);
+      field.setBattleMonster(newMonster);
+      field.putBench(oldMonster);
       Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('ポケモンいれかえ を つかった！');
-      MessageDisplay.println('『いけっ！ ' + card.name + '！』', 'あいては ' + card.name + ' を くりだした！');
+      MessageDisplay.println('『もどれっ！ ' + oldMonster.name + '！』', 'あいては ' + oldMonster.name + ' を ひっこめた');
+      MessageDisplay.println('『いけっ！ ' + newMonster.name + '！』', 'あいては ' + newMonster.name + ' を くりだした！');
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
