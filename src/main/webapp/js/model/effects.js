@@ -243,6 +243,7 @@
       target.hurt(-20);
       MessageDisplay.newSentence('きずぐすり を つかった！');
       MessageDisplay.println(target.name + ' は 20 かいふくした！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
     return false;
@@ -293,6 +294,7 @@
       target.hurt(-40);
       MessageDisplay.newSentence('いいきずぐすり を つかった！');
       MessageDisplay.println(target.name + ' は 40 かいふくした！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
     return false;
@@ -327,6 +329,7 @@
       }
       MessageDisplay.newSentence('なんでもなおし を つかった！');
       MessageDisplay.println(monster.name + ' のステータスがかいふくした！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
   };
   Effects.trainer_condition_1003 = function(model) {
@@ -352,9 +355,9 @@
       var card = field.getTrush().pick(response[0].trnId);
       card.hurt(Math.floor(card.hp / 2 / 10) * 10);
       field.putBench(card);
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('げんきのかけら を つかった！');
       MessageDisplay.println(card.name + ' は げんきをとりもどした！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
   };
   Effects.trainer_condition_1004 = function(model) {
@@ -376,10 +379,9 @@
     }), 1).then(function(response) {
       var card = field.getTrush().pick(response[0].trnId);
       field.putBench(card);
-      Effects.dispatchRedrawFieldRequestEvent();
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('ポケモンの笛 を つかった！');
       MessageDisplay.println(card.name + ' は ベンチによみがえった！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
   };
   Effects.trainer_condition_1007 = function(model) {
@@ -415,9 +417,9 @@
     }).then(function(response) {
       var card = trush.pick(response[0].trnId);
       hands.add(card);
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('ダウジングマシーン を つかった！');
       MessageDisplay.println(card.name + ' を みつけた！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
     return false;
@@ -454,8 +456,8 @@
       var card = deck.pick(response[0].trnId);
       hands.add(card);
       deck.shuffle();
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('パソコン通信 を つかった！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
     return false;
@@ -490,6 +492,7 @@
     });
     MessageDisplay.newSentence('ポケモンセンター を つかった！');
     MessageDisplay.println('すべてのポケモン が かいふくし、かいふくしたポケモン の エネルギーは うしなわれた！');
+    Effects.dispatchRedrawFieldRequestEvent();
   };
   Effects.trainer_condition_1011 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
@@ -528,10 +531,10 @@
       var newMonster = field.pickBench(response.trnId);
       field.setBattleMonster(newMonster);
       field.putBench(oldMonster);
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('ポケモンいれかえ を つかった！');
       MessageDisplay.println('『もどれっ！ ' + oldMonster.name + '！』', 'あいては ' + oldMonster.name + ' を ひっこめた');
       MessageDisplay.println('『いけっ！ ' + newMonster.name + '！』', 'あいては ' + newMonster.name + ' を くりだした！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
@@ -564,11 +567,11 @@
         var card = trush.pick(c.trnId);
         hands.add(card);
       });
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('エネルギー回収 を つかった！');
       MessageDisplay.println(response.map(function(c){
         return c.name;
       }).join(' と ') + ' を かいしゅうした！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
@@ -607,11 +610,11 @@
       response.energy.forEach(function(e) {
         target.removeEnergy(e);
       });
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('エネルギーリムーブ を つかった！');
       MessageDisplay.println(target.name + ' は ' + response.energy.map(function(c){
         return c.name;
       }).join(' と ') + ' を うしなった！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
 
     var targets = [];
@@ -689,11 +692,11 @@
       response.energy.forEach(function(e) {
         target.removeEnergy(e);
       });
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('超エネルギーリムーブ を つかった！');
       MessageDisplay.println(target.name + ' は ' + response.energy.map(function(c){
         return c.name;
       }).join(' と ') + ' を うしなった！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
 
     var targets = [];
@@ -755,8 +758,8 @@
       deck.shuffle();
       hands.add(deck.draw());
 
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('メンテナンス を つかった！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getHands().getAll()), $defer);
@@ -778,9 +781,9 @@
       var newMonster = field.pickBench(response.trnId);
       field.setBattleMonster(newMonster);
       field.putBench(oldMonster);
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('突風 を つかった！');
       MessageDisplay.println(oldMonster.name + ' は もどされ ' + newMonster.name + ' が でてきた！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
 
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
@@ -862,9 +865,9 @@
       evoluted.evolute(base);
       field.override(response.area, base, evoluted);
       turn.newAssign(evolutionTrnId);
-      Effects.dispatchRedrawFieldRequestEvent();
       MessageDisplay.newSentence('ポケモン育て屋さん が たすけにきた！');
       MessageDisplay.println(base.name + ' は ' + evoluted.name + ' に しんかした！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
     var secondEvos = field.getHands().getAll().filter(function(card) {
       return card.kind === '3';

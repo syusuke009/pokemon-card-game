@@ -290,17 +290,18 @@
       return;
     }
     this.pokemonCheck_.check(this.model_).then(function(res){
-      return this.exchangeIfDying_(this.model_, Const.Viewpoint.ME).then(function(my) {
-        var $deferRivalBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.RIVAL);
-        return $.when($.Deferred().resolve(my).promise(), $deferRivalBattle);
-      }.bind(this));
-    }.bind(this)).then(function(my, rival){
       // side clear
       var mySide = myField.getSide();
       var rivalSide = rivalField.getSide();
       if (mySide.length === 0 && rivalSide.length === 0) this.gameset(null, 'おたがいのサイドを全てとりました');
       if (mySide.length === 0) this.gameset(Const.Viewpoint.ME, 'じぶんのサイドを全てとりました');
       if (rivalSide.length === 0) this.gameset(Const.Viewpoint.RIVAL, 'あいてがサイドを全てとりました');
+
+      return this.exchangeIfDying_(this.model_, Const.Viewpoint.ME).then(function(my) {
+        var $deferRivalBattle = this.exchangeIfDying_(this.model_, Const.Viewpoint.RIVAL);
+        return $.when($.Deferred().resolve(my).promise(), $deferRivalBattle);
+      }.bind(this));
+    }.bind(this)).then(function(my, rival){
       // no monster
       if (!my && !rival) this.gameset(null, 'おたがいのポケモンが全滅しました');
       if (!my) this.gameset(Const.Viewpoint.RIVAL, 'あなたのポケモンが全滅しました');
