@@ -6,8 +6,13 @@
   DeckDao.prototype.get = function(userId) {
     var json = localStorage.getItem('pokemon-card');
     if (!!json) {
-      var data = JSON.parse(json);
-      return data.deck;
+      var json = localStorage.getItem('pokemon-card');
+      if (!!json) {
+        var data = JSON.parse(json);
+        if (!!data.deck){
+          return data.deck;
+        }
+      }
     }
     return MyDeck;
   };
