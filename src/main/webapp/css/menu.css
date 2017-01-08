@@ -3,7 +3,7 @@
 	margin:  64px 0;
 	text-align: center;
 }
-.menues {
+.menues, .networkplay-participants {
 	margin-top: 80px;
 	list-style-type: none;
 	padding: 0;
