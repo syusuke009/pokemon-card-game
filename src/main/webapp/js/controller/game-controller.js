@@ -38,6 +38,11 @@
 
     this.view_.myHands(true);
     this.view_.rivalHands(true);
+
+    if (networkplay.GameCoordinator.isNetworkplaying()) {
+      this.networkplayGameCoordinator = new networkplay.GameCoordinator();
+      this.networkplayGameCoordinator.startGame();
+    }
   };
 
   GameController.prototype.bindEvents_ = function() {
