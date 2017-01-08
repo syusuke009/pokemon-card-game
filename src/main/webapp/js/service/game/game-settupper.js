@@ -3,10 +3,11 @@
   GameSetupper = function(regulation) {
     this.regulation_ = regulation;
 
-    this.$rivalDrawnDefer = $.Deferred();
+    this.$rivalDrawnDefer;
   };
 
   GameSetupper.prototype.setup = function(viewpoint) {
+    this.$rivalDrawnDefer = $.Deferred();
     var model = new GameModel();
     var supplier = new DeckSupplier(new CardMstDao(), new SkillDao());
     var deckDao = new DeckDao();
