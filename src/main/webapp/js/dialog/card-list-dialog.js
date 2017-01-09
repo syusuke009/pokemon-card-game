@@ -38,7 +38,7 @@
           '<span class="caption">' + c.name + '</span>' +
           '</div>';
     });
-    return '<div class="card-selection-container"><div class="list-area">' + html + '</div></div>';
+    return '<div class="card-list-dialog-container"><div class="list-area">' + html + '</div></div>';
   };
 
   CardListDialog.prototype.createButtonsDom_ = function() {
