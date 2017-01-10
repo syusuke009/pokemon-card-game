@@ -21,7 +21,8 @@
 "20":{"name":"ラッタ","kind":"2","base":"19","type":"normal","hp":"60","special":"","skill1":"skill_20_1","skill2":"skill_20_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 // "21":{"name":"オニスズメ","kind":"1","base":"","type":"normal","hp":"50","special":"","skill1":"skill_21_1","skill2":"skill_21_2","escape":[],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
 // "22":{"name":"オニドリル","kind":"2","base":"21","type":"normal","hp":"70","special":"","skill1":"skill_22_1","skill2":"skill_22_2","escape":[],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
-
+// "23":{"name":"アーボ","kind":"1","base":"","type":"leaf","hp":"40","special":"","skill1":"skill_23_1","skill2":"skill_23_2","escape":["normal"],"weak":{"esper":"*2"}},
+// "24":{"name":"アボック","kind":"2","base":"23","type":"leaf","hp":"60","special":"","skill1":"skill_24_1","skill2":"skill_24_2","escape":["normal","normal"],"weak":{"esper":"*2"}},
 "25":{"name":"ピカチュウ","kind":"1","base":"","type":"thunder","hp":"40","special":"","skill1":"skill_25_1","skill2":"skill_25_2","escape":["normal"],"weak":{"fight":"*2"}},
 "26":{"name":"ライチュウ","kind":"2","base":"25","type":"thunder","hp":"80","special":"","skill1":"skill_26_1","skill2":"skill_26_2","escape":["normal"],"weak":{"fight":"*2"}},
 // "27":{"name":"サンド","kind":"1","base":"","type":"fight","hp":"40","special":"","skill1":"skill_27_1","skill2":"","escape":["normal"],"weak":{"leaf":"*2"},"regist":{"thunder":"-30"}},
@@ -38,7 +39,8 @@
 "38":{"name":"キュウコン","kind":"2","base":"37","type":"fire","hp":"80","special":"","skill1":"skill_38_1","skill2":"skill_38_2","escape":["normal"],"weak":{"aqua":"*2"}},
 // "39":{"name":"プリン","kind":"1","base":"","type":"normal","hp":"60","special":"","skill1":"skill_39_1","skill2":"skill_39_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 // "40":{"name":"プクリン","kind":"2","base":"39","type":"normal","hp":"80","special":"","skill1":"skill_40_1","skill2":"skill_40_2","escape":["normal","normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
-
+// "41":{"name":"ズバット","kind":"1","base":"","type":"leaf","hp":"40","special":"","skill1":"skill_41_1","skill2":"skill_41_2","escape":[],"weak":{"esper":"*2"},"regist":{"fight":"-30"}},
+// "42":{"name":"ゴルバット","kind":"2","base":"41","type":"leaf","hp":"60","special":"","skill1":"skill_42_1","skill2":"skill_42_2","escape":[],"weak":{"esper":"*2"},"regist":{"fight":"-30"}},
 // "43":{"name":"ナゾノクサ","kind":"1","base":"","type":"leaf","hp":"50","special":"","skill1":"skill_43_1","skill2":"skill_43_2","escape":["normal"],"weak":{"fire":"*2"}},
 // "44":{"name":"クサイハナ","kind":"2","base":"43","type":"leaf","hp":"60","special":"","skill1":"skill_44_1","skill2":"skill_44_2","escape":["normal"],"weak":{"fire":"*2"}},
 // "45":{"name":"ラフレシア","kind":"3","base":"44","type":"leaf","hp":"80","special":"ヒーリング","skill1":"skill_45_1","skill2":"","escape":["normal","normal"],"weak":{"fire":"*2"}},
@@ -78,6 +80,8 @@
 // "85":{"name":"ドードリオ","kind":"2","base":"84","type":"normal","hp":"70","special":"にげるサポート","skill1":"skill_85_1","skill2":"","escape":[],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
 "86":{"name":"パウワウ","kind":"1","base":"","type":"aqua","hp":"60","special":"","skill1":"skill_86_1","skill2":"","escape":["normal"],"weak":{"thunder":"*2"}},
 "87":{"name":"ジュゴン","kind":"2","base":"86","type":"aqua","hp":"80","special":"","skill1":"skill_87_1","skill2":"skill_87_2","escape":["normal","normal","normal"],"weak":{"thunder":"*2"}},
+// "88":{"name":"ベトベター","kind":"1","base":"","type":"leaf","hp":"50","special":"","skill1":"skill_88_1","skill2":"skill_88_2","escape":["normal"],"weak":{"esper":"*2"}},
+// "89":{"name":"ベトベトン","kind":"2","base":"88","type":"leaf","hp":"70","special":"かがくへんかガス","skill1":"skill_89_1","skill2":"","escape":["normal","normal"],"weak":{"esper":"*2"}},
 
 // "92":{"name":"ゴース","kind":"1","base":"","type":"esper","hp":"30","special":"","skill1":"skill_92_1","skill2":"skill_92_2","escape":[],"regist":{"fight":"-30"}},
 // "93":{"name":"ゴースト","kind":"2","base":"92","type":"esper","hp":"60","special":"","skill1":"skill_93_1","skill2":"skill_93_2","escape":["normal"],"regist":{"fight":"-30"}},
@@ -95,7 +99,7 @@
 "107":{"name":"エビワラー","kind":"1","base":"","type":"fight","hp":"70","special":"","skill1":"skill_107_1","skill2":"skill_107_2","escape":["normal","normal"],"weak":{"esper":"*2"}},
 // "108":{"name":"ベロリンガ","kind":"1","base":"","type":"normal","hp":"90","special":"","skill1":"skill_108_1","skill2":"skill_108_2","escape":["normal","normal","normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 "109":{"name":"ドガース","kind":"1","base":"","type":"leaf","hp":"50","special":"","skill1":"skill_109_1","skill2":"","escape":["normal"],"weak":{"esper":"*2"}},
-
+// "110":{"name":"マタドガス","kind":"2","base":"109","type":"leaf","hp":"60","special":"","skill1":"skill_110_1","skill2":"110_2","escape":["normal"],"weak":{"esper":"*2"}},
 // "111":{"name":"サイホーン","kind":"1","base":"","type":"fight","hp":"70","special":"","skill1":"skill_111_1","skill2":"skill_111_2","escape":["normal","normal","normal"],"weak":{"leaf":"*2"},"regist":{"thunder":"-30"}},
 // "112":{"name":"サイドン","kind":"2","base":"111","type":"fight","hp":"100","special":"","skill1":"skill_112_1","skill2":"skill_112_2","escape":["normal","normal","normal"],"weak":{"leaf":"*2"},"regist":{"thunder":"-30"}},
 "113":{"name":"ラッキー","kind":"1","base":"","type":"normal","hp":"120","special":"","skill1":"skill_113_1","skill2":"skill_113_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
@@ -116,6 +120,7 @@
 "129":{"name":"コイキング","kind":"1","base":"","type":"aqua","hp":"30","special":"","skill1":"skill_129_1","skill2":"","escape":["normal"],"weak":{"thunder":"*2"}},
 "130":{"name":"ギャラドス","kind":"2","base":"129","type":"aqua","hp":"100","special":"","skill1":"skill_130_1","skill2":"skill_130_2","escape":["normal","normal","normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
 
+// "132":{"name":"メタモン","kind":"1","base":"","type":"normal","hp":"50","special":"へんしん","skill1":"","skill2":"","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 // "133":{"name":"イーブイ","kind":"1","base":"","type":"normal","hp":"50","special":"","skill1":"skill_133_1","skill2":"skill_133_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 // "134":{"name":"シャワーズ","kind":"2","base":"133","type":"aqua","hp":"70","special":"","skill1":"skill_134_1","skill2":"skill_134_2","escape":["normal"],"weak":{"thunder":"*2"}},
 // "135":{"name":"サンダース","kind":"2","base":"133","type":"thunder","hp":"70","special":"","skill1":"skill_135_1","skill2":"skill_135_2","escape":["normal"],"weak":{"fight":"*2"}},
@@ -128,7 +133,7 @@
 
 "147":{"name":"ミニリュウ","kind":"1","base":"","type":"normal","hp":"40","special":"","skill1":"skill_147_1","skill2":"","escape":["normal"],"regist":{"esper":"-30"}},
 "148":{"name":"ハクリュー","kind":"2","base":"147","type":"normal","hp":"80","special":"","skill1":"skill_148_1","skill2":"skill_148_2","escape":["normal","normal"],"regist":{"esper":"-30"}},
-
+// "149":{"name":"カイリュー","kind":"3","base":"148","type":"normal","hp":"100","special":"かけつける","skill1":"skill_149_1","skill2":"","escape":["normal"],"regist":{"fight":"-30"}},
 "150":{"name":"ミュウツー","kind":"1","base":"","type":"esper","hp":"60","special":"","skill1":"skill_150_1","skill2":"skill_150_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
 
 "1001":{"name":"きずぐすり","kind":"goods","effect":"1001","description":"自分の場のポケモンにのっているダメージカウンターを2個まで、とりのぞくことができる。"},
@@ -156,7 +161,7 @@
 
 "8001":{"name":"オーキドはかせ","kind":"supporter","effect":"8001","description":"自分の手札をすべてトラッシュし、山札を7枚引く。"},
 "8002":{"name":"マサキ","kind":"supporter","effect":"8002","description":"山札からカードを2枚引いて、手札に加える。"},
-// "8003":{"name":"ポケモン交換おじさん","kind":"supporter","effect":"8003","description":"手札の「たねポケモン」か「進化カード」と、自分の山札から好きな「たねポケモン」か「進化カード」を1枚選んで交換することができる。そのあとで、自分の山札をよくきる。交換するカードは相手に見せなければならない。"},
+// "8003":{"name":"ポケモン交換おじさん","kind":"supporter","effect":"8003","description":"手札からポケモンを選び、相手プレーヤーに見せてから、山札にもどす。自分の山札からポケモンを1枚選び、相手プレーヤーに見せてから、手札に加える。そのあと、自分の山札をよくきる。"},
 "8004":{"name":"ポケモン育て屋さん","kind":"supporter","effect":"8004","description":"ポケモンを進化させるときに使う。2進化カードをいきなりつけることができる。"},
 // "8005":{"name":"ミニスカート","kind":"supporter","effect":"8005","description":"お互いのプレイヤーは手札を見せ合い、手札にあるトレーナーカードを全て山札に戻す。そのあとで山札をよくきって、プレイを再開する。"},
 "8006":{"name":"にせオーキドはかせ","kind":"supporter","effect":"8006","description":"相手の手札をすべて相手の山札にもどさせ、よくきってから、新たに7枚を引いて手札にさせる。"},
