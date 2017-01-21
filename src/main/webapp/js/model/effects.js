@@ -64,6 +64,11 @@
 
   Effects.skill_20_2 = EffectsBase.halfHpDamage;
 
+  Effects.skill_23_1 = EffectsBase.poisonByCoinToss;
+  Effects.skill_23_2 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_24_1 = null;
+  Effects.skill_24_2 = EffectsBase.poison;
+
   Effects.skill_25_2 = function(param) {
     return EffectsBase.selfDamageByCoinToss(10, param);
   };
@@ -107,6 +112,10 @@
   };
   Effects.skill_38_2 = Effects.skill_4_2;
 
+  Effects.skill_46_2 = EffectsBase.sleep;
+
+  Effects.skill_47_1 = EffectsBase.sleep;
+
   Effects.skill_51_2 = function(param) {
     var viewpoint = param.model.getTurn().whoseTurn();
     return EffectsBase.benchDamage(param.model.getField(viewpoint), 10);
@@ -132,6 +141,9 @@
     return EffectsBase.selfDamage(20, param);
   };
 
+  Effects.skill_73_1 = EffectsBase.confusionByCoinToss;
+  Effects.skill_73_2 = EffectsBase.poison;
+
   Effects.skill_84_1 = function(param) {
     return EffectsBase.pluralAttack(param, 2);
   };
@@ -152,7 +164,16 @@
 
   Effects.skill_101_1 = Effects.skill_25_2;
 
+  Effects.skill_108_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_108_2 = EffectsBase.confusionByCoinToss;
+
   Effects.skill_109_1 = EffectsBase.poisonOrConfusionByCoinToss;
+
+  Effects.skill_110_1 = EffectsBase.poisonByCoinToss;
+  Effects.skill_110_2 = function(param) {
+    return EffectsBase.suicideBombing(param, 10);
+  };
+
 
   Effects.skill_113_1 = EffectsBase.damageGuardByCoinToss;
   Effects.skill_113_2 = function(param) {
@@ -191,6 +212,8 @@
 
   Effects.skill_126_2 = Effects.skill_4_2;
 
+  Effects.skill_127_1 = EffectsBase.paralysisByCoinToss;
+
   Effects.skill_129_1 = function(param) {
     var $defer = $.Deferred();
     $defer.resolve(param.attacker.getDamageCount() * 10);
@@ -198,6 +221,9 @@
   };
 
   Effects.skill_130_2 = EffectsBase.paralysisByCoinToss;
+
+  Effects.skill_131_1 = Effects.skill_9_1;
+  Effects.skill_131_2 = EffectsBase.confusionByCoinToss;
 
   Effects.skill_145_1 = function(param) {
     return EffectsBase.selfDamageByCoinToss(30, param);

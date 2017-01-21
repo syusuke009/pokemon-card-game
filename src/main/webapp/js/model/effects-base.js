@@ -31,6 +31,27 @@
     return $defer.promise();
   };
 
+  EffectsBase.sleep = function(param) {
+    var $defer = $.Deferred();
+    MessageDisplay.println(param.defender.name + ' は ねむってしまった！');
+    param.defender.addStatus(Const.Status.SLEEP);
+    $defer.resolve();
+    return $defer.promise();
+  };
+
+  EffectsBase.sleepByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は ねむってしまった！');
+        param.defender.addStatus(Const.Status.SLEEP);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
   EffectsBase.paralysisByCoinToss = function(param) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
