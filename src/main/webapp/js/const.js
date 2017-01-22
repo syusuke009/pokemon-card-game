@@ -23,6 +23,9 @@
     PARALYSIS: 'paralysis',
     CONFUSION: 'confusion',
 
+    CANT_ESCAPE: 'cant-escape',
+    CANT_ATTACK: 'cant-attack',
+
     DAMAGE_GUARD: 'damage-guard',
     MATCHLESS: 'matchless'
   };

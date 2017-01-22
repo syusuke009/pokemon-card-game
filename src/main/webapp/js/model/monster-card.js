@@ -189,7 +189,7 @@
 
   MonsterCard.prototype.canAttack = function() {
     if (this.status_.some(function(state) {
-      return state === Const.Status.SLEEP || state === Const.Status.PARALYSIS;
+      return state === Const.Status.SLEEP || state === Const.Status.PARALYSIS || state === Const.Status.CANT_ATTACK;
     })) {
       return false;
     };
@@ -205,7 +205,7 @@
 
   MonsterCard.prototype.canEscape = function() {
     var statusCond = this.status_.every(function(state) {
-      return state !== Const.Status.SLEEP && state !== Const.Status.PARALYSIS;
+      return state !== Const.Status.SLEEP && state !== Const.Status.PARALYSIS && state !== Const.Status.CANT_ESCAPE;
     });
     var energyCond = UtilFunc.checkEnoughEnergy(this.escapeCost, UtilFunc.mapEnergyToArray(this.energy_));
     return statusCond && energyCond;

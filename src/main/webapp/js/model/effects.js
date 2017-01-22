@@ -78,6 +78,28 @@
     return EffectsBase.selfDamageByCoinToss(30, param);
   };
 
+  Effects.skill_29_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 3);
+  };
+  Effects.skill_29_2 = function(param) {
+    return EffectsBase.callFriend(param, function(card) {
+      var code = card.code;
+      return code === '29' || code === '32';
+    });
+  };
+
+  Effects.skill_30_1 = EffectsBase.confusionByCoinToss;
+  Effects.skill_30_2 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
+  };
+
+  Effects.skill_31_1 = function(param) {
+    return EffectsBase.boostByBench(param, 20, function(card) {
+      var code = card.code;
+      return code === '34';
+    });
+  };
+
   Effects.skill_32_1 = function(param) {
     return EffectsBase.pluralAttack(param, 1);
   };
@@ -112,10 +134,36 @@
   };
   Effects.skill_38_2 = Effects.skill_4_2;
 
+  Effects.skill_39_1 = EffectsBase.sleep;
+
+  Effects.skill_40_1 = EffectsBase.sleep;
+  Effects.skill_40_2 = function(param) {
+    return EffectsBase.boostByBench(param, 10, function(card) {
+      return true;
+    });
+  };
+
   Effects.skill_41_1 = EffectsBase.confusionByCoinToss;
   Effects.skill_41_2 = EffectsBase.absorb;
 
   Effects.skill_42_2 = EffectsBase.absorb;
+
+  Effects.skill_43_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_43_2 = function(param) {
+    return EffectsBase.callFriend(param, function(card) {
+      var code = card.code;
+      return code === '43';
+    });
+  };
+
+  Effects.skill_44_1 = EffectsBase.poison;
+  Effects.skill_44_2 = EffectsBase.confusionEachOther;
+
+  Effects.skill_45_1 = function(param) {
+    param.attacker.addStatus(Const.Status.CONFUSION);
+    MessageDisplay.println(param.attacker.name + ' は こんらんした！');
+    return EffectsBase.pluralAttack(param, 3);
+  };
 
   Effects.skill_46_2 = EffectsBase.sleep;
 
@@ -151,6 +199,18 @@
     return EffectsBase.selfDamage(20, param);
   };
 
+  Effects.skill_69_2 = function(param) {
+    return EffectsBase.callFriend(param, function(card) {
+      var code = card.code;
+      return code === '69';
+    });
+  };
+
+  Effects.skill_70_1 = EffectsBase.poisonByCoinToss;
+
+  Effects.skill_71_1 = Effects.skill_38_1;
+  Effects.skill_71_2 = EffectsBase.prohibitEscapeByCoinToss;
+
   Effects.skill_73_1 = EffectsBase.confusionByCoinToss;
   Effects.skill_73_2 = EffectsBase.poison;
 
@@ -178,7 +238,19 @@
   Effects.skill_91_1 = EffectsBase.paralysisOrMiss;
   Effects.skill_91_2 = function(param) {
     return EffectsBase.pluralAttack(param, 2);
-  };;
+  };
+
+  Effects.skill_98_1 = function(param) {
+    return EffectsBase.callFriend(param, function(card) {
+      var code = card.code;
+      return code === '98';
+    });
+  };
+  Effects.skill_99_1 = function(param) {
+    var $defer = $.Deferred();
+    $defer.resolve(param.attacker.getDamageCount() * 10);
+    return $defer.promise();
+  };
 
   Effects.skill_101_1 = Effects.skill_25_2;
 
@@ -215,28 +287,14 @@
 
   Effects.skill_125_1 = EffectsBase.paralysisByCoinToss;
   Effects.skill_125_2 = function(param) {
-    var $defer = $.Deferred();
-    var dialog = new CoinTossDialog();
-    dialog.show().then(function(response){
-      if (response[0]) {
-        $defer.resolve(param.skill.damage + 10);
-      } else {
-        $defer.resolve(param.skill.damage);
-        EffectsBase.selfDamage(10, param);
-      }
-    });
-    return $defer.promise();
+    return EffectsBase.boostOrSelfDamageByCoinToss(10, param);
   };
 
   Effects.skill_126_2 = Effects.skill_4_2;
 
   Effects.skill_127_1 = EffectsBase.paralysisByCoinToss;
 
-  Effects.skill_129_1 = function(param) {
-    var $defer = $.Deferred();
-    $defer.resolve(param.attacker.getDamageCount() * 10);
-    return $defer.promise();
-  };
+  Effects.skill_129_1 = Effects.skill_98_2;
 
   Effects.skill_130_2 = EffectsBase.paralysisByCoinToss;
 

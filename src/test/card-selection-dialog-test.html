@@ -4,10 +4,11 @@
 
 <meta charset="UTF-8">
 
-<title>Energy Selection Test</title>
+<title>Card Selection Test</title>
 
 <link rel="stylesheet" type="text/css" href="../main/webapp/css/animation.css">
 <link rel="stylesheet" type="text/css" href="../main/webapp/css/styles.css">
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/dialogs.css">
 <script type="text/javascript" src="../main/webapp/js/lib/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="../main/webapp/js/lib/hogan.min.js"></script>
 <script type="text/javascript" src="../main/webapp/json/card-list.js"></script>
@@ -88,8 +89,8 @@
 		list.push(CardFactory.create(key, card));
 
 		$('#button').on('click', function(e){
-		  var esd = new CardSelectionDialog();
-		  var promise = esd.show(list, 1);
+		  var csd = new CardSelectionDialog();
+		  var promise = csd.show(list, 1);
 		  promise.then(function(res) {
 		    alert(res.map(function(t){
 		      return t.trnId;
