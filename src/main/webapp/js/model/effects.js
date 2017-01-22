@@ -278,12 +278,14 @@
   };
   Effects.skill_121_2 = EffectsBase.paralysisByCoinToss;
 
+  Effects.skill_122_1 = function(param) {
+    return EffectsBase.boostByDamage(param.defender, param.skill);
+  };
+
   Effects.skill_124_1 = function(param) {
     return EffectsBase.pluralAttack(param, 2);
   };
-  Effects.skill_124_2 = function(param) {
-    return EffectsBase.boostByDamage(param.defender, param.skill);
-  };
+  Effects.skill_124_2 = Effects.skill_122_1;
 
   Effects.skill_125_1 = EffectsBase.paralysisByCoinToss;
   Effects.skill_125_2 = function(param) {
@@ -301,6 +303,8 @@
   Effects.skill_131_1 = Effects.skill_9_1;
   Effects.skill_131_2 = EffectsBase.confusionByCoinToss;
 
+  Effects.skill_143_1 = EffectsBase.paralysisByCoinToss;
+
   Effects.skill_145_1 = function(param) {
     return EffectsBase.selfDamageByCoinToss(30, param);
   };
@@ -311,6 +315,10 @@
   };
   Effects.skill_148_2 = function(param) {
     return EffectsBase.burstEnergy(1, param);
+  };
+
+  Effects.skill_149_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
   };
 
 
