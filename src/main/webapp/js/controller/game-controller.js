@@ -269,7 +269,7 @@
     var field = this.model_.getField(viewpoint || Const.Viewpoint.ME);
     var deck = field.getDeck();
     if (deck.isEmpty()) {
-      this.gameset(UtilFunc.reverseViewpoint(viewpoint), 'デッキがなくなりドローができなくなりました');
+      this.gameset(UtilFunc.reverseViewpoint(viewpoint), 'デッキがなくなりカードがドローできなくなりました');
     }
     var card = deck.draw();
     field.addHand(card);

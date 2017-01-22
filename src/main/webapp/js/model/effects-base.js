@@ -415,6 +415,7 @@
       $.each(response, function(idx, card) {
         field.putBench(deck.pick(card.trnId));
       });
+      deck.shuffle();
       $defer.resolve();
     });
     return $defer.promise();
