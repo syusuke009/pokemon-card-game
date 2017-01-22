@@ -112,9 +112,19 @@
   };
   Effects.skill_38_2 = Effects.skill_4_2;
 
+  Effects.skill_41_1 = EffectsBase.confusionByCoinToss;
+  Effects.skill_41_2 = EffectsBase.absorb;
+
+  Effects.skill_42_2 = EffectsBase.absorb;
+
   Effects.skill_46_2 = EffectsBase.sleep;
 
   Effects.skill_47_1 = EffectsBase.sleep;
+
+  Effects.skill_48_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_48_2 = EffectsBase.absorb;
+
+  Effects.skill_49_1 = EffectsBase.poisonAndConfusionByCoinToss;
 
   Effects.skill_51_2 = function(param) {
     var viewpoint = param.model.getTurn().whoseTurn();
@@ -161,6 +171,14 @@
   Effects.skill_87_2 = EffectsBase.paralysisByCoinToss;
 
   Effects.skill_96_2 = EffectsBase.confusionByCoinToss;
+
+  Effects.skill_90_1 = EffectsBase.confusionByCoinToss;
+  Effects.skill_90_2 = EffectsBase.damageGuardByCoinToss;
+
+  Effects.skill_91_1 = EffectsBase.paralysisOrMiss;
+  Effects.skill_91_2 = function(param) {
+    return EffectsBase.pluralAttack(param, 2);
+  };;
 
   Effects.skill_101_1 = Effects.skill_25_2;
 

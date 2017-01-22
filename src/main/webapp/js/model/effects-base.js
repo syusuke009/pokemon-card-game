@@ -65,6 +65,21 @@
     return $defer.promise();
   };
 
+  EffectsBase.paralysisOrMiss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は マヒ になった！');
+        param.defender.addStatus(Const.Status.PARALYSIS);
+        $defer.resolve(param.skill.damage);
+      } else {
+        $defer.resolve(0);
+      }
+    });
+    return $defer.promise();
+  };
+
   EffectsBase.confusionByCoinToss = function(param) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
@@ -87,6 +102,21 @@
         param.defender.addStatus(Const.Status.POISON);
       } else {
         MessageDisplay.println(param.defender.name + ' は こんらんした！');
+        param.defender.addStatus(Const.Status.CONFUSION);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.poisonAndConfusionByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は どく になった！');
+        MessageDisplay.println(param.defender.name + ' は こんらんした！');
+        param.defender.addStatus(Const.Status.POISON);
         param.defender.addStatus(Const.Status.CONFUSION);
       }
       $defer.resolve();
@@ -310,8 +340,18 @@
   EffectsBase.refresh = function(param, cost) {
     var attacker = param.attacker;
     return EffectsBase.trushEnergy(attacker, cost).then(function(response) {
-      MessageDisplay.println(attacker.name + ' のダメージがかいふくした！');
+      MessageDisplay.println(attacker.name + ' はぜんかいふくした！');
       attacker.hurt(attacker.hp * (-1));
     });
-  }
+  };
+
+  /**
+   * あたえたダメージ分、回復する
+   */
+  EffectsBase.absorb = function(param) {
+    var attacker = param.attacker;
+    attacker.hurt(param.damage * -1);
+    MessageDisplay.println(attacker.name + ' は ' + param.damage + ' かいふくした！');
+    return $.Deferred().resolve().promise();
+  };
 })(jQuery);
