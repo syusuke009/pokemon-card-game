@@ -31,6 +31,27 @@
     return $defer.promise();
   };
 
+  EffectsBase.sleep = function(param) {
+    var $defer = $.Deferred();
+    MessageDisplay.println(param.defender.name + ' は ねむってしまった！');
+    param.defender.addStatus(Const.Status.SLEEP);
+    $defer.resolve();
+    return $defer.promise();
+  };
+
+  EffectsBase.sleepByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は ねむってしまった！');
+        param.defender.addStatus(Const.Status.SLEEP);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
   EffectsBase.paralysisByCoinToss = function(param) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
@@ -40,6 +61,21 @@
         param.defender.addStatus(Const.Status.PARALYSIS);
       }
       $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.paralysisOrMiss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は マヒ になった！');
+        param.defender.addStatus(Const.Status.PARALYSIS);
+        $defer.resolve(param.skill.damage);
+      } else {
+        $defer.resolve(0);
+      }
     });
     return $defer.promise();
   };
@@ -57,6 +93,13 @@
     return $defer.promise();
   };
 
+  EffectsBase.confusionEachOther = function(param) {
+    param.defender.addStatus(Const.Status.CONFUSION);
+    param.attacker.addStatus(Const.Status.CONFUSION);
+    MessageDisplay.println(param.defender.name + ' は こんらんした！', param.attacker.name + ' は こんらんした！');
+    MessageDisplay.println(param.attacker.name + ' は こんらんした！', param.defender.name + ' は こんらんした！');
+  };
+
   EffectsBase.poisonOrConfusionByCoinToss = function(param) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
@@ -66,6 +109,21 @@
         param.defender.addStatus(Const.Status.POISON);
       } else {
         MessageDisplay.println(param.defender.name + ' は こんらんした！');
+        param.defender.addStatus(Const.Status.CONFUSION);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.poisonAndConfusionByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        MessageDisplay.println(param.defender.name + ' は どく になった！');
+        MessageDisplay.println(param.defender.name + ' は こんらんした！');
+        param.defender.addStatus(Const.Status.POISON);
         param.defender.addStatus(Const.Status.CONFUSION);
       }
       $defer.resolve();
@@ -115,6 +173,30 @@
         card.removeEnergy(trushed);
       })
       card.addDefenceSkillEffect(Const.Status.MATCHLESS);
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.prohibitEscapeByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        param.defender.addStatus(Const.Status.CANT_ESCAPE);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.prohibitAttackByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        param.defender.addStatus(Const.Status.CANT_ATTACK);
+      }
       $defer.resolve();
     });
     return $defer.promise();
@@ -186,6 +268,18 @@
     var $defer = $.Deferred();
     var boost = target.getDamageCount() * 10;
     $defer.resolve(skill.damage + boost);
+    return $defer.promise();
+  };
+
+  /**
+   * 控えポケモンの数によって、ダメージ追加
+   */
+  EffectsBase.boostByBench = function(param, boostDamage, filterFn) {
+    var $defer = $.Deferred();
+    var field = param.model.getField(param.model.getTurn().whoseTurn());
+    var bench = field.getBench();
+    var list = bench.filter(filterFn);
+    $defer.resolve(param.skill.damage + (boostDamage * list.length));
     return $defer.promise();
   };
 
@@ -289,8 +383,40 @@
   EffectsBase.refresh = function(param, cost) {
     var attacker = param.attacker;
     return EffectsBase.trushEnergy(attacker, cost).then(function(response) {
-      MessageDisplay.println(attacker.name + ' のダメージがかいふくした！');
+      MessageDisplay.println(attacker.name + ' はぜんかいふくした！');
       attacker.hurt(attacker.hp * (-1));
     });
-  }
+  };
+
+  /**
+   * あたえたダメージ分、回復する
+   */
+  EffectsBase.absorb = function(param) {
+    var attacker = param.attacker;
+    attacker.hurt(param.damage * -1);
+    MessageDisplay.println(attacker.name + ' は ' + param.damage + ' かいふくした！');
+    return $.Deferred().resolve().promise();
+  };
+
+  /**
+   * デッキからカードを選び、ベンチに出す
+   */
+  EffectsBase.callFriend = function(param, filterFn) {
+    var $defer = $.Deferred();
+    var field = param.model.getField(param.model.getTurn().whoseTurn());
+    var deck = field.getDeck();
+    var list = deck.getAll().filter(filterFn);
+    if (list.length === 0) {
+      MessageDisplay.println('しかし よびだせるなかまがいなかった！');
+      return $defer.resolve().promise();
+    }
+    var dialog = new CardSelectionDialog();
+    dialog.show(list, 1).then(function(response) {
+      $.each(response, function(idx, card) {
+        field.putBench(deck.pick(card.trnId));
+      });
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
 })(jQuery);

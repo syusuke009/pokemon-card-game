@@ -108,7 +108,15 @@
       m.updateDefenceEffect();
     }.bind(this));
 
-    attackerField.getBattleMonster().updateAttackEffect();
+    var attacker = attackerField.getBattleMonster();
+    var attackerStatus = attacker.getStatus();
+    if (attackerStatus.indexOf(Const.Status.CANT_ATTACK) >= 0) {
+      attackerStatus.splice(attackerStatus.indexOf(Const.Status.CANT_ATTACK), 1);
+    }
+    if (attackerStatus.indexOf(Const.Status.CANT_ESCAPE) >= 0) {
+      attackerStatus.splice(attackerStatus.indexOf(Const.Status.CANT_ESCAPE), 1);
+    }
+    attacker.updateAttackEffect();
     attackerField.getBench().forEach(function(m) {
       m.updateAttackEffect();
     }.bind(this));
