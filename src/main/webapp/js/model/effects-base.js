@@ -93,11 +93,25 @@
     return $defer.promise();
   };
 
+  EffectsBase.selfConfusionByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (!response[0]) {
+        MessageDisplay.println(param.attacker.name + ' は こんらんした！');
+        param.attacker.addStatus(Const.Status.CONFUSION);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
   EffectsBase.confusionEachOther = function(param) {
     param.defender.addStatus(Const.Status.CONFUSION);
     param.attacker.addStatus(Const.Status.CONFUSION);
     MessageDisplay.println(param.defender.name + ' は こんらんした！', param.attacker.name + ' は こんらんした！');
     MessageDisplay.println(param.attacker.name + ' は こんらんした！', param.defender.name + ' は こんらんした！');
+    return  $.Deferred().resolve().promise();
   };
 
   EffectsBase.poisonOrConfusionByCoinToss = function(param) {
@@ -178,6 +192,15 @@
     return $defer.promise();
   };
 
+  /**
+   * 次の相手の晩、相手がコイントスをして「うら」ならワザが失敗する
+   */
+  EffectsBase.blind = function(param) {
+    param.defender.addStatus(Const.Status.BLIND);
+    MessageDisplay.println(param.defender.name + ' は めいちゅうりつがさがった！');
+    return $.Deferred().resolve().promise();
+  };
+
   EffectsBase.prohibitEscapeByCoinToss = function(param) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
@@ -240,6 +263,19 @@
       card.removeEnergy(e);
     });
     return $defer.resolve().promise();
+  };
+
+  EffectsBase.boostByCoinToss = function(boost, param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        $defer.resolve(param.skill.damage + boost);
+      } else {
+        $defer.resolve(param.skill.damage);
+      }
+    });
+    return $defer.promise();
   };
 
   /**

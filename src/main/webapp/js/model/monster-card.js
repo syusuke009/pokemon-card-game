@@ -120,6 +120,14 @@
     this.status_ = status;
   };
 
+  MonsterCard.prototype.hasStatus = function(status) {
+    return this.status_.indexOf(status) >= 0;
+  };
+
+  MonsterCard.prototype.removeStatus = function(status) {
+    this.status_.splice(this.status_.indexOf(status), 1);
+  };
+
   MonsterCard.prototype.addStatus = function(status) {
     if (this.status_.indexOf(status) >= 0) {
       return;
@@ -185,6 +193,9 @@
 
     this.damage_ = base.damage_;
     this.energy_ = base.energy_;
+    base.damage_ = 0;
+    base.energy_ = [];
+    base.status_ = [];
   };
 
   MonsterCard.prototype.canAttack = function() {

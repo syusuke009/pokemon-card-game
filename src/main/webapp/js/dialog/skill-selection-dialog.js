@@ -1,16 +1,17 @@
 (function($){
 
-  SkillSelectionDialog = function() {
+  SkillSelectionDialog = function(opt_forSkill) {
     this.$defer_ = null;
+    this.isForSkill_ = opt_forSkill === true;
   };
 
 
   SkillSelectionDialog.prototype.show = function(card) {
     $('.dialog-backdrop').addClass('open');
     $('.dialog-window').addClass('open').height(360).width(480);
-    $('.dialog-header').text('わざの選択');
+    $('.dialog-header').text('ワザの選択');
     var $content = $('.dialog-content').html(this.createContentDom_(card));
-    var $buttons = $('.dialog-buttons').html(this.createButtonsDom_());
+    var $buttons = $('.dialog-buttons').html(this.createButtonsDom_(this.isForSkill_));
 
     this.controlEnabled_($content, card);
 
@@ -66,14 +67,16 @@
   };
 
   SkillSelectionDialog.prototype.createButtonsDom_ = function() {
-    return '<div class="skill-selection-buttons"><button class="btn close-btn">キャンセル</button></div>';
+    var cancelDom = this.isForSkill_ ? '' : '<button class="btn close-btn">キャンセル</button>';
+    return '<div class="skill-selection-buttons">' + cancelDom + '</div>';
   };
 
   SkillSelectionDialog.prototype.controlEnabled_ = function($content, card) {
-    var energyArr = UtilFunc.mapEnergyToArray(card.getEnergy());
+    var allTypes = ["leaf","fire","aqua","thunder","fight","esper","leaf","fire","aqua","thunder","fight","esper","leaf","fire","aqua","thunder","fight","esper","leaf","fire","aqua","thunder","fight","esper"];
+    var energyArr = this.isForSkill_ ? allTypes : UtilFunc.mapEnergyToArray(card.getEnergy());
     if (!!card.skill1) {
       var $skillPanel1 = $content.find('.skill1');
-      if (card.skill1.satisfy(energyArr)) {
+      if (card.skill1.satisfy(energyArr) && !card.hasStatus(Const.Status.CANT_SKILL1)) {
         $skillPanel1.removeClass('disabled');
       } else {
         $skillPanel1.addClass('disabled');
@@ -81,7 +84,7 @@
     }
     if (!!card.skill2) {
       var $skillPanel2 = $content.find('.skill2');
-      if (card.skill2.satisfy(energyArr)) {
+      if (card.skill2.satisfy(energyArr) && !card.hasStatus(Const.Status.CANT_SKILL2)) {
         $skillPanel2.removeClass('disabled');
       } else {
         $skillPanel2.addClass('disabled');

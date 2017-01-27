@@ -78,6 +78,12 @@
     return EffectsBase.selfDamageByCoinToss(30, param);
   };
 
+  Effects.skill_27_1 = EffectsBase.blind;
+
+  Effects.skill_28_2 = function(param) {
+    return EffectsBase.pluralAttack(param, 3);
+  };
+
   Effects.skill_29_1 = function(param) {
     return EffectsBase.pluralAttack(param, 3);
   };
@@ -89,9 +95,7 @@
   };
 
   Effects.skill_30_1 = EffectsBase.confusionByCoinToss;
-  Effects.skill_30_2 = function(param) {
-    return EffectsBase.pluralAttack(param, 2);
-  };
+  Effects.skill_30_2 = Effects.skill_15_1;
 
   Effects.skill_31_1 = function(param) {
     return EffectsBase.boostByBench(param, 20, function(card) {
@@ -104,9 +108,7 @@
     return EffectsBase.pluralAttack(param, 1);
   };
 
-  Effects.skill_33_1 = function(param) {
-    return EffectsBase.pluralAttack(param, 2);
-  };
+  Effects.skill_33_1 = Effects.skill_15_1;
 
   Effects.skill_34_1 = function(param) {
     return EffectsBase.boostOrSelfDamageByCoinToss(10, param);
@@ -179,9 +181,34 @@
     return EffectsBase.benchDamage(param.model.getField(viewpoint), 10);
   };
 
+  Effects.skill_57_1 = function(param) {
+    return EffectsBase.pluralAttack(param, 3);
+  };
+  Effects.skill_57_2 = EffectsBase.selfConfusionByCoinToss;
+
   Effects.skill_59_1 = Effects.skill_4_2;
   Effects.skill_59_2 = function(param) {
     return EffectsBase.selfDamage(30, param);
+  };
+
+  Effects.skill_60_1 = Effects.skill_9_1;
+
+  Effects.skill_61_1 = function(param) {
+    var dialog = new SkillSelectionDialog(true);
+    return dialog.show(param.defender).then(function(key) {
+      if (key === 'skill1') {
+        param.defender.addStatus(Const.Status.CANT_SKILL1);
+      } else if (key === 'skill2') {
+        param.defender.addStatus(Const.Status.CANT_SKILL2);
+      }
+      return $.Deferred().resolve().promise();
+    });
+  };
+  Effects.skill_61_2 = Effects.skill_15_1;
+
+  Effects.skill_62_1 = Effects.skill_9_1;
+  Effects.skill_62_2 = function(param) {
+    return EffectsBase.burstEnergy(1, param);
   };
 
   Effects.skill_63_1 = EffectsBase.paralysisByCoinToss;
@@ -214,9 +241,7 @@
   Effects.skill_73_1 = EffectsBase.confusionByCoinToss;
   Effects.skill_73_2 = EffectsBase.poison;
 
-  Effects.skill_84_1 = function(param) {
-    return EffectsBase.pluralAttack(param, 2);
-  };
+  Effects.skill_84_1 = Effects.skill_15_1;
 
   Effects.skill_81_1 = EffectsBase.paralysisByCoinToss;
   Effects.skill_81_2 = function(param) {
@@ -236,9 +261,7 @@
   Effects.skill_90_2 = EffectsBase.damageGuardByCoinToss;
 
   Effects.skill_91_1 = EffectsBase.paralysisOrMiss;
-  Effects.skill_91_2 = function(param) {
-    return EffectsBase.pluralAttack(param, 2);
-  };
+  Effects.skill_91_2 = Effects.skill_15_1;
 
   Effects.skill_98_1 = function(param) {
     return EffectsBase.callFriend(param, function(card) {
@@ -273,6 +296,11 @@
   Effects.skill_114_1 = EffectsBase.paralysisByCoinToss;
   Effects.skill_114_2 = EffectsBase.poison;
 
+  Effects.skill_116_1 = EffectsBase.blind;
+
+  Effects.skill_117_1 = Effects.skill_9_1;
+  Effects.skill_117_2 = EffectsBase.matchlessByCoinToss;
+
   Effects.skill_121_1 = function(param) {
     return EffectsBase.refresh(param, ["aqua"]);
   };
@@ -282,9 +310,7 @@
     return EffectsBase.boostByDamage(param.defender, param.skill);
   };
 
-  Effects.skill_124_1 = function(param) {
-    return EffectsBase.pluralAttack(param, 2);
-  };
+  Effects.skill_124_1 = Effects.skill_15_1;
   Effects.skill_124_2 = Effects.skill_122_1;
 
   Effects.skill_125_1 = EffectsBase.paralysisByCoinToss;
@@ -303,6 +329,22 @@
   Effects.skill_131_1 = Effects.skill_9_1;
   Effects.skill_131_2 = EffectsBase.confusionByCoinToss;
 
+  Effects.skill_133_1 = EffectsBase.prohibitAttackByCoinToss;
+  Effects.skill_133_2 = function(param) {
+    return EffectsBase.boostByCoinToss(20, param);
+  };
+
+  Effects.skill_134_1 = Effects.skill_133_2;
+  Effects.skill_134_2 = Effects.skill_9_1;
+
+  Effects.skill_135_1 = Effects.skill_133_2;
+  Effects.skill_135_2 = function(param) {
+    return EffectsBase.pluralAttack(param, 4);
+  };
+
+  Effects.skill_136_1 = Effects.skill_133_2;
+  Effects.skill_136_2 = Effects.skill_4_2;
+
   Effects.skill_143_1 = EffectsBase.paralysisByCoinToss;
 
   Effects.skill_145_1 = function(param) {
@@ -310,16 +352,12 @@
   };
   Effects.skill_145_2 = EffectsBase.trushAllEnergy;
 
-  Effects.skill_148_1 = function(param) {
-    return EffectsBase.pluralAttack(param, 2);
-  };
+  Effects.skill_148_1 = Effects.skill_15_1;
   Effects.skill_148_2 = function(param) {
     return EffectsBase.burstEnergy(1, param);
   };
 
-  Effects.skill_149_1 = function(param) {
-    return EffectsBase.pluralAttack(param, 2);
-  };
+  Effects.skill_149_1 = Effects.skill_15_1;
 
 
   Effects.skill_150_1 = function(param) {

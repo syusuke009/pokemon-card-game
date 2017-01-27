@@ -23,8 +23,11 @@
     PARALYSIS: 'paralysis',
     CONFUSION: 'confusion',
 
+    BLIND: 'blind',
     CANT_ESCAPE: 'cant-escape',
     CANT_ATTACK: 'cant-attack',
+    CANT_SKILL1: 'cant-skill1',
+    CANT_SKILL2: 'cant-skill2',
 
     DAMAGE_GUARD: 'damage-guard',
     MATCHLESS: 'matchless'

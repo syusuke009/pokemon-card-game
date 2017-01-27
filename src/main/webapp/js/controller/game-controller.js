@@ -200,17 +200,18 @@
     var viewpoint = UtilFunc.getViewpoint(trnId);
     var field = this.model_.getField(viewpoint);
     var dialog = new SkillSelectionDialog();
-    var promise = dialog.show(field.getBattleMonster());
-    promise.then(function(obj) {
+    dialog.show(field.getBattleMonster()).then(function(obj) {
       if (!!obj) {
         return this.battleController_.battle(this.model_, obj);
       }
-      return $.Deferred().reject().promise();
+      return $.Deferred().resolve(false).promise();
     }.bind(this)).then(function(res) {
-      this.turnEnd();
+      if (res) {
+        this.turnEnd();
+      }
     }.bind(this), function(res) {
-      // do nothing
-    });
+      this.turnEnd();
+    }.bind(this));
   };
 
   GameController.prototype.onEscape_ = function(e, trnId) {
