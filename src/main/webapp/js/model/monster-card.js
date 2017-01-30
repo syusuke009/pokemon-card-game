@@ -25,10 +25,6 @@
     this.status_ = [];
     this.energy_ = [];
 
-    this.attackEffectReservation_ = {};
-    this.attackEffect_ = {};
-    this.defenceEffect_ = {};
-
     this.evolutedBase_ = null;
 
     this.dir = 'monster';
@@ -222,28 +218,4 @@
     return statusCond && energyCond;
   };
 
-  MonsterCard.prototype.addAttackSkillEffect = function(status) {
-    this.attackEffectReservation_[status] = true;
-  };
-
-  MonsterCard.prototype.addDefenceSkillEffect = function(status) {
-    this.defenceEffect_[status] = true;
-  };
-
-  MonsterCard.prototype.getAttackEffect = function() {
-    return this.attackEffect_;
-  };
-
-  MonsterCard.prototype.getDefenceEffect = function() {
-    return this.defenceEffect_;
-  };
-
-  MonsterCard.prototype.updateAttackEffect = function() {
-    this.attackEffect_ = this.attackEffectReservation_;
-    this.attackEffectReservation_ = {};
-  };
-
-  MonsterCard.prototype.updateDefenceEffect = function() {
-    this.defenceEffect_ = {};
-  };
 })(jQuery);

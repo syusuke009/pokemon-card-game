@@ -97,17 +97,15 @@
   PokemonChecker.prototype.checkEffects_ = function(model) {
     var turn = model.getTurn();
     var attackerField = model.getField(turn.whoseTurn());
-    var defenderField = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
-
-    defenderField.getBattleMonster().updateDefenceEffect();
-    defenderField.getBench().forEach(function(m) {
-      m.updateDefenceEffect();
-    }.bind(this));
-
     var attacker = attackerField.getBattleMonster();
-    var attackerStatus = attacker.getStatus();
     if (attacker.hasStatus(Const.Status.BLIND)) {
       attacker.removeStatus(Const.Status.BLIND);
+    }
+    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_10)) {
+      attacker.removeStatus(Const.Status.ATTACK_DOWN_10);
+    }
+    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_20)) {
+      attacker.removeStatus(Const.Status.ATTACK_DOWN_20);
     }
     if (attacker.hasStatus(Const.Status.CANT_ATTACK)) {
       attacker.removeStatus(Const.Status.CANT_ATTACK);
@@ -121,10 +119,21 @@
     if (attacker.hasStatus(Const.Status.CANT_SKILL2)) {
       attacker.removeStatus(Const.Status.CANT_SKILL2);
     }
-    attacker.updateAttackEffect();
-    attackerField.getBench().forEach(function(m) {
-      m.updateAttackEffect();
-    }.bind(this));
+
+    var defenderField = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
+    var defender = defenderField.getBattleMonster();
+    if (defender.hasStatus(Const.Status.DEFENCE_UP_20)) {
+      defender.removeStatus(Const.Status.DEFENCE_UP_20);
+    }
+    if (defender.hasStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40)) {
+      defender.removeStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40);
+    }
+    if (defender.hasStatus(Const.Status.DAMAGE_GUARD)) {
+      defender.removeStatus(Const.Status.DAMAGE_GUARD);
+    }
+    if (defender.hasStatus(Const.Status.MATCHLESS)) {
+      defender.removeStatus(Const.Status.MATCHLESS);
+    }
   };
 
   PokemonChecker.prototype.checkDying_ = function(field) {
@@ -139,12 +148,16 @@
       count++;
       MessageDisplay.println(monster.name + ' は たおれた！');
     }
+    var dead = [];
     $.each(field.getBench(), function(idx, card) {
       if (isDead(card)) {
-        field.pickBench(card.trnId).trush();
+        dead.push(card.trnId);
         count++;
         MessageDisplay.println(card.name + ' は たおれた！');
       }
+    });
+    $.each(dead, function(idx, id) {
+      field.pickBench(id).trush();
     });
     return count;
   };

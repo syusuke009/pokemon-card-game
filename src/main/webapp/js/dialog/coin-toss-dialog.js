@@ -70,6 +70,8 @@
       this.result_.push(val);
       if (this.result_.length === this.times_) {
         $('.dialog-buttons').find('.close-btn').removeClass('hidden');
+      } else if (this.times_ === Infinity && !val) {
+        $('.dialog-buttons').find('.close-btn').removeClass('hidden');
       } else {
         $('.dialog-buttons').find('.toss-btn').removeClass('invisible');
       }

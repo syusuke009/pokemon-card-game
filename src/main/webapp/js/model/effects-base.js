@@ -146,6 +146,15 @@
   };
 
   /**
+   * 40未満のダメージは0になる
+   */
+  EffectsBase.damageGuardLessThan40 = function(param) {
+    var $defer = $.Deferred();
+    param.attacker.addStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40);
+    return $defer.resolve().promise();
+  };
+
+  /**
    * コインを投げて「おもて」なら、ダメージが0になる
    */
   EffectsBase.damageGuardByCoinToss = function(param) {
@@ -153,7 +162,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addDefenceSkillEffect(Const.Status.DAMAGE_GUARD);
+        param.attacker.addStatus(Const.Status.DAMAGE_GUARD);
       }
       $defer.resolve();
     });
@@ -168,7 +177,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addDefenceSkillEffect(Const.Status.MATCHLESS);
+        param.attacker.addStatus(Const.Status.MATCHLESS);
       }
       $defer.resolve();
     });
@@ -198,6 +207,18 @@
   EffectsBase.blind = function(param) {
     param.defender.addStatus(Const.Status.BLIND);
     MessageDisplay.println(param.defender.name + ' は めいちゅうりつがさがった！');
+    return $.Deferred().resolve().promise();
+  };
+
+  EffectsBase.attackDown10 = function(param) {
+    param.defender.addStatus(Const.Status.ATTACK_DOWN_10);
+    MessageDisplay.println(param.defender.name + ' は こうげきりょくがさがった！');
+    return $.Deferred().resolve().promise();
+  };
+
+  EffectsBase.attackDown20 = function(param) {
+    param.defender.addStatus(Const.Status.ATTACK_DOWN_20);
+    MessageDisplay.println(param.defender.name + ' は こうげきりょくが ぐーんとさがった！');
     return $.Deferred().resolve().promise();
   };
 
@@ -344,6 +365,21 @@
     return $defer.promise();
   };
 
+  /**
+   * 裏が出るまでコイントスして、「おもて」の数の分だけダメージ
+   */
+  EffectsBase.pluralAttackUntilTail = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog(Infinity);
+    dialog.show().then(function(response){
+      var times = response.filter(function(b){
+        return b;
+      }).length;
+      $defer.resolve(param.skill.damage * times);
+    });
+    return $defer.promise();
+  };
+
   EffectsBase.selfDamage = function(damage, param) {
     var $defer = $.Deferred();
     MessageDisplay.println(param.attacker.name + ' にも はんどうで ' + damage + ' ダメージ！');
@@ -452,6 +488,28 @@
         field.putBench(deck.pick(card.trnId));
       });
       deck.shuffle();
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.draw = function(param) {
+    var $defer = $.Deferred();
+    var field = param.model.getField(param.model.getTurn().whoseTurn());
+    var deck = field.getDeck();
+    field.addHand(deck.draw());
+    return $defer.resolve().promise();
+  };
+
+  EffectsBase.drawByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        var field = param.model.getField(param.model.getTurn().whoseTurn());
+        var deck = field.getDeck();
+        field.addHand(deck.draw());
+      }
       $defer.resolve();
     });
     return $defer.promise();

@@ -67,7 +67,7 @@
   };
 
   BattleController.prototype.battle_ = function(skill, attacker, defender, model) {
-    if (defender.getDefenceEffect()[Const.Status.MATCHLESS]) {
+    if (defender.hasStatus(Const.Status.MATCHLESS)) {
       $defer.resolve(true);
       return $defer.promise();
     }
