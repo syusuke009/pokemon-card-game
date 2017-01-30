@@ -38,12 +38,11 @@
 
   PokemonChecker.prototype.checkPoison_ = function(field) {
     var monster = field.getBattleMonster();
-    var status = monster.getStatus();
-    if (status.indexOf(Const.Status.POISON) >= 0) {
+    if (monster.hasStatus(Const.Status.POISON)) {
       MessageDisplay.println(monster.name + ' は どく で 10 ダメージ！');
       monster.hurt(10);
     }
-    if (status.indexOf(Const.Status.DOUBLE_POISON) >= 0) {
+    if (monster.hasStatus(Const.Status.DOUBLE_POISON)) {
       MessageDisplay.println(monster.name + ' は どくどく で 20 ダメージ！');
       monster.hurt(20);
     }
@@ -52,8 +51,7 @@
   PokemonChecker.prototype.checkBurn_ = function(field) {
     var $defer = $.Deferred();
     var monster = field.getBattleMonster();
-    var status = monster.getStatus();
-    if (status.indexOf(Const.Status.BURN) >= 0) {
+    if (monster.hasStatus(Const.Status.BURN)) {
       var dialog = new CoinTossDialog();
       dialog.show().then(function(response){
         if (response[0]) {
@@ -71,13 +69,12 @@
   PokemonChecker.prototype.checkSleep_ = function(field) {
     var $defer = $.Deferred();
     var monster = field.getBattleMonster();
-    var status = monster.getStatus();
-    if (status.indexOf(Const.Status.SLEEP) >= 0) {
+    if (monster.hasStatus(Const.Status.SLEEP)) {
       var dialog = new CoinTossDialog();
       dialog.show().then(function(response){
         if (response[0]) {
           MessageDisplay.println(monster.name + ' は めをさました！');
-          status.splice(status.indexOf(Const.Status.SLEEP), 1);
+          monster.removeStatus(Const.Status.SLEEP);
         } else {
           MessageDisplay.println(monster.name + ' は ねむっている');
         }
@@ -91,35 +88,52 @@
 
   PokemonChecker.prototype.checkParalysis_ = function(field) {
     var monster = field.getBattleMonster();
-    var status = monster.getStatus();
-    if (status.indexOf(Const.Status.PARALYSIS) >= 0) {
+    if (monster.hasStatus(Const.Status.PARALYSIS)) {
       MessageDisplay.println(monster.name + ' は マヒ がとけた！');
-      status.splice(status.indexOf(Const.Status.PARALYSIS), 1);
+      monster.removeStatus(Const.Status.PARALYSIS);
     }
   };
 
   PokemonChecker.prototype.checkEffects_ = function(model) {
     var turn = model.getTurn();
     var attackerField = model.getField(turn.whoseTurn());
-    var defenderField = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
-
-    defenderField.getBattleMonster().updateDefenceEffect();
-    defenderField.getBench().forEach(function(m) {
-      m.updateDefenceEffect();
-    }.bind(this));
-
     var attacker = attackerField.getBattleMonster();
-    var attackerStatus = attacker.getStatus();
-    if (attackerStatus.indexOf(Const.Status.CANT_ATTACK) >= 0) {
-      attackerStatus.splice(attackerStatus.indexOf(Const.Status.CANT_ATTACK), 1);
+    if (attacker.hasStatus(Const.Status.BLIND)) {
+      attacker.removeStatus(Const.Status.BLIND);
     }
-    if (attackerStatus.indexOf(Const.Status.CANT_ESCAPE) >= 0) {
-      attackerStatus.splice(attackerStatus.indexOf(Const.Status.CANT_ESCAPE), 1);
+    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_10)) {
+      attacker.removeStatus(Const.Status.ATTACK_DOWN_10);
     }
-    attacker.updateAttackEffect();
-    attackerField.getBench().forEach(function(m) {
-      m.updateAttackEffect();
-    }.bind(this));
+    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_20)) {
+      attacker.removeStatus(Const.Status.ATTACK_DOWN_20);
+    }
+    if (attacker.hasStatus(Const.Status.CANT_ATTACK)) {
+      attacker.removeStatus(Const.Status.CANT_ATTACK);
+    }
+    if (attacker.hasStatus(Const.Status.CANT_ESCAPE)) {
+      attacker.removeStatus(Const.Status.CANT_ESCAPE);
+    }
+    if (attacker.hasStatus(Const.Status.CANT_SKILL1)) {
+      attacker.removeStatus(Const.Status.CANT_SKILL1);
+    }
+    if (attacker.hasStatus(Const.Status.CANT_SKILL2)) {
+      attacker.removeStatus(Const.Status.CANT_SKILL2);
+    }
+
+    var defenderField = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
+    var defender = defenderField.getBattleMonster();
+    if (defender.hasStatus(Const.Status.DEFENCE_UP_20)) {
+      defender.removeStatus(Const.Status.DEFENCE_UP_20);
+    }
+    if (defender.hasStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40)) {
+      defender.removeStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40);
+    }
+    if (defender.hasStatus(Const.Status.DAMAGE_GUARD)) {
+      defender.removeStatus(Const.Status.DAMAGE_GUARD);
+    }
+    if (defender.hasStatus(Const.Status.MATCHLESS)) {
+      defender.removeStatus(Const.Status.MATCHLESS);
+    }
   };
 
   PokemonChecker.prototype.checkDying_ = function(field) {
@@ -134,12 +148,16 @@
       count++;
       MessageDisplay.println(monster.name + ' は たおれた！');
     }
+    var dead = [];
     $.each(field.getBench(), function(idx, card) {
       if (isDead(card)) {
-        field.pickBench(card.trnId).trush();
+        dead.push(card.trnId);
         count++;
         MessageDisplay.println(card.name + ' は たおれた！');
       }
+    });
+    $.each(dead, function(idx, id) {
+      field.pickBench(id).trush();
     });
     return count;
   };

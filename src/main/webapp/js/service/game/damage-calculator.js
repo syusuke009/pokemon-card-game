@@ -30,6 +30,8 @@
 
       d = this.effectDefenderEffect_(defender, d);
 
+      d = Math.max(d, 0);
+
       MessageDisplay.println(defender.name + ' に ' + d + ' のダメージ！');
       result.damage = d;
       $defer.resolve(result);
@@ -54,6 +56,12 @@
   };
 
   DamageCalculator.prototype.effectAttackerEffect_ = function(attacker, d) {
+    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_10)) {
+      d = d - 10;
+    }
+    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_20)) {
+      d = d - 20;
+    }
     return d;
   };
 
@@ -83,8 +91,14 @@
   };
 
   DamageCalculator.prototype.effectDefenderEffect_ = function(defender, d) {
-    var effect = defender.getDefenceEffect();
-    if (effect[Const.Status.DAMAGE_GUARD]) {
+    if (defender.hasStatus(Const.Status.DEFENCE_UP_20)) {
+      d = d - 20;
+    }
+    if (defender.hasStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40) && (d < 40)) {
+      MessageDisplay.println(defender.name + ' は ぼうぎょしている！');
+      return 0;
+    }
+    if (defender.hasStatus(Const.Status.DAMAGE_GUARD)) {
       MessageDisplay.println(defender.name + ' は ぼうぎょしている！');
       return 0;
     }

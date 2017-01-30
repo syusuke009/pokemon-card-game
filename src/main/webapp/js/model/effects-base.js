@@ -93,11 +93,25 @@
     return $defer.promise();
   };
 
+  EffectsBase.selfConfusionByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (!response[0]) {
+        MessageDisplay.println(param.attacker.name + ' は こんらんした！');
+        param.attacker.addStatus(Const.Status.CONFUSION);
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
   EffectsBase.confusionEachOther = function(param) {
     param.defender.addStatus(Const.Status.CONFUSION);
     param.attacker.addStatus(Const.Status.CONFUSION);
     MessageDisplay.println(param.defender.name + ' は こんらんした！', param.attacker.name + ' は こんらんした！');
     MessageDisplay.println(param.attacker.name + ' は こんらんした！', param.defender.name + ' は こんらんした！');
+    return  $.Deferred().resolve().promise();
   };
 
   EffectsBase.poisonOrConfusionByCoinToss = function(param) {
@@ -132,6 +146,15 @@
   };
 
   /**
+   * 40未満のダメージは0になる
+   */
+  EffectsBase.damageGuardLessThan40 = function(param) {
+    var $defer = $.Deferred();
+    param.attacker.addStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40);
+    return $defer.resolve().promise();
+  };
+
+  /**
    * コインを投げて「おもて」なら、ダメージが0になる
    */
   EffectsBase.damageGuardByCoinToss = function(param) {
@@ -139,7 +162,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addDefenceSkillEffect(Const.Status.DAMAGE_GUARD);
+        param.attacker.addStatus(Const.Status.DAMAGE_GUARD);
       }
       $defer.resolve();
     });
@@ -154,7 +177,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addDefenceSkillEffect(Const.Status.MATCHLESS);
+        param.attacker.addStatus(Const.Status.MATCHLESS);
       }
       $defer.resolve();
     });
@@ -176,6 +199,27 @@
       $defer.resolve();
     });
     return $defer.promise();
+  };
+
+  /**
+   * 次の相手の晩、相手がコイントスをして「うら」ならワザが失敗する
+   */
+  EffectsBase.blind = function(param) {
+    param.defender.addStatus(Const.Status.BLIND);
+    MessageDisplay.println(param.defender.name + ' は めいちゅうりつがさがった！');
+    return $.Deferred().resolve().promise();
+  };
+
+  EffectsBase.attackDown10 = function(param) {
+    param.defender.addStatus(Const.Status.ATTACK_DOWN_10);
+    MessageDisplay.println(param.defender.name + ' は こうげきりょくがさがった！');
+    return $.Deferred().resolve().promise();
+  };
+
+  EffectsBase.attackDown20 = function(param) {
+    param.defender.addStatus(Const.Status.ATTACK_DOWN_20);
+    MessageDisplay.println(param.defender.name + ' は こうげきりょくが ぐーんとさがった！');
+    return $.Deferred().resolve().promise();
   };
 
   EffectsBase.prohibitEscapeByCoinToss = function(param) {
@@ -242,6 +286,19 @@
     return $defer.resolve().promise();
   };
 
+  EffectsBase.boostByCoinToss = function(boost, param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        $defer.resolve(param.skill.damage + boost);
+      } else {
+        $defer.resolve(param.skill.damage);
+      }
+    });
+    return $defer.promise();
+  };
+
   /**
    * 余分なエネルギーの数×10のダメージを追加
    */
@@ -299,6 +356,21 @@
   EffectsBase.pluralAttack = function(param, times) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog(times);
+    dialog.show().then(function(response){
+      var times = response.filter(function(b){
+        return b;
+      }).length;
+      $defer.resolve(param.skill.damage * times);
+    });
+    return $defer.promise();
+  };
+
+  /**
+   * 裏が出るまでコイントスして、「おもて」の数の分だけダメージ
+   */
+  EffectsBase.pluralAttackUntilTail = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog(Infinity);
     dialog.show().then(function(response){
       var times = response.filter(function(b){
         return b;
@@ -415,6 +487,29 @@
       $.each(response, function(idx, card) {
         field.putBench(deck.pick(card.trnId));
       });
+      deck.shuffle();
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.draw = function(param) {
+    var $defer = $.Deferred();
+    var field = param.model.getField(param.model.getTurn().whoseTurn());
+    var deck = field.getDeck();
+    field.addHand(deck.draw());
+    return $defer.resolve().promise();
+  };
+
+  EffectsBase.drawByCoinToss = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      if (response[0]) {
+        var field = param.model.getField(param.model.getTurn().whoseTurn());
+        var deck = field.getDeck();
+        field.addHand(deck.draw());
+      }
       $defer.resolve();
     });
     return $defer.promise();

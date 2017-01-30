@@ -11,6 +11,9 @@
       key.id = prefix + '-' + idx;
       key.cardCode = code;
       var card = this.cardMstDao_.get(code);
+      if (!card) {
+        throw 'unregistered card: ' + code;
+      }
       if (!!card.skill1 && (typeof card.skill1 === 'string')) {
         var skill1 = this.skillDao_.get(card.skill1.replace('skill_',''));
         card.skill1 = new Skill(card.skill1, skill1);
