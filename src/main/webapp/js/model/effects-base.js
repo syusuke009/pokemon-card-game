@@ -190,12 +190,16 @@
   EffectsBase.matchlessByTrushEnergy = function(param, trushes) {
     var $defer = $.Deferred();
     var card = param.attacker;
+    if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+      MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
+      return $defer.resolve().promise();
+    }
     var dialog = new EnergySelectionDialog();
     dialog.show(card.getEnergy(), trushes).then(function(response){
       response.forEach(function(trushed){
         card.removeEnergy(trushed);
       })
-      card.addDefenceSkillEffect(Const.Status.MATCHLESS);
+      card.addStatus(Const.Status.MATCHLESS);
       $defer.resolve();
     });
     return $defer.promise();
@@ -257,6 +261,10 @@
    */
   EffectsBase.trushEnergy = function(card, trushes) {
     var $defer = $.Deferred();
+    if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+      MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
+      return $defer.resolve().promise();
+    }
     var dialog = new EnergySelectionDialog();
     dialog.show(card.getEnergy(), trushes).then(function(response){
       response.forEach(function(trushed){
@@ -518,6 +526,30 @@
         var field = param.model.getField(param.model.getTurn().whoseTurn());
         var deck = field.getDeck();
         field.addHand(deck.draw());
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.trushDeckByTrushEnergy = function(param) {
+    var $defer = $.Deferred();
+    var card = param.attacker;
+    if (!UtilFunc.checkEnoughEnergy(['fire'], UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+      MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
+      return $defer.resolve().promise();
+    }
+    var viewpoint = UtilFunc.reverseViewpoint(param.model.getTurn().whoseTurn());
+    var defenderField = param.model.getField(viewpoint);
+    var dialog = new EnergySelectionDialog();
+    dialog.show(card.getEnergy(), 'fire').then(function(response){
+      var deck = defenderField.getDeck();
+      var trush = defenderField.getTrush();
+      response.forEach(function(trushed){
+        card.removeEnergy(trushed);
+      })
+      for (var i = 0; i < response.length; i++) {
+        trush.add(deck.draw());
       }
       $defer.resolve();
     });

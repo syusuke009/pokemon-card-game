@@ -462,10 +462,23 @@
 
   Effects.skill_143_1 = EffectsBase.paralysisByCoinToss;
 
+  Effects.skill_144_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_144_2 = function(param) {
+    var viewpoint = param.model.getTurn().whoseTurn();
+    var dialog = new CoinTossDialog();
+    return dialog.show().then(function(response){
+      var field = param.model.getField(response[0] ? UtilFunc.reverseViewpoint(viewpoint) : viewpoint);
+      return EffectsBase.benchDamage(field, 10);
+    });
+  };
+
   Effects.skill_145_1 = function(param) {
     return EffectsBase.selfDamageByCoinToss(30, param);
   };
   Effects.skill_145_2 = EffectsBase.trushAllEnergy;
+
+  Effects.skill_146_1 = EffectsBase.trushDeckByTrushEnergy;
+  Effects.skill_146_2 = Effects.skill_32_1;
 
   Effects.skill_148_1 = Effects.skill_15_1;
   Effects.skill_148_2 = function(param) {

@@ -24,7 +24,8 @@
 
 
 <body>
-	<button id="button" class="btn">エネルギー</button>
+	<button id="button" class="btn">2個</button>
+	<button id="button-unlimited" class="btn">無制限</button>
 
 	<div class="dialog-backdrop"></div>
 	<div class="dialog-window">
@@ -47,10 +48,28 @@
 		key.cardCode = '10011';
 		card = cardDao.get(key.cardCode);
 		energies.push(CardFactory.create(key, card));
+		key.id = 'test-energy4';
+		key.cardCode = '10001';
+		card = cardDao.get(key.cardCode);
+		energies.push(CardFactory.create(key, card));
+		key.id = 'test-energy5';
+		key.cardCode = '10002';
+		card = cardDao.get(key.cardCode);
+		energies.push(CardFactory.create(key, card));
+
 
 		$('#button').on('click', function(e){
 		  var esd = new EnergySelectionDialog();
 		  var promise = esd.show(energies, ['normal', 'normal']);
+		  promise.then(function(res) {
+		    alert(res.map(function(t){
+		      return t.trnId;
+		    }));
+		  });
+		});
+		$('#button-unlimited').on('click', function(e){
+		  var esd = new EnergySelectionDialog();
+		  var promise = esd.show(energies, 'leaf');
 		  promise.then(function(res) {
 		    alert(res.map(function(t){
 		      return t.trnId;
