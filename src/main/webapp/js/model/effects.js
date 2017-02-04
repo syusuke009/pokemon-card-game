@@ -4,6 +4,7 @@
 
   Effects.EventType = {
       REQUEST_SELECT : 'request-select',
+      REQUEST_SELECT_SIGNAL_SEND : 'request-select-signal-send',
       REQUEST_REDRAW_FIELD : 'request-redraw-field',
       REQUEST_REDRAW_DETAIL : 'request-redraw-detail',
   };
@@ -15,19 +16,17 @@
     if (!$defer) throw 'need to pass parameger of $.Deferred';
     Effects.getEventTarget().trigger(Effects.EventType.REQUEST_SELECT, [selectables, $defer]);
   };
+  Effects.dispatchSelectSignalSendRequestEvent = function(selectables, $defer) {
+    if (!selectables) throw 'need to pass parameger of selectable trnIds';
+    if (!$defer) throw 'need to pass parameger of $.Deferred';
+    Effects.getEventTarget().trigger(Effects.EventType.REQUEST_SELECT_SIGNAL_SEND, [selectables, $defer]);
+  };
   Effects.dispatchRedrawFieldRequestEvent = function() {
     Effects.getEventTarget().trigger(Effects.EventType.REQUEST_REDRAW_FIELD);
   };
 
   Effects.skill_1_1 = function(param) {
-    var $defer = $.Deferred();
-    var d = param.attacker.getDamageCount();
-    if (d > 0) {
-      MessageDisplay.println(param.attacker.name + ' は 10 かいふくした！');
-      param.attacker.hurt(-10);
-    }
-    $defer.resolve();
-    return $defer.promise();
+    return EffectsBase.absorb(10, param);
   };
 
   Effects.skill_2_2 = EffectsBase.poison;
@@ -52,6 +51,33 @@
     return EffectsBase.boostByExtraEnergy(energies, param.skill, "aqua", 2);
   };
 
+  Effects.skill_10_1 = EffectsBase.paralysisByCoinToss;
+
+  Effects.skill_11_1 = EffectsBase.damageGuardByCoinToss;
+  Effects.skill_11_2 = EffectsBase.paralysisByCoinToss;
+
+  Effects.skill_12_1 = function(param) {
+    var $defer = $.Deferred();
+    var viewpoint = param.model.getTurn().whoseTurn();
+    var field = param.model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    var selectables = field.getBench().map(function(c) {
+      return c.trnId;
+    });
+    if (selectables.length === 0) {
+      return $defer.resolve().promise();
+    }
+    var monster = field.getBattleMonster();
+    Effects.dispatchSelectSignalSendRequestEvent(selectables, $defer)
+    $defer.then(function(trnId) {
+      field.putBench(monster);
+    });
+    return $defer.promise();
+  };
+  Effects.skill_12_2 = function(param) {
+    var restore = Math.ceil(param.damage / 2 / 10) * 10;
+    EffectsBase.absorb(restore, param);
+  };
+
   Effects.skill_13_1 = EffectsBase.poisonByCoinToss;
 
   Effects.skill_14_1 = EffectsBase.damageGuardByCoinToss;
@@ -62,11 +88,21 @@
   };
   Effects.skill_15_2 = EffectsBase.poisonByCoinToss;
 
+  Effects.skill_16_1 = Effects.skill_12_1;
+
+  Effects.skill_17_1 = Effects.skill_12_1;
+  Effects.skill_17_2 = EffectsBase.revenge;
+
   Effects.skill_20_2 = EffectsBase.halfHpDamage;
+
+  Effects.skill_21_2 = EffectsBase.revenge;
+
+  Effects.skill_22_1 = EffectsBase.matchlessByCoinToss;
 
   Effects.skill_23_1 = EffectsBase.poisonByCoinToss;
   Effects.skill_23_2 = EffectsBase.paralysisByCoinToss;
-  Effects.skill_24_1 = null;
+
+  Effects.skill_24_1 = Effects.skill_12_1;
   Effects.skill_24_2 = EffectsBase.poison;
 
   Effects.skill_25_2 = function(param) {
@@ -146,9 +182,11 @@
   };
 
   Effects.skill_41_1 = EffectsBase.confusionByCoinToss;
-  Effects.skill_41_2 = EffectsBase.absorb;
+  Effects.skill_41_2 = function(param) {
+    return EffectsBase.absorb(param.damage, param);
+  };
 
-  Effects.skill_42_2 = EffectsBase.absorb;
+  Effects.skill_42_2 = Effects.skill_41_2;
 
   Effects.skill_43_1 = EffectsBase.paralysisByCoinToss;
   Effects.skill_43_2 = function(param) {
@@ -172,7 +210,7 @@
   Effects.skill_47_1 = EffectsBase.sleep;
 
   Effects.skill_48_1 = EffectsBase.paralysisByCoinToss;
-  Effects.skill_48_2 = EffectsBase.absorb;
+  Effects.skill_48_2 = Effects.skill_41_2;
 
   Effects.skill_49_1 = EffectsBase.poisonAndConfusionByCoinToss;
 
@@ -269,6 +307,11 @@
 
   Effects.skill_87_2 = EffectsBase.paralysisByCoinToss;
 
+  Effects.skill_88_1 = EffectsBase.paralysisByCoinToss;
+  Effects.skill_88_2 = EffectsBase.defenceUp20;
+
+  Effects.skill_89_1 = EffectsBase.poisonByCoinToss;
+
   Effects.skill_96_2 = EffectsBase.confusionByCoinToss;
 
   Effects.skill_90_1 = EffectsBase.confusionByCoinToss;
@@ -333,6 +376,13 @@
   Effects.skill_110_1 = EffectsBase.poisonByCoinToss;
   Effects.skill_110_2 = Effects.skill_81_2;
 
+  Effects.skill_111_1 = EffectsBase.prohibitAttackByCoinToss;
+
+  Effects.skill_112_2 = function(param) {
+    return Effects.skill_12_1(param).then(function(){
+      return EffectsBase.selfDamage(20, param);
+    });
+  };
 
   Effects.skill_113_1 = EffectsBase.damageGuardByCoinToss;
   Effects.skill_113_2 = function(param) {
@@ -402,6 +452,13 @@
 
   Effects.skill_136_1 = Effects.skill_133_2;
   Effects.skill_136_2 = Effects.skill_4_2;
+
+  Effects.skill_138_1 = Effects.skill_9_1;
+
+  Effects.skill_139_1 = Effects.skill_9_1;
+  Effects.skill_139_2 = Effects.skill_15_1;
+
+  Effects.skill_141_2 = Effects.skill_12_2;
 
   Effects.skill_143_1 = EffectsBase.paralysisByCoinToss;
 
@@ -725,7 +782,30 @@
     return false;
   };
 
+  Effects.trainer_effect_1012 = function(model, original) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
 
+    var dao = new CardMstDao();
+    var mst = dao.get('9901');
+    var key = {};
+    key.id = original.trnId;
+    key.cardCode = original.code;
+
+    var card = CardFactory.create(key, mst);
+    card.originalCard = original;
+
+    field.putBench(card);
+    model.getTurn().newAssign(card.trnId);
+
+    MessageDisplay.newSentence('ピッピ人形 を つかった！');
+  };
+  Effects.trainer_condition_1012 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getBench().length < 5;
+  };
 
   Effects.trainer_effect_1013 = function(model) {
     var turn = model.getTurn();
@@ -1000,6 +1080,27 @@
     var field = model.getField(viewpoint);
     return field.getBench().length > 0;
   };
+
+  Effects.trainer_effect_1023 = function(model, original) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+
+    var dao = new CardMstDao();
+    var mst = dao.get('9902');
+    var key = {};
+    key.id = original.trnId;
+    key.cardCode = original.code;
+
+    var card = CardFactory.create(key, mst);
+    card.originalCard = original;
+
+    field.putBench(card);
+    model.getTurn().newAssign(card.trnId);
+
+    MessageDisplay.newSentence('なにかの化石 を つかった！');
+  };
+  Effects.trainer_condition_1023 = Effects.trainer_condition_1012;
 
 
 

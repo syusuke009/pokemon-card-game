@@ -25,6 +25,11 @@
 
     this.checkEffects_(model);
 
+    if (!model.getTurn().wasAttacked()) {
+      var defenderField = (model.getTurn().whoseTurn() === Const.Viewpoint.ME ? rivalModel : myModel);
+      defenderField.getBattleMonster().attacked(null);
+    }
+
     $.when(def1, def2, def3, def4).then(function(){
       var myDyingCount = this.checkDying_(myModel);
       this.getSide_(rivalModel, myDyingCount);
@@ -145,14 +150,18 @@
     if (isDead(monster)) {
       monster.trush();
       field.setBattleMonster(null);
-      count++;
+      if (!monster.isDummy) {
+        count++;
+      }
       MessageDisplay.println(monster.name + ' は たおれた！');
     }
     var dead = [];
     $.each(field.getBench(), function(idx, card) {
       if (isDead(card)) {
         dead.push(card.trnId);
-        count++;
+        if (!card.isDummy) {
+          count++;
+        }
         MessageDisplay.println(card.name + ' は たおれた！');
       }
     });

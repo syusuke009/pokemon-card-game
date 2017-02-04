@@ -21,9 +21,14 @@
     this.weak = mst.weak;
     this.regist = mst.regist;
 
+    this.isDummy = mst.isDummy
+    this.originalCard = null;
+
     this.damage_ = 0;
     this.status_ = [];
     this.energy_ = [];
+
+    this.attackedSkill_ = null;
 
     this.evolutedBase_ = null;
 
@@ -74,6 +79,7 @@
   };
 
   MonsterCard.prototype.trush = function() {
+
     var targets = [];
     this.energy_.forEach(function(e) {
       targets.push(e);
@@ -100,7 +106,11 @@
     this.defenceEffect_ = {};
     this.evolutedBase_ = null;
 
-    targets.push(this);
+    if (this.isDummy) {
+      targets.push(this.originalCard);
+    } else {
+      targets.push(this);
+    }
     MonsterCard.dispatchRemoveEvent(targets);
   };
 
@@ -216,6 +226,14 @@
     });
     var energyCond = UtilFunc.checkEnoughEnergy(this.escapeCost, UtilFunc.mapEnergyToArray(this.energy_));
     return statusCond && energyCond;
+  };
+
+  MonsterCard.prototype.attacked = function(skill) {
+    this.atattackedSkill_ = skill || null;
+  };
+
+  MonsterCard.prototype.returnAttackedSkill = function() {
+    return this.atattackedSkill_;
   };
 
 })(jQuery);

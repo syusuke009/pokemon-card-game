@@ -40,6 +40,9 @@
   Const.Types = ["normal","leaf","fire","aqua","thunder","fight","esper"];
 
   Const.EffectTiming = {
+    HACK_SKILL: 'hack-skill',
+    REINFORCE:  'reinforce',
+
     BEFORE_DAMAGE: 'before-damage',
     CALC_DAMAGE: 'calc-damage',
     AFTER_DAMAGE: 'after-damage'
