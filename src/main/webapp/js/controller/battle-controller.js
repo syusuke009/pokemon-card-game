@@ -93,8 +93,8 @@
     return this.processBeforeDamage_(skill, attacker, defender)
         .then(function(){
           return this.calculator_.calculate(skill, attacker, defender, model);
-        }.bind(this))
-        .then(this.processAfterDamage_.bind(this));
+        }.bind(this), this.rejectProcess_)
+        .then(this.processAfterDamage_.bind(this), this.rejectProcess_);
   };
 
   BattleController.prototype.processBeforeDamage_ = function(skill, attacker, defender) {
@@ -105,8 +105,12 @@
       var param = {};
       param.attacker = attacker;
       param.defender = defender;
-      effect(param).then(function(){
-        $defer.resolve();
+      effect(param).then(function(response){
+        if (response) {
+          $defer.resolve();
+        } else {
+          $defer.reject();
+        }
       });
     } else {
       $defer.resolve();

@@ -263,14 +263,14 @@
     var $defer = $.Deferred();
     if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy()))) {
       MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
-      return $defer.resolve().promise();
+      return $defer.resolve(false).promise();
     }
     var dialog = new EnergySelectionDialog();
     dialog.show(card.getEnergy(), trushes).then(function(response){
       response.forEach(function(trushed){
         card.removeEnergy(trushed);
       })
-      $defer.resolve();
+      $defer.resolve(true);
     });
     return $defer.promise();
   };
@@ -294,10 +294,10 @@
   EffectsBase.trushAllEnergy = function(param) {
     var $defer = $.Deferred();
     var card = param.attacker;
-    card.getEnergy().concat().forEach(function(e) {
+    card.getEnergy().forEach(function(e) {
       card.removeEnergy(e);
     });
-    return $defer.resolve().promise();
+    return $defer.resolve(true).promise();
   };
 
   EffectsBase.boostByCoinToss = function(boost, param) {
@@ -469,8 +469,10 @@
   EffectsBase.refresh = function(param, cost) {
     var attacker = param.attacker;
     return EffectsBase.trushEnergy(attacker, cost).then(function(response) {
-      MessageDisplay.println(attacker.name + ' はぜんかいふくした！');
-      attacker.hurt(attacker.hp * (-1));
+      if (response) {
+        MessageDisplay.println(attacker.name + ' はぜんかいふくした！');
+        attacker.hurt(attacker.hp * (-1));
+      }
     });
   };
 
