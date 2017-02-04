@@ -336,6 +336,31 @@
 
   Effects.skill_101_1 = Effects.skill_25_2;
 
+  Effects.skill_102_1 = EffectsBase.sleep;
+  Effects.skill_102_2 = Effects.skill_1_1;
+
+  Effects.skill_103_1 = function(param) {
+    var $defer = $.Deferred();
+    var viewpoint = param.model.getTurn().whoseTurn();
+    var field = param.model.getField(viewpoint);
+    var bench = field.getBench();
+    if (bench.length === 0) {
+      $defer.resolve();
+      return $defer.promise();
+    }
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(bench), $defer);
+    return $defer.promise().then(function(response) {
+      field.putBench(field.getBattleMonster());
+      var card = field.pickBench(response.trnId);
+      field.setBattleMonster(card);
+      return $.Deferred().resolve().promise();
+    });
+  };;
+  Effects.skill_103_2 = function(param) {
+    var times = UtilFunc.mapEnergyToArray(param.attacker.getEnergy()).length;
+    return EffectsBase.pluralAttack(param, times);
+  };
+
   Effects.skill_104_1 = EffectsBase.attackDown20;
   Effects.skill_104_2 = Effects.skill_85_1;
 
