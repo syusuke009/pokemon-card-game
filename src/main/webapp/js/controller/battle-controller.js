@@ -67,9 +67,26 @@
   };
 
   BattleController.prototype.battle_ = function(skill, attacker, defender, model) {
-    if (defender.hasStatus(Const.Status.MATCHLESS)) {
-      $defer.resolve(true);
-      return $defer.promise();
+    var param = {};
+    param.attacker = attacker;
+    param.defender = defender;
+    param.model = model;
+
+    if (skill.timing === Const.EffectTiming.HACK_SKILL) {
+      var effect = this.effectDao_.getSkillEffect(skill.effect);
+      var hackedSkill = effect(param);
+      if (!hackedSkill) {
+        MessageDisplay.newSentence(attacker.name + ' の ' + skill.name + '！');
+        MessageDisplay.println('しかし ワザはしっぱいした');
+        return $.Deferred().resolve(true).promise();
+      }
+      return this.battle_(hackedSkill, attacker, defender, model);
+    }
+    if (skill.timing === Const.EffectTiming.REINFORCE) {
+      var effect = this.effectDao_.getSkillEffect(skill.effect);
+      return effect(param).then(function() {
+        return $.Deferred().resolve(true).promise();
+      });
     }
 
     MessageDisplay.newSentence(attacker.name + ' の ' + skill.name + '！');
@@ -102,6 +119,7 @@
     var $defer = $.Deferred();
 
     response.defender.hurt(response.damage);
+    response.defender.attacked(response.skill);
 
     if (response.skill.timing === Const.EffectTiming.AFTER_DAMAGE) {
       var effect = this.effectDao_.getSkillEffect(response.skill.effect);

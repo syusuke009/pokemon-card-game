@@ -12,6 +12,7 @@
     this.name = mst.name;
     this.description = mst.description;
     this.effect = mst.effect;
+    this.pendingTrush = mst.pendingTrush;
 
     this.dir = 'trainer';
   };

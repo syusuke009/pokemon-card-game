@@ -8,7 +8,7 @@
       this.viewpoint_ = UtilFunc.reverseViewpoint(opt_turn.viewpoint_);
     }
 
-    this.isAttacked_ = false;
+    this.wasAttacked_ = false;
     this.isUsedSupporter_ = false;
     this.isAttachedEnergy_ = false;
     this.newAssigned_ = [];
@@ -38,11 +38,11 @@
   }
 
   TurnModel.prototype.attacked = function() {
-    this.isAttacked_ = true;
+    this.wasAttacked_ = true;
   };
 
-  TurnModel.prototype.isAttacked = function() {
-    return this.isAttacked_;
+  TurnModel.prototype.wasAttacked = function() {
+    return this.wasAttacked_;
   };
 
   TurnModel.prototype.useSupporter = function() {

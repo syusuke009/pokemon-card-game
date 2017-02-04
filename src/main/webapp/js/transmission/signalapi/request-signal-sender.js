@@ -23,10 +23,8 @@
     RequestSignalSender.operation_.syncModel(data);
   };
 
-  RequestSignalSender.selectBattleMonster = function(selectables) {
-    var $defer = $.Deferred();
+  RequestSignalSender.selectBattleMonster = function(selectables, $defer) {
     RequestSignalSender.operation_.selectBattleMonster($defer, selectables);
-    return $defer.promise();
   };
 
   RequestSignalSender.displayClear = function(message) {

@@ -222,6 +222,12 @@
     return $.Deferred().resolve().promise();
   };
 
+  EffectsBase.defenceUp20 = function(param) {
+    param.attacker.addStatus(Const.Status.DEFENCE_UP_20);
+    MessageDisplay.println(param.attacker.name + ' は ぼうぎょりょくが ぐーんとあがった！');
+    return $.Deferred().resolve().promise();
+  };
+
   EffectsBase.prohibitEscapeByCoinToss = function(param) {
     var $defer = $.Deferred();
     var dialog = new CoinTossDialog();
@@ -461,12 +467,15 @@
   };
 
   /**
-   * あたえたダメージ分、回復する
+   * ダメージをあたえたら回復する
    */
-  EffectsBase.absorb = function(param) {
+  EffectsBase.absorb = function(restore, param) {
     var attacker = param.attacker;
-    attacker.hurt(param.damage * -1);
-    MessageDisplay.println(attacker.name + ' は ' + param.damage + ' かいふくした！');
+    var d = attacker.getDamageCount();
+    if (d > 0) {
+      attacker.hurt(restore * -1);
+      MessageDisplay.println(attacker.name + ' は ' + restore + ' かいふくした！');
+    }
     return $.Deferred().resolve().promise();
   };
 
@@ -513,5 +522,9 @@
       $defer.resolve();
     });
     return $defer.promise();
+  };
+
+  EffectsBase.revenge = function(param) {
+    return param.attacker.returnAttackedSkill();
   };
 })(jQuery);

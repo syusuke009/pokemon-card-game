@@ -54,6 +54,7 @@
     this.view_.getElement().on(ApplicationView.EventType.TURN_END, this.turnEnd.bind(this));
 
     Effects.getEventTarget().on(Effects.EventType.REQUEST_SELECT, this.onRequestSelect_.bind(this));
+    Effects.getEventTarget().on(Effects.EventType.REQUEST_SELECT_SIGNAL_SEND, this.onRequestSelectSignalSend_.bind(this));
     Effects.getEventTarget().on(Effects.EventType.REQUEST_REDRAW_FIELD, this.onRequestRedrawField_.bind(this));
 
     this.view_.getElement().on(ApplicationView.EventType.SURRENDER, this.onSurrender_.bind(this));
@@ -169,8 +170,11 @@
       this.model_.getTurn().useSupporter();
     }
 
-    var bool = this.effectDao_.getTrainerEffect(card.code)(this.model_);
-    field.getTrush().trush(card);
+    var bool = this.effectDao_.getTrainerEffect(card.code)(this.model_, card);
+
+    if (!card.pendingTrush) {
+      field.getTrush().trush(card);
+    }
 
     this.view_.clearSelecting();
     this.selectingData_ = null;
@@ -256,6 +260,10 @@
     this.onSelectInterceptor_.forEffect($defer);
   };
 
+  GameController.prototype.onRequestSelectSignalSend_ = function(e, selectables, $defer) {
+    RequestSignalSender.selectBattleMonster(selectables, $defer);
+  };
+
   GameController.prototype.onRequestRedrawField_ = function(e) {
     this.view_.redrawField(this.model_);
   };
@@ -338,10 +346,10 @@
     if (viewpoint === Const.Viewpoint.ME) {
       this.view_.drawSelectable(selectables);
       this.onSelectInterceptor_.forGoBattle($defer);
-      return $defer.promise();
     } else {
-      return RequestSignalSender.selectBattleMonster(selectables);
+      RequestSignalSender.selectBattleMonster(selectables, $defer);
     }
+    return $defer.promise();
   };
 
   GameController.prototype.gameset = function(winner, reason) {
