@@ -72,7 +72,7 @@
     result.kind = 'trainer';
     switch(area) {
     case Const.Area.HAND:
-      if (turn.isSetupTurn()) {
+      if (turn.isSetupTurn() || turn.isProhibittedTrainer()) {
         result.use = false;
       } else{
         var notlimit = card.kind === 'goods' ? true : !turn.isUsedSupporter();

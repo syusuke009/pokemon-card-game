@@ -150,7 +150,7 @@
    */
   EffectsBase.damageGuardLessThan40 = function(param) {
     var $defer = $.Deferred();
-    param.attacker.addStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40);
+    param.attacker.addEffect(Const.Effect.DAMAGE_GUARD_LESS_THAN_40);
     return $defer.resolve().promise();
   };
 
@@ -162,7 +162,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addStatus(Const.Status.DAMAGE_GUARD);
+        param.attacker.addEffect(Const.Effect.DAMAGE_GUARD);
       }
       $defer.resolve();
     });
@@ -177,7 +177,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addStatus(Const.Status.MATCHLESS);
+        param.attacker.addEffect(Const.Effect.MATCHLESS);
       }
       $defer.resolve();
     });
@@ -190,40 +190,58 @@
   EffectsBase.matchlessByTrushEnergy = function(param, trushes) {
     var $defer = $.Deferred();
     var card = param.attacker;
+    if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+      MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
+      return $defer.resolve().promise();
+    }
     var dialog = new EnergySelectionDialog();
     dialog.show(card.getEnergy(), trushes).then(function(response){
       response.forEach(function(trushed){
         card.removeEnergy(trushed);
       })
-      card.addDefenceSkillEffect(Const.Status.MATCHLESS);
+      card.addEffect(Const.Effect.MATCHLESS);
       $defer.resolve();
     });
     return $defer.promise();
   };
 
   /**
-   * 次の相手の晩、相手がコイントスをして「うら」ならワザが失敗する
+   * 次の相手の番、相手がコイントスをして「うら」ならワザが失敗する
    */
   EffectsBase.blind = function(param) {
-    param.defender.addStatus(Const.Status.BLIND);
+    param.defender.addEffect(Const.Effect.BLIND);
     MessageDisplay.println(param.defender.name + ' は めいちゅうりつがさがった！');
     return $.Deferred().resolve().promise();
   };
 
+  /**
+   * 次の相手の番で自分がきぜつすると、相手もきぜつさせる
+   */
+  EffectsBase.takeAlong = function(param) {
+    param.attacker.addEffect(Const.Effect.TAKE_ALONG);
+    return $.Deferred().resolve().promise();
+  };
+
+  EffectsBase.doubling = function(param) {
+    param.attacker.addEffect(Const.Effect.PRE_DOUBLING);
+    MessageDisplay.println(param.attacker.name + ' は ちからをためている！');
+    return $.Deferred().resolve().promise();
+  };
+
   EffectsBase.attackDown10 = function(param) {
-    param.defender.addStatus(Const.Status.ATTACK_DOWN_10);
+    param.defender.addEffect(Const.Effect.ATTACK_DOWN_10);
     MessageDisplay.println(param.defender.name + ' は こうげきりょくがさがった！');
     return $.Deferred().resolve().promise();
   };
 
   EffectsBase.attackDown20 = function(param) {
-    param.defender.addStatus(Const.Status.ATTACK_DOWN_20);
+    param.defender.addEffect(Const.Effect.ATTACK_DOWN_20);
     MessageDisplay.println(param.defender.name + ' は こうげきりょくが ぐーんとさがった！');
     return $.Deferred().resolve().promise();
   };
 
   EffectsBase.defenceUp20 = function(param) {
-    param.attacker.addStatus(Const.Status.DEFENCE_UP_20);
+    param.attacker.addEffect(Const.Effect.DEFENCE_UP_20);
     MessageDisplay.println(param.attacker.name + ' は ぼうぎょりょくが ぐーんとあがった！');
     return $.Deferred().resolve().promise();
   };
@@ -233,7 +251,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.defender.addStatus(Const.Status.CANT_ESCAPE);
+        param.defender.addEffect(Const.Effect.CANT_ESCAPE);
       }
       $defer.resolve();
     });
@@ -245,7 +263,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.defender.addStatus(Const.Status.CANT_ATTACK);
+        param.defender.addEffect(Const.Effect.CANT_ATTACK);
       }
       $defer.resolve();
     });
@@ -257,12 +275,16 @@
    */
   EffectsBase.trushEnergy = function(card, trushes) {
     var $defer = $.Deferred();
+    if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+      MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
+      return $defer.resolve(false).promise();
+    }
     var dialog = new EnergySelectionDialog();
     dialog.show(card.getEnergy(), trushes).then(function(response){
       response.forEach(function(trushed){
         card.removeEnergy(trushed);
       })
-      $defer.resolve();
+      $defer.resolve(true);
     });
     return $defer.promise();
   };
@@ -286,10 +308,10 @@
   EffectsBase.trushAllEnergy = function(param) {
     var $defer = $.Deferred();
     var card = param.attacker;
-    card.getEnergy().concat().forEach(function(e) {
+    card.getEnergy().forEach(function(e) {
       card.removeEnergy(e);
     });
-    return $defer.resolve().promise();
+    return $defer.resolve(true).promise();
   };
 
   EffectsBase.boostByCoinToss = function(boost, param) {
@@ -343,6 +365,16 @@
     var bench = field.getBench();
     var list = bench.filter(filterFn);
     $defer.resolve(param.skill.damage + (boostDamage * list.length));
+    return $defer.promise();
+  };
+
+  EffectsBase.boostByDoubling = function(param) {
+    var $defer = $.Deferred();
+    if (param.attacker.getEffectCount(Const.Effect.DOUBLING) > 0) {
+      $defer.resolve(param.skill.damage * 2);
+    } else {
+      $defer.resolve(param.skill.damage);
+    }
     return $defer.promise();
   };
 
@@ -461,8 +493,10 @@
   EffectsBase.refresh = function(param, cost) {
     var attacker = param.attacker;
     return EffectsBase.trushEnergy(attacker, cost).then(function(response) {
-      MessageDisplay.println(attacker.name + ' はぜんかいふくした！');
-      attacker.hurt(attacker.hp * (-1));
+      if (response) {
+        MessageDisplay.println(attacker.name + ' はぜんかいふくした！');
+        attacker.hurt(attacker.hp * (-1));
+      }
     });
   };
 
@@ -518,6 +552,30 @@
         var field = param.model.getField(param.model.getTurn().whoseTurn());
         var deck = field.getDeck();
         field.addHand(deck.draw());
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+
+  EffectsBase.trushDeckByTrushEnergy = function(param) {
+    var $defer = $.Deferred();
+    var card = param.attacker;
+    if (!UtilFunc.checkEnoughEnergy(['fire'], UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+      MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
+      return $defer.resolve().promise();
+    }
+    var viewpoint = UtilFunc.reverseViewpoint(param.model.getTurn().whoseTurn());
+    var defenderField = param.model.getField(viewpoint);
+    var dialog = new EnergySelectionDialog();
+    dialog.show(card.getEnergy(), 'fire').then(function(response){
+      var deck = defenderField.getDeck();
+      var trush = defenderField.getTrush();
+      response.forEach(function(trushed){
+        card.removeEnergy(trushed);
+      })
+      for (var i = 0; i < response.length; i++) {
+        trush.add(deck.draw());
       }
       $defer.resolve();
     });

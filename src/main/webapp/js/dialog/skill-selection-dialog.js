@@ -76,7 +76,7 @@
     var energyArr = this.isForSkill_ ? allTypes : UtilFunc.mapEnergyToArray(card.getEnergy());
     if (!!card.skill1) {
       var $skillPanel1 = $content.find('.skill1');
-      if (card.skill1.satisfy(energyArr) && !card.hasStatus(Const.Status.CANT_SKILL1)) {
+      if (card.skill1.satisfy(energyArr) && !(card.getEffectCount(Const.Effect.CANT_SKILL1) > 0)) {
         $skillPanel1.removeClass('disabled');
       } else {
         $skillPanel1.addClass('disabled');
@@ -84,7 +84,7 @@
     }
     if (!!card.skill2) {
       var $skillPanel2 = $content.find('.skill2');
-      if (card.skill2.satisfy(energyArr) && !card.hasStatus(Const.Status.CANT_SKILL2)) {
+      if (card.skill2.satisfy(energyArr) && !(card.getEffectCount(Const.Effect.CANT_SKILL2) > 0)) {
         $skillPanel2.removeClass('disabled');
       } else {
         $skillPanel2.addClass('disabled');

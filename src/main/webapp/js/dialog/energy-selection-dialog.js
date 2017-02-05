@@ -13,7 +13,7 @@
     $('.dialog-window').addClass('open').height(480).width(400);
     $('.dialog-header').text('エネルギー選択');
     var $content = $('.dialog-content').html(this.createContentDom_(require, energies));
-    var $buttons = $('.dialog-buttons').html(this.createButtonsDom_());
+    var $buttons = $('.dialog-buttons').html(this.createButtonsDom_(require));
 
     this.energyMap_ = {};
     energies.forEach(function(e) {
@@ -41,11 +41,18 @@
 
   EnergySelectionDialog.prototype.createContentDom_ = function(require, energies) {
     var requiretypes = '';
-    require.forEach(function(t) {
-      requiretypes += '<div class="cost ' + t + '"></div>';
-    });
+    if (Array.isArray(require)) {
+      require.forEach(function(t) {
+        requiretypes += '<div class="cost ' + t + '"></div>';
+      });
+    } else {
+      requiretypes += '<div class="cost ' + require + '"></div><span>:無制限</span>';
+    }
     var html = '';
-    energies.forEach(function(e) {
+    var filter = Array.isArray(require) ? require : [require];
+    energies.filter(function(e) {
+      return filter.indexOf(e.type) >= 0 || filter.indexOf('normal') >= 0;
+    }).forEach(function(e) {
       var costtypes = '';
       for (var i = 0; i < e.value; i++) {
         costtypes += '<div class="cost ' + e.type + '" data-type="' + e.type + '"></div>';
@@ -60,8 +67,9 @@
         html + '</div></div>';
   };
 
-  EnergySelectionDialog.prototype.createButtonsDom_ = function() {
-    return '<button class="btn clear-btn">クリア</button><button class="btn btn-primary ok-btn disabled">決定</button></div>';
+  EnergySelectionDialog.prototype.createButtonsDom_ = function(require) {
+    var btnClass = Array.isArray(require) ? 'disabled' : ''
+    return '<button class="btn clear-btn">クリア</button><button class="btn btn-primary ok-btn ' + btnClass + '">決定</button></div>';
   };
 
   EnergySelectionDialog.prototype.bindEvents_ = function($content, $buttons) {
@@ -86,19 +94,21 @@
     });
 
     var $okBtn = $('.dialog-buttons').find('.ok-btn');
-    if (UtilFunc.checkEnoughEnergy(this.require_, provide)) {
-      $okBtn.removeClass('disabled');
-      $('.dialog-content').find('.checkbox').each(function(idx, checkbox) {
-        var $checkbox = $(checkbox);
-        if (!$checkbox.hasClass('checked')) {
-          $checkbox.addClass('disabled');
+    if (Array.isArray(this.require_)) {
+      if (UtilFunc.checkEnoughEnergy(this.require_, provide)) {
+        $okBtn.removeClass('disabled');
+        $('.dialog-content').find('.checkbox').each(function(idx, checkbox) {
+          var $checkbox = $(checkbox);
+          if (!$checkbox.hasClass('checked')) {
+            $checkbox.addClass('disabled');
+          }
+        });
+      } else {
+        if (!$okBtn.hasClass('disabled')) {
+          $okBtn.addClass('disabled');
         }
-      });
-    } else {
-      if (!$okBtn.hasClass('disabled')) {
-        $okBtn.addClass('disabled');
+        $('.dialog-content').find('.checkbox').removeClass('disabled');
       }
-      $('.dialog-content').find('.checkbox').removeClass('disabled');
     }
   };
 

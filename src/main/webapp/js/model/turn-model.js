@@ -15,6 +15,8 @@
     this.escaped_ = false;
 
     this.turnCount_ = !!opt_turn ? opt_turn.turnCount_ + 1 : 0;
+
+    this.prohibittedTrainerCount_ = !!opt_turn ? Math.max(opt_turn.prohibittedTrainerCount_ - 1, 0) : 0;
   };
 
   TurnModel.prototype.next = function() {
@@ -75,5 +77,13 @@
 
   TurnModel.prototype.wasEscaped = function() {
     return this.escaped_;
+  };
+
+  TurnModel.prototype.prohibitTrainer = function() {
+    this.prohibittedTrainerCount_ = 2;
+  };
+
+  TurnModel.prototype.isProhibittedTrainer = function() {
+    return this.prohibittedTrainerCount_ > 0;
   };
 })(jQuery);
