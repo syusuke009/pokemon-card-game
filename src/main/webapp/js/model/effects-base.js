@@ -150,7 +150,7 @@
    */
   EffectsBase.damageGuardLessThan40 = function(param) {
     var $defer = $.Deferred();
-    param.attacker.addStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40);
+    param.attacker.addEffect(Const.Effect.DAMAGE_GUARD_LESS_THAN_40);
     return $defer.resolve().promise();
   };
 
@@ -162,7 +162,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addStatus(Const.Status.DAMAGE_GUARD);
+        param.attacker.addEffect(Const.Effect.DAMAGE_GUARD);
       }
       $defer.resolve();
     });
@@ -177,7 +177,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.attacker.addStatus(Const.Status.MATCHLESS);
+        param.attacker.addEffect(Const.Effect.MATCHLESS);
       }
       $defer.resolve();
     });
@@ -199,35 +199,49 @@
       response.forEach(function(trushed){
         card.removeEnergy(trushed);
       })
-      card.addStatus(Const.Status.MATCHLESS);
+      card.addEffect(Const.Effect.MATCHLESS);
       $defer.resolve();
     });
     return $defer.promise();
   };
 
   /**
-   * 次の相手の晩、相手がコイントスをして「うら」ならワザが失敗する
+   * 次の相手の番、相手がコイントスをして「うら」ならワザが失敗する
    */
   EffectsBase.blind = function(param) {
-    param.defender.addStatus(Const.Status.BLIND);
+    param.defender.addEffect(Const.Effect.BLIND);
     MessageDisplay.println(param.defender.name + ' は めいちゅうりつがさがった！');
     return $.Deferred().resolve().promise();
   };
 
+  /**
+   * 次の相手の番で自分がきぜつすると、相手もきぜつさせる
+   */
+  EffectsBase.takeAlong = function(param) {
+    param.attacker.addEffect(Const.Effect.TAKE_ALONG);
+    return $.Deferred().resolve().promise();
+  };
+
+  EffectsBase.doubling = function(param) {
+    param.attacker.addEffect(Const.Effect.PRE_DOUBLING);
+    MessageDisplay.println(param.attacker.name + ' は ちからをためている！');
+    return $.Deferred().resolve().promise();
+  };
+
   EffectsBase.attackDown10 = function(param) {
-    param.defender.addStatus(Const.Status.ATTACK_DOWN_10);
+    param.defender.addEffect(Const.Effect.ATTACK_DOWN_10);
     MessageDisplay.println(param.defender.name + ' は こうげきりょくがさがった！');
     return $.Deferred().resolve().promise();
   };
 
   EffectsBase.attackDown20 = function(param) {
-    param.defender.addStatus(Const.Status.ATTACK_DOWN_20);
+    param.defender.addEffect(Const.Effect.ATTACK_DOWN_20);
     MessageDisplay.println(param.defender.name + ' は こうげきりょくが ぐーんとさがった！');
     return $.Deferred().resolve().promise();
   };
 
   EffectsBase.defenceUp20 = function(param) {
-    param.attacker.addStatus(Const.Status.DEFENCE_UP_20);
+    param.attacker.addEffect(Const.Effect.DEFENCE_UP_20);
     MessageDisplay.println(param.attacker.name + ' は ぼうぎょりょくが ぐーんとあがった！');
     return $.Deferred().resolve().promise();
   };
@@ -237,7 +251,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.defender.addStatus(Const.Status.CANT_ESCAPE);
+        param.defender.addEffect(Const.Effect.CANT_ESCAPE);
       }
       $defer.resolve();
     });
@@ -249,7 +263,7 @@
     var dialog = new CoinTossDialog();
     dialog.show().then(function(response){
       if (response[0]) {
-        param.defender.addStatus(Const.Status.CANT_ATTACK);
+        param.defender.addEffect(Const.Effect.CANT_ATTACK);
       }
       $defer.resolve();
     });
@@ -351,6 +365,16 @@
     var bench = field.getBench();
     var list = bench.filter(filterFn);
     $defer.resolve(param.skill.damage + (boostDamage * list.length));
+    return $defer.promise();
+  };
+
+  EffectsBase.boostByDoubling = function(param) {
+    var $defer = $.Deferred();
+    if (param.attacker.getEffectCount(Const.Effect.DOUBLING) > 0) {
+      $defer.resolve(param.skill.damage * 2);
+    } else {
+      $defer.resolve(param.skill.damage);
+    }
     return $defer.promise();
   };
 

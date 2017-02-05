@@ -28,6 +28,8 @@
     this.status_ = [];
     this.energy_ = [];
 
+    this.effect_ = [];
+
     this.attackedSkill_ = null;
 
     this.evolutedBase_ = null;
@@ -141,15 +143,13 @@
     var idx;
     switch(status) {
     case Const.Status.POISON:
-      idx = this.status_.indexOf(Const.Status.DOUBLE_POISON);
-      if (idx >= 0) {
+      if (this.hasStatus(Const.Status.DOUBLE_POISON)) {
         return;
       }
       break;
     case Const.Status.DOUBLE_POISON:
-      idx = this.status_.indexOf(Const.Status.POISON);
-      if (idx >= 0) {
-        this.status_.splice(idx, 1);
+      if (this.hasStatus(Const.Status.POISON)) {
+        this.removeStatus(Const.Status.POISON);
       }
       break;
     case Const.Status.BURN:
@@ -157,21 +157,34 @@
     case Const.Status.SLEEP:
     case Const.Status.PARALYSIS:
     case Const.Status.CONFUSION:
-      idx = this.status_.indexOf(Const.Status.SLEEP);
-      if (idx >= 0) {
-        this.status_.splice(idx, 1);
+      if (this.hasStatus(Const.Status.SLEEP)) {
+        this.removeStatus(Const.Status.SLEEP);
       }
-      idx = this.status_.indexOf(Const.Status.PARALYSIS);
-      if (idx >= 0) {
-        this.status_.splice(idx, 1);
+      if (this.hasStatus(Const.Status.PARALYSIS)) {
+        this.removeStatus(Const.Status.SLEPARALYSISEP);
       }
-      idx = this.status_.indexOf(Const.Status.CONFUSION);
-      if (idx >= 0) {
-        this.status_.splice(idx, 1);
+      if (this.hasStatus(Const.Status.CONFUSION)) {
+        this.removeStatus(Const.Status.CONFUSION);
       }
       break;
     }
     this.status_.push(status);
+  };
+
+  MonsterCard.prototype.getEffectCount = function(effect) {
+    return this.effect_.filter(function(ef) {
+      return ef === effect;
+    }).length;
+  };
+
+  MonsterCard.prototype.removeEffect = function(effect) {
+    this.effect_ = this.effect_.filter(function(ef) {
+      return ef !== effect;
+    });
+  };
+
+  MonsterCard.prototype.addEffect = function(effect) {
+    this.effect_.push(effect)
   };
 
   MonsterCard.prototype.getBase = function() {
@@ -206,10 +219,13 @@
 
   MonsterCard.prototype.canAttack = function() {
     if (this.status_.some(function(state) {
-      return state === Const.Status.SLEEP || state === Const.Status.PARALYSIS || state === Const.Status.CANT_ATTACK;
+      return state === Const.Status.SLEEP || state === Const.Status.PARALYSIS;
     })) {
       return false;
     };
+    if (this.getEffectCount(Const.Effect.CANT_ATTACK) > 0) {
+      return false;
+    }
     var energies = UtilFunc.mapEnergyToArray(this.getEnergy());
     if (!!this.skill1 && this.skill1.satisfy(energies)) {
       return true;
@@ -221,11 +237,15 @@
   };
 
   MonsterCard.prototype.canEscape = function() {
-    var statusCond = this.status_.every(function(state) {
-      return state !== Const.Status.SLEEP && state !== Const.Status.PARALYSIS && state !== Const.Status.CANT_ESCAPE;
-    });
-    var energyCond = UtilFunc.checkEnoughEnergy(this.escapeCost, UtilFunc.mapEnergyToArray(this.energy_));
-    return statusCond && energyCond;
+    if (this.status_.some(function(state) {
+      return state === Const.Status.SLEEP || state === Const.Status.PARALYSIS;
+    })) {
+      return false;
+    };
+    if (this.getEffectCount(Const.Effect.CANT_ESCAPE) > 0) {
+      return false;
+    }
+    return UtilFunc.checkEnoughEnergy(this.escapeCost, UtilFunc.mapEnergyToArray(this.energy_));
   };
 
   MonsterCard.prototype.attacked = function(skill) {

@@ -21,9 +21,12 @@
     BURN: 'burn',
     SLEEP: 'sleep',
     PARALYSIS: 'paralysis',
-    CONFUSION: 'confusion',
+    CONFUSION: 'confusion'
+  };
 
+  Const.Effect = {
     BLIND: 'blind',
+    TAKE_ALONG: 'take-along',
     ATTACK_DOWN_10: 'attack-down-10',
     ATTACK_DOWN_20: 'attack-down-20',
     DEFENCE_UP_20: 'defence-up-20',
@@ -34,7 +37,10 @@
 
     DAMAGE_GUARD_LESS_THAN_40: 'damage-guard-less-than-40',
     DAMAGE_GUARD: 'damage-guard',
-    MATCHLESS: 'matchless'
+    MATCHLESS: 'matchless',
+
+    PRE_DOUBLING: 'pre-doubling',
+    DOUBLING: 'doubling'
   };
 
   Const.Types = ["normal","leaf","fire","aqua","thunder","fight","esper"];

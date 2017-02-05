@@ -56,12 +56,8 @@
   };
 
   DamageCalculator.prototype.effectAttackerEffect_ = function(attacker, d) {
-    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_10)) {
-      d = d - 10;
-    }
-    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_20)) {
-      d = d - 20;
-    }
+    d = d - (10 * attacker.getEffectCount(Const.Effect.ATTACK_DOWN_10));
+    d = d - (20 * attacker.getEffectCount(Const.Effect.ATTACK_DOWN_20));
     return d;
   };
 
@@ -91,17 +87,15 @@
   };
 
   DamageCalculator.prototype.effectDefenderEffect_ = function(defender, d) {
-    if (defender.hasStatus(Const.Status.DEFENCE_UP_20)) {
-      d = d - 20;
-    }
-    if (defender.hasStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40) && (d < 40)) {
+    if (defender.getEffectCount(Const.Effect.DAMAGE_GUARD_LESS_THAN_40) > 0 && (d < 40)) {
       MessageDisplay.println(defender.name + ' は ぼうぎょしている！');
       return 0;
     }
-    if (defender.hasStatus(Const.Status.DAMAGE_GUARD)) {
+    if (defender.getEffectCount(Const.Effect.DAMAGE_GUARD) > 0) {
       MessageDisplay.println(defender.name + ' は ぼうぎょしている！');
       return 0;
     }
+    d = d - (20 * defender.getEffectCount(Const.Effect.DEFENCE_UP_20));
     return d;
   };
 

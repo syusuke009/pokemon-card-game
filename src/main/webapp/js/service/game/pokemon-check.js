@@ -103,41 +103,51 @@
     var turn = model.getTurn();
     var attackerField = model.getField(turn.whoseTurn());
     var attacker = attackerField.getBattleMonster();
-    if (attacker.hasStatus(Const.Status.BLIND)) {
-      attacker.removeStatus(Const.Status.BLIND);
+    if (attacker.getEffectCount(Const.Effect.BLIND) > 0) {
+      attacker.removeEffect(Const.Effect.BLIND);
     }
-    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_10)) {
-      attacker.removeStatus(Const.Status.ATTACK_DOWN_10);
+    if (attacker.getEffectCount(Const.Effect.ATTACK_DOWN_10) > 0) {
+      attacker.removeEffect(Const.Effect.ATTACK_DOWN_10);
     }
-    if (attacker.hasStatus(Const.Status.ATTACK_DOWN_20)) {
-      attacker.removeStatus(Const.Status.ATTACK_DOWN_20);
+    if (attacker.getEffectCount(Const.Effect.ATTACK_DOWN_20) > 0) {
+      attacker.removeEffect(Const.Effect.ATTACK_DOWN_20);
     }
-    if (attacker.hasStatus(Const.Status.CANT_ATTACK)) {
-      attacker.removeStatus(Const.Status.CANT_ATTACK);
+    if (attacker.getEffectCount(Const.Effect.CANT_ATTACK) > 0) {
+      attacker.removeEffect(Const.Effect.CANT_ATTACK);
     }
-    if (attacker.hasStatus(Const.Status.CANT_ESCAPE)) {
-      attacker.removeStatus(Const.Status.CANT_ESCAPE);
+    if (attacker.getEffectCount(Const.Effect.CANT_ESCAPE) > 0) {
+      attacker.removeEffect(Const.Effect.CANT_ESCAPE);
     }
-    if (attacker.hasStatus(Const.Status.CANT_SKILL1)) {
-      attacker.removeStatus(Const.Status.CANT_SKILL1);
+    if (attacker.getEffectCount(Const.Effect.CANT_SKILL1) > 0) {
+      attacker.removeEffect(Const.Effect.CANT_SKILL1);
     }
-    if (attacker.hasStatus(Const.Status.CANT_SKILL2)) {
-      attacker.removeStatus(Const.Status.CANT_SKILL2);
+    if (attacker.getEffectCount(Const.Effect.CANT_SKILL2) > 0) {
+      attacker.removeEffect(Const.Effect.CANT_SKILL2);
+    }
+    if (attacker.getEffectCount(Const.Effect.DOUBLING) > 0) {
+      attacker.removeEffect(Const.Effect.DOUBLING);
+    }
+    if (attacker.getEffectCount(Const.Effect.PRE_DOUBLING) > 0) {
+      attacker.removeEffect(Const.Effect.PRE_DOUBLING);
+      attacker.addEffect(Const.Effect.DOUBLING);
     }
 
     var defenderField = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
     var defender = defenderField.getBattleMonster();
-    if (defender.hasStatus(Const.Status.DEFENCE_UP_20)) {
-      defender.removeStatus(Const.Status.DEFENCE_UP_20);
+    if (defender.getEffectCount(Const.Effect.TAKE_ALONG) > 0) {
+      defender.removeEffect(Const.Effect.TAKE_ALONG);
     }
-    if (defender.hasStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40)) {
-      defender.removeStatus(Const.Status.DAMAGE_GUARD_LESS_THAN_40);
+    if (defender.getEffectCount(Const.Effect.DEFENCE_UP_20) > 0) {
+      defender.removeEffect(Const.Effect.DEFENCE_UP_20);
     }
-    if (defender.hasStatus(Const.Status.DAMAGE_GUARD)) {
-      defender.removeStatus(Const.Status.DAMAGE_GUARD);
+    if (defender.getEffectCount(Const.Effect.DAMAGE_GUARD_LESS_THAN_40) > 0) {
+      defender.removeEffect(Const.Effect.DAMAGE_GUARD_LESS_THAN_40);
     }
-    if (defender.hasStatus(Const.Status.MATCHLESS)) {
-      defender.removeStatus(Const.Status.MATCHLESS);
+    if (defender.getEffectCount(Const.Effect.DAMAGE_GUARD) > 0) {
+      defender.removeEffect(Const.Effect.DAMAGE_GUARD);
+    }
+    if (defender.getEffectCount(Const.Effect.MATCHLESS) > 0) {
+      defender.removeEffect(Const.Effect.MATCHLESS);
     }
   };
 
