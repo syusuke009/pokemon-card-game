@@ -46,6 +46,8 @@
 
     $view.find('.bench').html(openedTmpl.render({'list':field.getBench()}));
 
+    $view.find('.hands-size').text(field.getHands().size() + '枚');
+
     var trush = field.getTrush();
     if (trush.isEmpty()) {
       $view.find('.trush').html('');

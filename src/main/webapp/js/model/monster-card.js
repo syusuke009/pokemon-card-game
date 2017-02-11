@@ -18,8 +18,8 @@
     this.skill2 = mst.skill2;
 
     this.escapeCost = mst.escape;
-    this.weak = mst.weak;
-    this.regist = mst.regist;
+    this.originalWeak_ = mst.weak;
+    this.originalRegist_ = mst.regist;
 
     this.isDummy = mst.isDummy
     this.originalCard = null;
@@ -29,6 +29,9 @@
     this.energy_ = [];
 
     this.effect_ = [];
+    this.persistantEffect_ = [];
+    this.overwrittenWeak_ = null;
+    this.overwrittenRegist_ = null;
 
     this.attackedSkill_ = null;
 
@@ -51,6 +54,36 @@
   };
   MonsterCard.dispatchRemoveEvent = function(arr) {
     MonsterCard.getEventTarget().trigger(MonsterCard.EventType.REMOVE, [arr]);
+  };
+
+  MonsterCard.prototype.isWeak = function(type) {
+    if (!!this.overwrittenWeak_) {
+      return this.overwrittenWeak_[type] || '';
+    }
+    if (!!this.originalWeak_) {
+      return this.originalWeak_[type] || '';
+    }
+    return '';
+  };
+
+  MonsterCard.prototype.hasRegist = function(type) {
+    if (!!this.overwrittenRegist_) {
+      return this.overwrittenRegist_[type] || '';
+    }
+    if (!!this.originalRegist_) {
+      return this.originalRegist_[type] || '';
+    }
+    return '';
+  };
+
+  MonsterCard.prototype.overwriteWeak = function(type) {
+    this.overwrittenWeak_ = {};
+    this.overwrittenWeak_[type] = '*2';
+  };
+
+  MonsterCard.prototype.overwriteRegist = function(type) {
+    this.overwrittenRegist_ = {};
+    this.overwrittenRegist_[type] = '-30';
   };
 
   MonsterCard.prototype.addEnergy = function(e) {
@@ -187,6 +220,14 @@
     this.effect_.push(effect)
   };
 
+  MonsterCard.prototype.addPersistantEffect = function(effect) {
+    this.persistantEffect_.push(effect);
+  };
+
+  MonsterCard.prototype.hasPersistantEffect = function(effect) {
+    return this.persistantEffect_.indexOf(effect) >= 0;
+  };
+
   MonsterCard.prototype.getBase = function() {
     return this.evolutedBase_;
   };
@@ -204,6 +245,15 @@
 
   MonsterCard.prototype.backToBench = function() {
     this.status_ = [];
+
+    this.overwrittenWeak_ = null;
+    this.overwrittenRegist_ = null;
+  };
+
+  MonsterCard.prototype.backToHand = function() {
+    this.backToBench();
+
+    this.persistantEffect_ = [];
   };
 
   MonsterCard.prototype.evolute = function(base) {

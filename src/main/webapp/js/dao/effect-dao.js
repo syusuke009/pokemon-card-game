@@ -8,6 +8,10 @@
     return this.mst_[code];
   };
 
+  EffectDao.prototype.getSkillEffectCondition = function(code) {
+    return this.mst_[code + '_condition'];
+  };
+
   EffectDao.prototype.getTrainerEffect = function(code) {
     return this.mst_['trainer_effect_' + code];
   };

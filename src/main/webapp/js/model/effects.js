@@ -149,6 +149,12 @@
   };
   Effects.skill_34_2 = EffectsBase.doublePoison;
 
+  Effects.skill_35_1 = EffectsBase.sleepByCoinToss;
+  Effects.skill_35_2 = EffectsBase.useRivalSkill;
+
+  Effects.skill_36_1 = EffectsBase.useRivalSkill;
+  Effects.skill_36_2 = EffectsBase.defenceUp20;
+
   Effects.skill_37_1 = EffectsBase.confusionByCoinToss;
 
   Effects.skill_38_1 = function(param) {
@@ -243,7 +249,7 @@
   Effects.skill_60_1 = Effects.skill_9_1;
 
   Effects.skill_61_1 = function(param) {
-    var dialog = new SkillSelectionDialog(true);
+    var dialog = new SkillSelectionDialog(param.model, true);
     return dialog.show(param.defender).then(function(key) {
       if (key === 'skill1') {
         param.defender.addEffect(Const.Effect.CANT_SKILL1);
@@ -296,6 +302,44 @@
     return EffectsBase.suicideBombing(param, 20);
   };
 
+  Effects.skill_79_1 = function(param) {
+    var $defer = $.Deferred();
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      var attacker = param.attacker;
+      var restore = 10;
+      if (response[0]) {
+        attacker.hurt(restore * -1);
+        MessageDisplay.println(attacker.name + ' は ' + restore + ' かいふくした！');
+      }
+      $defer.resolve();
+    });
+    return $defer.promise();
+  };
+  Effects.skill_79_2 = function(param) {
+    return EffectsBase.trushEnergy(param.attacker, ['esper']).then(function(bool) {
+      var $defer = $.Deferred();
+      if (bool) {
+        var viewpoint = param.model.getTurn().whoseTurn();
+        var field = param.model.getField(viewpoint);
+        var trush = field.getTrush();
+        var dialog = new CardSelectionDialog();
+        dialog.show(trush.getAll().filter(function(card) {
+          return UtilFunc.isTrainer(card.kind);
+        }), 1).then(function(response) {
+          var card = trush.pick(response[0].trnId);
+          field.getHands().add(card);
+          $defer.resolve();
+        });
+      } else {
+        $defer.resolve();
+      }
+      return $defer.promise();
+    });
+  };
+
+  Effects.skill_80_1 = EffectsBase.paralysisByCoinToss;
+
   Effects.skill_84_1 = Effects.skill_15_1;
 
   Effects.skill_81_1 = EffectsBase.paralysisByCoinToss;
@@ -305,6 +349,17 @@
 
   Effects.skill_82_1 = EffectsBase.paralysisByCoinToss;
   Effects.skill_82_2 = Effects.skill_76_2;
+
+  Effects.skill_83_1 = function(param) {
+    param.attacker.addPersistantEffect('skill_83_1');
+    return EffectsBase.pluralAttack(param, 1);
+  };
+  Effects.skill_83_1_condition = function(model) {
+    var viewpoint = model.getTurn().whoseTurn()
+    var attacker = model.getField(viewpoint).getBattleMonster();
+    return !attacker.hasPersistantEffect('skill_83_1');
+  };
+
 
   Effects.skill_85_1 = function(param) {
     return EffectsBase.boostByDamage(param.attacker, param.skill);
@@ -351,6 +406,25 @@
   };
 
   Effects.skill_96_2 = EffectsBase.confusionByCoinToss;
+
+  Effects.skill_97_1 = function(param) {
+    var $defer = $.Deferred();
+    var psd = new PlayerSelectionDialog();
+    psd.show(param.model.getTurn()).then(function(viewpoint) {
+      var deck = param.model.getField(viewpoint).getDeck();
+      var list = [];
+      for (var i = 0; i < 3; i++) {
+        list.push(deck.draw());
+      }
+      var rd = new ReorderDialog();
+      rd.show(list).then(function(reordered) {
+        deck.putOn(reordered);
+        $defer.resolve();
+      });
+    });
+    return $defer.promise();
+  };
+  Effects.skill_97_2 = Effects.skill_94_1;
 
   Effects.skill_90_1 = EffectsBase.confusionByCoinToss;
   Effects.skill_90_2 = EffectsBase.damageGuardByCoinToss;
@@ -424,8 +498,7 @@
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
     return $defer;
   };
-  Effects.skill_106_1_condition = function(param) {
-    var model = param.model;
+  Effects.skill_106_1_condition = function(model) {
     var viewpoint = UtilFunc.reverseViewpoint(model.getTurn().whoseTurn());
     var field = model.getField(viewpoint);
     return field.getBench().length > 0;
@@ -518,6 +591,23 @@
 
   Effects.skill_136_1 = Effects.skill_133_2;
   Effects.skill_136_2 = Effects.skill_4_2;
+
+  Effects.skill_137_1 = function(param) {
+    var dialog = new TypeSelectionDialog();
+    return dialog.show(['leaf','fire','aqua','thunder','esper','fight']).then(function(response) {
+      param.defender.overwriteWeak(response);
+      MessageDisplay.println(param.defender.name + 'は ' + UtilFunc.getTypeCaption(response) + 'タイプ が弱点になった！')
+      return $.Deferred().resolve().promise();
+    });
+  };
+  Effects.skill_137_2 = function(param) {
+    var dialog = new TypeSelectionDialog();
+    return dialog.show(['leaf','fire','aqua','thunder','esper','fight']).then(function(response) {
+      param.attacker.overwriteRegist(response);
+      MessageDisplay.println(param.attacker.name + 'は ' + UtilFunc.getTypeCaption(response) + 'タイプ に抵抗力がついた！')
+      return $.Deferred().resolve().promise();
+    });
+  };
 
   Effects.skill_138_1 = Effects.skill_9_1;
 
@@ -731,6 +821,24 @@
     return trush.getAll().some(function(c) {
       return c.kind === '1';
     });
+  };
+
+  Effects.trainer_effect_1008 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var deck = model.getField(viewpoint).getDeck();
+    var list = [];
+    for (var i = 0; i < 5; i++) {
+      list.push(deck.draw());
+    }
+    var dialog = new ReorderDialog();
+    dialog.show(list).then(function(reordered) {
+      deck.putOn(reordered);
+    });
+  };
+  Effects.trainer_condition_1008 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getDeck().size() >= 5;
   };
 
   Effects.trainer_effect_1009 = function(model) {

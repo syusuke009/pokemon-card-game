@@ -4,6 +4,7 @@
 }
 .invisible {
     visibility: hidden !important;
+    cursor: inherit !important;
 }
 
 .select {
@@ -187,7 +188,7 @@
 
 .message-window {
     height: 162px;
-    margin: 16px 16px 4px 16px;
+    margin: 16px 40px 4px 8px;
     padding: 8px;
     border: 10px double #555;
     border-radius: 10px;
@@ -283,7 +284,8 @@
     display: flex;
 }
 .barometer-caption {
-    margin: 0 4px;
+    margin-right: 4px;
+    width: 28px;
 }
 .hp-barometer-container {
     display: flex;
@@ -309,6 +311,11 @@
     margin: 2px;
     border-radius: 50%;
 }
+.hands-size {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .hands-toggle-caption {
     display: block;
 }
@@ -333,7 +340,7 @@
 .hands-float-area {
     position: absolute;
     background-color: rgba(0,0,0,.75);
-    width: 880px;
+    width: 888px;
     display: flex;
     align-items: center;
     z-index: -1;

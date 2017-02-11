@@ -1,14 +1,17 @@
 (function($){
 
-  SkillSelectionDialog = function(opt_forSkill) {
+  SkillSelectionDialog = function(model, opt_forSkill) {
     this.$defer_ = null;
+    this.model_ = model;
     this.isForSkill_ = opt_forSkill === true;
+
+    this.effectDao_ = new EffectDao();
   };
 
 
   SkillSelectionDialog.prototype.show = function(card) {
     $('.dialog-backdrop').addClass('open');
-    $('.dialog-window').addClass('open').height(360).width(480);
+    $('.dialog-window').addClass('open').height(380).width(480);
     $('.dialog-header').text('ワザの選択');
     var $content = $('.dialog-content').html(this.createContentDom_(card));
     var $buttons = $('.dialog-buttons').html(this.createButtonsDom_(this.isForSkill_));
@@ -72,11 +75,11 @@
   };
 
   SkillSelectionDialog.prototype.controlEnabled_ = function($content, card) {
-    var allTypes = ["leaf","fire","aqua","thunder","fight","esper","leaf","fire","aqua","thunder","fight","esper","leaf","fire","aqua","thunder","fight","esper","leaf","fire","aqua","thunder","fight","esper"];
+    var allTypes = ["rainbow","rainbow","rainbow","rainbow","rainbow"];
     var energyArr = this.isForSkill_ ? allTypes : UtilFunc.mapEnergyToArray(card.getEnergy());
     if (!!card.skill1) {
       var $skillPanel1 = $content.find('.skill1');
-      if (card.skill1.satisfy(energyArr) && !(card.getEffectCount(Const.Effect.CANT_SKILL1) > 0)) {
+      if (card.skill1.satisfy(energyArr) && !(card.getEffectCount(Const.Effect.CANT_SKILL1) > 0) && this.satisfyCondition_(card.skill1)) {
         $skillPanel1.removeClass('disabled');
       } else {
         $skillPanel1.addClass('disabled');
@@ -84,7 +87,7 @@
     }
     if (!!card.skill2) {
       var $skillPanel2 = $content.find('.skill2');
-      if (card.skill2.satisfy(energyArr) && !(card.getEffectCount(Const.Effect.CANT_SKILL2) > 0)) {
+      if (card.skill2.satisfy(energyArr) && !(card.getEffectCount(Const.Effect.CANT_SKILL2) > 0) && this.satisfyCondition_(card.skill2)) {
         $skillPanel2.removeClass('disabled');
       } else {
         $skillPanel2.addClass('disabled');
@@ -99,6 +102,14 @@
 
   SkillSelectionDialog.prototype.unbindEvents_ = function($buttons) {
     $buttons.off();
+  };
+
+  SkillSelectionDialog.prototype.satisfyCondition_ = function(skill) {
+    var conditionFunc = this.effectDao_.getSkillEffectCondition(skill.effect);
+    if (!!conditionFunc) {
+      return conditionFunc(this.model_);
+    }
+    return true;
   };
 
   SkillSelectionDialog.prototype.onClickSkill_ = function(e) {
