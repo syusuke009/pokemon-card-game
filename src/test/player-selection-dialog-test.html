@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Reorder Test</title>
+
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/animation.css">
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/styles.css">
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/dialogs.css">
+<script type="text/javascript" src="../main/webapp/js/lib/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="../main/webapp/js/lib/hogan.min.js"></script>
+<script type="text/javascript" src="../main/webapp/js/const.js"></script>
+<script type="text/javascript" src="../main/webapp/js/util-func.js"></script>
+<script type="text/javascript" src="../main/webapp/js/dialog/player-selection-dialog.js"></script>
+
+</head>
+
+
+<body>
+	<button id="button" class="btn">対象選択</button>
+
+	<div class="dialog-backdrop"></div>
+	<div class="dialog-window">
+		<div class="dialog-header"></div>
+		<div class="dialog-content"></div>
+		<div class="dialog-buttons"></div>
+	</div>
+
+	<script type="text/javascript">
+
+	    var turn = {};
+	    turn.whoseTurn = function() {
+	      return Const.Viewpoint.ME;
+	    };
+
+		$('#button').on('click', function(e){
+		  var psd = new PlayerSelectionDialog();
+		  var promise = psd.show(turn);
+		  promise.then(function(res) {
+		    alert(res);
+		  });
+		});
+	</script>
+</body>
+</html>

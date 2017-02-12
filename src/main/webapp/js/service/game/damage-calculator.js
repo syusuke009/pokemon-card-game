@@ -62,10 +62,7 @@
   };
 
   DamageCalculator.prototype.effectWeak_ = function(attacker, defender, d) {
-    if (!defender.weak || !defender.weak[attacker.type]) {
-      return d;
-    }
-    var weakValue = defender.weak[attacker.type];
+    var weakValue = defender.isWeak(attacker.type);
     switch (weakValue) {
     case '*2':
       MessageDisplay.println('こうかは ばつぐんだ！');
@@ -75,13 +72,11 @@
   };
 
   DamageCalculator.prototype.effectRegist_ = function(attacker, defender, d) {
-    if (!defender.regist || !defender.regist[attacker.type]) {
-      return d;
-    }
-    var registValue = defender.regist[attacker.type];
-    if (!isNaN(Number(registValue))) {
+    var registValue = defender.hasRegist(attacker.type);
+    var num = Number(registValue);
+    if (!isNaN(num) && num < 0) {
       MessageDisplay.println('こうかは いまひとつのようだ');
-      return Math.max(d + Number(registValue), 0);
+      return Math.max(d + num, 0);
     }
     return d;
   };

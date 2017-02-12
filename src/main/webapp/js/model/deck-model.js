@@ -24,6 +24,14 @@
 
   Deck.prototype.turnUp = function(count) {
     var c = !!count ? count : 1;
-    return this.getAll().slice(0, c);
+    var size = this.size();
+    return this.getAll().slice(size - c, size);
+  };
+
+  Deck.prototype.putOn = function(list) {
+    list.reverse();
+    $.each(list, function(idx, card) {
+      this.add(card);
+    }.bind(this));
   };
 })(jQuery);

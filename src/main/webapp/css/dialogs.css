@@ -101,6 +101,12 @@
     vertical-align: middle;
 }
 
+.player-selection-container {
+    padding: 16px;
+    display: flex;
+    justify-content: space-around;
+}
+
 .card-selection-container .required-area,
 .energy-selection-container .required-area {
     margin: 16px;
@@ -108,21 +114,32 @@
 .required-area .label {
     margin-right: 8px;
 }
-.card-list-dialog-container .list-area {
+.card-list-dialog-container .list-area,
+.reorder-container .list-area {
     height: 368px;
     overflow-y: auto;
 }
 .card-selection-container .list-area,
-.energy-selection-container .list-area {
+.energy-selection-container .list-area,
+.reorder-container .list-area {
     height: 300px;
     overflow-y: auto;
 }
 .card-list-dialog-container .row,
 .card-selection-container .row,
-.energy-selection-container .row {
+.energy-selection-container .row,
+.type-selection-container .row {
     margin: 8px 16px;
     padding: 4px;
     cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.15), 0 -1px 2px -1px rgba(0,0,0,.1);
+}
+.reorder-container .row {
+    margin: 8px 16px;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.15), 0 -1px 2px -1px rgba(0,0,0,.1);
 }
 .energy-selection-container .types {
@@ -134,4 +151,8 @@
 .energy-selection-container .caption {
     display: inline-block;
     width: 200px;
+}
+.reorder-container .caption {
+    display: inline-block;
+    width: 240px;
 }

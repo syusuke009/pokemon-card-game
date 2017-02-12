@@ -91,15 +91,15 @@
     $escape.html('<span class="label">にげる</span><span class="detail-escape-simbol">━</span>' +
         this.createTypeHtml_(card.escapeCost));
     var $weak = this.$element_.find('.detail-weak');
-    var weakType = this.getType_(card.weak);
+    var weakType = this.getType_(card, card.isWeak);
     var weakHtml = !weakType ? 'なし' : this.createTypeHtml_([weakType]) +
-        '<span class="label">' + card.weak[weakType].replace('*', '×') + '</span>';
+        '<span class="label">' + card.isWeak(weakType).replace('*', '×') + '</span>';
     $weak.html('<span class="label">弱点</span>' + weakHtml);
 
     var $regist = this.$element_.find('.detail-regist');
-    var registType = this.getType_(card.regist);
+    var registType = this.getType_(card, card.hasRegist);
     var registHtml = !registType ? 'なし' : this.createTypeHtml_([registType]) +
-        '<span class="label">' + card.regist[registType].replace('-', '－') + '</span>'
+        '<span class="label">' + String(card.hasRegist(registType)).replace('-', '－') + '</span>'
     $regist.html('<span class="label">抵抗力</span>' + registHtml);
 
     var $energy = this.$element_.find('.detail-energy');
@@ -141,18 +141,16 @@
     return result;
   };
 
-  CardDetailRenderer.prototype.getType_ = function (obj) {
-    if (!obj) {
-      return null;
-    }
-    for (t in obj) {
-      var i = Const.Types.indexOf(t);
-      if (i < 0) {
-        continue;
+  CardDetailRenderer.prototype.getType_ = function (card, func) {
+    var type = null;
+
+    $.each(Const.Types, function(idx, t) {
+      var val = func.call(card, t);
+      if (!!val) {
+        type = t;
       }
-      return t;
-    }
-    throw 'Ilegal Type. ' + obj;
+    });
+    return type;
   };
 
   CardDetailRenderer.prototype.createDamageHtml_ = function(damage){

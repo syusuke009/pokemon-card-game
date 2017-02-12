@@ -583,6 +583,26 @@
   };
 
   EffectsBase.revenge = function(param) {
-    return param.attacker.returnAttackedSkill();
+    return $.Deferred().resolve(param.attacker.returnAttackedSkill()).promise();
   };
+
+  EffectsBase.useRivalSkill = function(param) {
+    var $defer = $.Deferred();
+    var viewpoint = param.model.getTurn().whoseTurn();
+    var field = param.model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    var monster = field.getBattleMonster();
+    var dialog = new SkillSelectionDialog(param.model, true);
+    dialog.show(monster).then(function(skillKey) {
+      if (!!skillKey) {
+        var skill = {};
+        $.extend(skill, monster[skillKey]);
+        skill.cost = param.skill.cost;
+        $defer.resolve(skill);
+      } else {
+        $defer.resolve(null);
+      }
+    });
+    return $defer.promise();
+  };
+
 })(jQuery);

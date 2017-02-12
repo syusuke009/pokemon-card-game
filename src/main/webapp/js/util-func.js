@@ -102,7 +102,14 @@
       }
       extraCount += cnt;
     });
-    return satisfyRequiredType && normalCostCount <= extraCount;
+    if (satisfyRequiredType && normalCostCount <= extraCount) {
+      return true;
+    }
+    if (stock["rainbow"] >= require.length) {
+      return true;
+    }
+    return false;
+
   };
 
   UtilFunc.calculateExtraEnergy = function(require, provide, type) {

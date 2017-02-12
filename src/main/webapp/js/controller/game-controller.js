@@ -203,7 +203,7 @@
   GameController.prototype.onAttack_ = function(e, trnId) {
     var viewpoint = UtilFunc.getViewpoint(trnId);
     var field = this.model_.getField(viewpoint);
-    var dialog = new SkillSelectionDialog();
+    var dialog = new SkillSelectionDialog(this.model_);
     dialog.show(field.getBattleMonster()).then(function(obj) {
       if (!!obj) {
         return this.battleController_.battle(this.model_, obj);

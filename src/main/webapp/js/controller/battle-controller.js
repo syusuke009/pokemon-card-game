@@ -74,13 +74,16 @@
 
     if (skill.timing === Const.EffectTiming.HACK_SKILL) {
       var effect = this.effectDao_.getSkillEffect(skill.effect);
-      var hackedSkill = effect(param);
-      if (!hackedSkill) {
-        MessageDisplay.newSentence(attacker.name + ' の ' + skill.name + '！');
-        MessageDisplay.println('しかし ワザはしっぱいした');
-        return $.Deferred().resolve(true).promise();
-      }
-      return this.battle_(hackedSkill, attacker, defender, model);
+      param.skill = skill;
+      var $defer = effect(param);
+      return $defer.then(function(hackedSkill) {
+        if (!hackedSkill) {
+          MessageDisplay.newSentence(attacker.name + ' の ' + skill.name + '！');
+          MessageDisplay.println('しかし ワザはしっぱいした');
+          return $.Deferred().resolve(true).promise();
+        }
+        return this.battle_(hackedSkill, attacker, defender, model);
+      }.bind(this));
     }
 
     MessageDisplay.newSentence(attacker.name + ' の ' + skill.name + '！');
