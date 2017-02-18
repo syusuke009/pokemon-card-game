@@ -3,10 +3,11 @@
   Effects = {};
 
   Effects.EventType = {
-      REQUEST_SELECT : 'request-select',
-      REQUEST_SELECT_SIGNAL_SEND : 'request-select-signal-send',
-      REQUEST_REDRAW_FIELD : 'request-redraw-field',
-      REQUEST_REDRAW_DETAIL : 'request-redraw-detail',
+      REQUEST_SELECT : 'effect:request-select',
+      REQUEST_SELECT_SIGNAL_SEND : 'effect:request-select-signal-send',
+      REQUEST_REDRAW_FIELD : 'effect:request-redraw-field',
+      REQUEST_REDRAW_DETAIL : 'effect:request-redraw-detail',
+      GAME_SET : 'effect:gameset'
   };
   Effects.getEventTarget = function() {
     return $(document.body);
@@ -23,6 +24,9 @@
   };
   Effects.dispatchRedrawFieldRequestEvent = function() {
     Effects.getEventTarget().trigger(Effects.EventType.REQUEST_REDRAW_FIELD);
+  };
+  Effects.dispatchGameSet = function(winner, message) {
+    Effects.getEventTarget().trigger(Effects.EventType.GAME_SET, [winner, message]);
   };
 
   Effects.skill_1_1 = function(param) {
@@ -92,6 +96,38 @@
 
   Effects.skill_17_1 = Effects.skill_12_1;
   Effects.skill_17_2 = EffectsBase.revenge;
+
+  Effects.skill_18_2 = function(param) {
+    var $defer = $.Deferred();
+    var defender = param.defender;
+    if (defender.hp === defender.getDamageCount() * 10) {
+      return $defer.resolve().promise();
+    }
+    var viewpoint = UtilFunc.reverseViewpoint(param.model.getTurn().whoseTurn());
+    var field = param.model.getField(viewpoint);
+    var hands = field.getHands();
+    var cards = defender.getAllCards();
+    $.each(cards, function(idx, card) {
+      hands.add(card);
+    });
+    MessageDisplay.println(defender.name + ' は 手札に飛ばされた！');
+    var bench = field.getBench();
+    if (bench.length === 0) {
+      field.setBattleMonster(null);
+      var v = param.model.getTurn().whoseTurn();
+      Effects.dispatchGameSet(v, (v === Const.Viewpoint.ME ? 'あいて' : 'あなた') + 'のポケモンが全滅しました');
+    }
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var monster = field.pickBench(response.trnId);
+      field.setBattleMonster(monster);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(bench), $defer);
+    return $defer;
+  };
 
   Effects.skill_20_2 = EffectsBase.halfHpDamage;
 
@@ -641,12 +677,66 @@
 
   Effects.skill_149_1 = Effects.skill_15_1;
 
-
   Effects.skill_150_1 = function(param) {
     return EffectsBase.boostByEnergyCount(param.defender.getEnergy(), param.skill);
   };
   Effects.skill_150_2 = function(param) {
     return EffectsBase.matchlessByTrushEnergy(param, ['esper']);
+  };
+
+  Effects.skill_151_1 = function(param) {
+    return EffectsBase.damageByEnergyCount(param.defender.getEnergy(), param.skill);
+  };
+  Effects.skill_151_2 = function(param) {
+    var model = param.model;
+    var turn = model.getTurn();
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monsters = [];
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+
+    var targets = monsters.filter(function(card){
+      return UtilFunc.isEvolutionMonster(card.kind);
+    });
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      field = model.getField(UtilFunc.getViewpoint(response.trnId));
+      var target = field.selectFrom(response.area, response.trnId);
+      var base = target.degenerate();
+      field.replace(response.area, target, base);
+      field.addHand(target);
+      MessageDisplay.println(target.name + ' は ' + base.name + ' にたいかした！');
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
+    return $defer;
+
+
+  };
+  Effects.skill_151_2_condition = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monsters = [];
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+    return monsters.filter(function(card){
+      return UtilFunc.isEvolutionMonster(card.kind);
+    }).length > 0;
   };
 
 

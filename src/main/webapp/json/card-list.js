@@ -16,7 +16,7 @@
 "15":{"name":"スピアー","kind":"3","base":"14","type":"leaf","hp":"80","special":"","skill1":"skill_15_1","skill2":"skill_15_2","escape":[],"weak":{"fire":"*2"},"regist":{"fight":"-30"}},
 "16":{"name":"ポッポ","kind":"1","base":"","type":"normal","hp":"40","special":"","skill1":"skill_16_1","skill2":"","escape":["normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
 "17":{"name":"ピジョン","kind":"2","base":"16","type":"normal","hp":"60","special":"","skill1":"skill_17_1","skill2":"skill_17_2","escape":["normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
-// "18":{"name":"ピジョット","kind":"3","base":"17","type":"normal","hp":"80","special":"","skill1":"skill_18_1","skill2":"skill_18_2","escape":[],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
+"18":{"name":"ピジョット","kind":"3","base":"17","type":"normal","hp":"80","special":"","skill1":"skill_18_1","skill2":"skill_18_2","escape":[],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
 "19":{"name":"コラッタ","kind":"1","base":"","type":"normal","hp":"30","special":"","skill1":"skill_19_1","skill2":"","escape":[],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 "20":{"name":"ラッタ","kind":"2","base":"19","type":"normal","hp":"60","special":"","skill1":"skill_20_1","skill2":"skill_20_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 "21":{"name":"オニスズメ","kind":"1","base":"","type":"normal","hp":"50","special":"","skill1":"skill_21_1","skill2":"skill_21_2","escape":[],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
@@ -149,7 +149,7 @@
 "148":{"name":"ハクリュー","kind":"2","base":"147","type":"normal","hp":"80","special":"","skill1":"skill_148_1","skill2":"skill_148_2","escape":["normal","normal"],"regist":{"esper":"-30"}},
 "149":{"name":"カイリュー","kind":"3","base":"148","type":"normal","hp":"100","special":"かけつける","skill1":"skill_149_1","skill2":"","escape":["normal"],"regist":{"fight":"-30"}},
 "150":{"name":"ミュウツー","kind":"1","base":"","type":"esper","hp":"60","special":"","skill1":"skill_150_1","skill2":"skill_150_2","escape":["normal","normal","normal"],"weak":{"esper":"*2"}},
-// "151":{"name":"ミュウ","kind":"1","base":"","type":"esper","hp":"50","special":"","skill1":"skill_151_1","skill2":"skill_151_2","escape":["normal"],"weak":{"esper":"*2"}},
+"151":{"name":"ミュウ","kind":"1","base":"","type":"esper","hp":"50","special":"","skill1":"skill_151_1","skill2":"skill_151_2","escape":["normal"],"weak":{"esper":"*2"}},
 
 "1001":{"name":"きずぐすり","kind":"goods","effect":"1001","description":"自分の場のポケモンにのっているダメージカウンターを2個まで、とりのぞくことができる。"},
 "1002":{"name":"いいきずぐすり","kind":"goods","effect":"1002","description":"自分の場にいるポケモンから、エネルギーカードのついているものを1匹選ぶ。そのポケモンについているエネルギーカードを1枚トラッシュして、そのポケモンにのっているダメージカウンターを最大4個、とりのぞく。"},

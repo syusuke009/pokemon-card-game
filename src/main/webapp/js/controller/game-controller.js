@@ -56,6 +56,7 @@
     Effects.getEventTarget().on(Effects.EventType.REQUEST_SELECT, this.onRequestSelect_.bind(this));
     Effects.getEventTarget().on(Effects.EventType.REQUEST_SELECT_SIGNAL_SEND, this.onRequestSelectSignalSend_.bind(this));
     Effects.getEventTarget().on(Effects.EventType.REQUEST_REDRAW_FIELD, this.onRequestRedrawField_.bind(this));
+    Effects.getEventTarget().on(Effects.EventType.GAME_SET, this.onGameSet_.bind(this));
 
     this.view_.getElement().on(ApplicationView.EventType.SURRENDER, this.onSurrender_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.GAME_START, this.onGameStart_.bind(this));
@@ -350,6 +351,10 @@
       RequestSignalSender.selectBattleMonster(selectables, $defer);
     }
     return $defer.promise();
+  };
+
+  GameController.prototype.onGameSet_ = function(e, winner, reason) {
+    this.gameset(winner, reason);
   };
 
   GameController.prototype.gameset = function(winner, reason) {

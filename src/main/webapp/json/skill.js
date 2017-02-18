@@ -26,8 +26,8 @@ SkillList = {
 "16_1":{"name":"ふきとばし","cost":["normal","normal"],"damage":"10","description":"相手の対戦ポケモンを控えポケモンと入れ替える。控えポケモンは相手がえらぶ。相手に控えポケモンがいないときには入れ替えはおこらない。","effect":"skill_16_1","timing":"after-damage"},
 "17_1":{"name":"ふきとばし","cost":["normal","normal"],"damage":"20","description":"相手の対戦ポケモンを控えポケモンと入れ替える。控えポケモンは相手がえらぶ。相手に控えポケモンがいないときには入れ替えはおこらない。","effect":"skill_17_1","timing":"after-damage"},
 "17_2":{"name":"オウムがえし","cost":["normal","normal","normal"],"damage":"","description":"前の相手の番で受けた「ワザ」と同じ「ワザ」をだす。","effect":"skill_17_2","timing":"hack-skill"},
-// "18_1":{"name":"つばさでうつ","cost":["normal","normal"],"damage":"20","description":""},
-// "18_2":{"name":"ハリケーン","cost":["normal","normal","normal","normal"],"damage":"30","description":"相手の対戦ポケモンが「きぜつ」しなければ、そのカードにのっていたダメージカウンターをとりのぞき、そのカードを持ち主の手札に戻す。そのカードについていた全てのカードも持ち主の手札にもどす。","effect":"skill_18_2","timing":"after-damage"},
+"18_1":{"name":"つばさでうつ","cost":["normal","normal"],"damage":"20","description":""},
+"18_2":{"name":"ハリケーン","cost":["normal","normal","normal","normal"],"damage":"30","description":"相手の対戦ポケモンが「きぜつ」しなければ、そのカードにのっていたダメージカウンターをとりのぞき、そのカードを持ち主の手札に戻す。そのカードについていた全てのカードも持ち主の手札にもどす。","effect":"skill_18_2","timing":"after-damage"},
 "19_1":{"name":"かみつく","cost":["normal"],"damage":"20","description":""},
 "20_1":{"name":"かみつく","cost":["normal"],"damage":"20","description":""},
 "20_2":{"name":"いかりのまえば","cost":["normal","normal","normal"],"damage":"","description":"相手の残りのHPの半分(切り上げ)のダメージをあたえる。","effect":"skill_20_2","timing":"calc-damage"},
@@ -254,6 +254,6 @@ SkillList = {
 "149_1":{"name":"たたきつける","cost":["normal","normal","normal","normal"],"damage":"40","damageCaption":"40×","description":"コインを2枚投げて「おもて」の数×40のダメージを相手にあたえる。","effect":"skill_149_1","timing":"calc-damage"},
 "150_1":{"name":"サイコキネシス","cost":["esper","normal"],"damage":"10","damageCaption":"10＋","description":"相手についているエネルギーカード×10の追加ダメージをあたえる。","effect":"skill_150_1","timing":"calc-damage"},
 "150_2":{"name":"バリアー","cost":["esper","esper"],"damage":"","description":"自分についている「超」エネルギーカードを1枚はがしてすてることによって、次の相手の番の「ワザ」のダメージや効果をうけない。","effect":"skill_150_2","timing":"reinforce"},
-// "151_1":{"name":"サイコウェーブ","cost":["esper"],"damage":"10","damageCaption":"10×","description":"相手についているエネルギーカード×10のダメージ。","effect":"skill_151_1","timing":"calc-damage"},
-// "151_2":{"name":"たいかビーム","cost":["esper","esper"],"damage":"","description":"自分または相手の場にいるポケモンの中から「進化カード」のついているもの1匹を選び、その「進化カード」を上から1枚はがして持ち主の手札に戻す。","effect":"skill_151_2","timing":"after-damage"}
+"151_1":{"name":"サイコウェーブ","cost":["esper"],"damage":"10","damageCaption":"10×","description":"相手についているエネルギーカード×10のダメージ。","effect":"skill_151_1","timing":"calc-damage"},
+ "151_2":{"name":"たいかビーム","cost":["esper","esper"],"damage":"","description":"自分または相手の場にいるポケモンの中から「進化カード」のついているもの1匹を選び、その「進化カード」を上から1枚はがして持ち主の手札に戻す。","effect":"skill_151_2","timing":"after-damage"}
 };
