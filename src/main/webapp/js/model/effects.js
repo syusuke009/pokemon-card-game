@@ -3,10 +3,11 @@
   Effects = {};
 
   Effects.EventType = {
-      REQUEST_SELECT : 'request-select',
-      REQUEST_SELECT_SIGNAL_SEND : 'request-select-signal-send',
-      REQUEST_REDRAW_FIELD : 'request-redraw-field',
-      REQUEST_REDRAW_DETAIL : 'request-redraw-detail',
+      REQUEST_SELECT : 'effect:request-select',
+      REQUEST_SELECT_SIGNAL_SEND : 'effect:request-select-signal-send',
+      REQUEST_REDRAW_FIELD : 'effect:request-redraw-field',
+      REQUEST_REDRAW_DETAIL : 'effect:request-redraw-detail',
+      GAME_SET : 'effect:gameset'
   };
   Effects.getEventTarget = function() {
     return $(document.body);
@@ -23,6 +24,9 @@
   };
   Effects.dispatchRedrawFieldRequestEvent = function() {
     Effects.getEventTarget().trigger(Effects.EventType.REQUEST_REDRAW_FIELD);
+  };
+  Effects.dispatchGameSet = function(winner, message) {
+    Effects.getEventTarget().trigger(Effects.EventType.GAME_SET, [winner, message]);
   };
 
   Effects.skill_1_1 = function(param) {
@@ -70,6 +74,7 @@
     Effects.dispatchSelectSignalSendRequestEvent(selectables, $defer)
     $defer.then(function(trnId) {
       field.putBench(monster);
+      monster.backToBench();
     });
     return $defer.promise();
   };
@@ -92,6 +97,39 @@
 
   Effects.skill_17_1 = Effects.skill_12_1;
   Effects.skill_17_2 = EffectsBase.revenge;
+
+  Effects.skill_18_2 = function(param) {
+    var $defer = $.Deferred();
+    var defender = param.defender;
+    if (defender.hp === defender.getDamageCount() * 10) {
+      return $defer.resolve().promise();
+    }
+    var viewpoint = UtilFunc.reverseViewpoint(param.model.getTurn().whoseTurn());
+    var field = param.model.getField(viewpoint);
+    var hands = field.getHands();
+    defender.backToHand();
+    var cards = defender.getAllCards();
+    $.each(cards, function(idx, card) {
+      hands.add(card);
+    });
+    MessageDisplay.println(defender.name + ' は 手札に飛ばされた！');
+    var bench = field.getBench();
+    if (bench.length === 0) {
+      field.setBattleMonster(null);
+      var v = param.model.getTurn().whoseTurn();
+      Effects.dispatchGameSet(v, (v === Const.Viewpoint.ME ? 'あいて' : 'あなた') + 'のポケモンが全滅しました');
+    }
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var monster = field.pickBench(response.trnId);
+      field.setBattleMonster(monster);
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(bench), $defer);
+    return $defer;
+  };
 
   Effects.skill_20_2 = EffectsBase.halfHpDamage;
 
@@ -168,7 +206,9 @@
     }
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(bench), $defer);
     return $defer.promise().then(function(response) {
-      field.putBench(field.getBattleMonster());
+      var monster= field.getBattleMonster();
+      monster.backToBench();
+      field.putBench(monster);
       var card = field.pickBench(response.trnId);
       field.setBattleMonster(card);
       return $.Deferred().resolve().promise();
@@ -641,12 +681,64 @@
 
   Effects.skill_149_1 = Effects.skill_15_1;
 
-
   Effects.skill_150_1 = function(param) {
     return EffectsBase.boostByEnergyCount(param.defender.getEnergy(), param.skill);
   };
   Effects.skill_150_2 = function(param) {
     return EffectsBase.matchlessByTrushEnergy(param, ['esper']);
+  };
+
+  Effects.skill_151_1 = function(param) {
+    return EffectsBase.damageByEnergyCount(param.defender.getEnergy(), param.skill);
+  };
+  Effects.skill_151_2 = function(param) {
+    var model = param.model;
+    var turn = model.getTurn();
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monsters = [];
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+
+    var targets = monsters.filter(function(card){
+      return UtilFunc.isEvolutionMonster(card.kind);
+    });
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      field = model.getField(UtilFunc.getViewpoint(response.trnId));
+      var target = field.selectFrom(response.area, response.trnId);
+      var base = target.degenerate();
+      field.replace(response.area, target, base);
+      field.addHand(target);
+      MessageDisplay.println(target.name + ' は ' + base.name + ' にたいかした！');
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
+    return $defer;
+  };
+  Effects.skill_151_2_condition = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monsters = [];
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+    return monsters.filter(function(card){
+      return UtilFunc.isEvolutionMonster(card.kind);
+    }).length > 0;
   };
 
 
@@ -830,6 +922,7 @@
     for (var i = 0; i < 5; i++) {
       list.push(deck.draw());
     }
+    MessageDisplay.newSentence('ポケモン図鑑 を つかった！');
     var dialog = new ReorderDialog();
     dialog.show(list).then(function(reordered) {
       deck.putOn(reordered);
@@ -999,6 +1092,7 @@
     var $defer = $.Deferred();
     $defer.promise().then(function(response) {
       var oldMonster = field.getBattleMonster();
+      oldMonster.backToBench();
       var newMonster = field.pickBench(response.trnId);
       field.setBattleMonster(newMonster);
       field.putBench(oldMonster);
@@ -1012,6 +1106,59 @@
     return false;
   };
   Effects.trainer_condition_1013 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getBench().length > 0;
+  };
+
+  Effects.trainer_effect_1014 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var trush = field.getTrush();
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var card = field.selectFrom(response.area, response.trnId);
+      card.backToHand();
+      var cards = card.getAllCards();
+      MessageDisplay.newSentence('ポケモン回収 を つかった！');
+      $.each(cards, function(idx, c) {
+        if (c.kind === '1' || !!c.isDummyMonster) {
+          hands.add(c);
+          MessageDisplay.println(c.name + ' は 手札にもどった！');
+        } else {
+          trush.trush(c);
+        }
+      });
+
+
+      var $d = $.Deferred();
+      if (response.area === Const.Area.BATTLE_MONSTER) {
+        field.setBattleMonster(null);
+        Effects.dispatchRedrawFieldRequestEvent();
+        Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $d);
+      } else if (response.area === Const.Area.BENCH) {
+        field.pickBench(response.trnId);
+        $d.resolve(null);
+      }
+
+      return $d;
+    }).then(function(response) {
+      if (!!response) {
+        var monster = field.pickBench(response.trnId);
+        field.setBattleMonster(monster);
+        MessageDisplay.println('『いけっ！ ' + monster.name + '！』', 'あいては ' + monster.name + ' を くりだした！');
+      }
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    var targets = UtilFunc.mapToTrnId(field.getBench());
+    targets.push(field.getBattleMonster().trnId);
+    Effects.dispatchSelectRequestEvent(targets, $defer);
+    return false;
+  };
+  Effects.trainer_condition_1014 = function(model) {
     var viewpoint = model.getTurn().whoseTurn();
     var field = model.getField(viewpoint);
     return field.getBench().length > 0;
@@ -1206,6 +1353,48 @@
     }).length > 0;
 
     return mineCondition && rivalCondition;
+  };
+
+
+  Effects.trainer_effect_1018 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monsters = [];
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+
+    var targets = monsters.filter(function(card){
+      return UtilFunc.isEvolutionMonster(card.kind);
+    });
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      field = model.getField(UtilFunc.getViewpoint(response.trnId));
+      var target = field.selectFrom(response.area, response.trnId);
+      var base = target.degenerate();
+      field.replace(response.area, target, base);
+      field.addHand(target);
+      MessageDisplay.newSentence('退化スプレー を つかった！');
+      MessageDisplay.println(target.name + ' は ' + base.name + ' にたいかした！');
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
+    return false;
+  };
+  Effects.trainer_condition_1018 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monsters = [];
+    monsters.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      monsters.push(card);
+    });
+    return monsters.filter(function(card){
+      return UtilFunc.isEvolutionMonster(card.kind);
+    }).length > 0;
   };
 
   Effects.trainer_effect_1019 = function(model) {
@@ -1418,5 +1607,71 @@
     var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
     var field = model.getField(viewpoint);
     return !field.getHands().isEmpty();
+  };
+
+  Effects.trainer_effect_8007 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var deck = field.getDeck();
+
+    $.each(hands.getAll().map(function(hand) {
+      return hand.trnId;
+    }), function(idx, trnId) {
+      deck.add(hands.pick(trnId));
+    });
+    deck.shuffle();
+
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response){
+      var count = (response[0]) ? 8 : 1;
+      for (var i = 0; i < count; i++) {
+        if (deck.isEmpty()) {
+          Effects.dispatchGameSet(UtilFunc.reverseViewpoint(viewpoint), 'デッキがなくなりカードがドローできなくなりました');
+        } else {
+          hands.add(deck.draw());
+        }
+      }
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    MessageDisplay.newSentence('ギャンブラー が たすけにきた！');
+  };
+  Effects.trainer_condition_8007 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    return (field.getHands().size() + field.getDeck().size()) > 1;
+  };
+
+  Effects.trainer_effect_8008 = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var deck = field.getDeck();
+
+    var $defer = $.Deferred();
+    $defer.promise().then(function(response) {
+      var card = field.pickBench(response.trnId);
+      card.backToHand();
+      $.each(card.getAllCards(), function(idx, c) {
+        deck.add(c);
+      });
+      MessageDisplay.println(card.name + ' は デッキにもどった！');
+
+      deck.shuffle();
+
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    MessageDisplay.newSentence('フジろうじん が たすけにきた！');
+    Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
+    return false;
+  };
+  Effects.trainer_condition_8008 = function(model) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getBench().length > 0;
   };
 })(jQuery);

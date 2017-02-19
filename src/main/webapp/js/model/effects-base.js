@@ -440,6 +440,15 @@
   };
 
   /**
+   * エネルギーカードの数×10のダメージをあたえる
+   */
+  EffectsBase.damageByEnergyCount = function(energies, skill) {
+    var $defer = $.Deferred();
+    $defer.resolve(energies.length * 10);
+    return $defer.promise();
+  };
+
+  /**
    * コイントスでダメージ追加か自分にダメージ
    */
   EffectsBase.boostOrSelfDamageByCoinToss = function(damage, param) {

@@ -13,6 +13,7 @@
     this.description = mst.description;
     this.effect = mst.effect;
     this.pendingTrush = mst.pendingTrush;
+    this.isDummyMonster = mst.isDummyMonster;
 
     this.dir = 'trainer';
   };

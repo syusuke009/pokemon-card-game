@@ -90,13 +90,28 @@
       card = this.selectHand(trnId);
       break;
     case Const.Area.BENCH:
-        card = this.selectBench(trnId);
-        break;
+      card = this.selectBench(trnId);
+      break;
     case Const.Area.BATTLE_MONSTER:
-        card = this.getBattleMonster();
-        break;
+      card = this.getBattleMonster();
+      break;
     }
     return card;
+  };
+
+  PlayField.prototype.replace = function(area, from, to) {
+    var card;
+    switch (area) {
+    case Const.Area.HAND:
+      this.hands_.replace(from, to);
+      break;
+    case Const.Area.BENCH:
+      this.bench_.replace(from, to);
+      break;
+    case Const.Area.BATTLE_MONSTER:
+      this.setBattleMonster(to);
+      break;
+    }
   };
 
   PlayField.prototype.override = function(area, oldCard, newCard) {

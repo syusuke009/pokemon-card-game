@@ -34,4 +34,12 @@
     return this.bundle_.splice(idx, 1)[0];
   };
 
+  CardBundle.prototype.replace = function(from, to) {
+    var idx = this.bundle_.findIndex(function(e){
+      return (e.trnId === from.trnId);
+    });
+    if (idx < 0) return null;
+    return this.bundle_[idx] = to;
+  };
+
 })(jQuery);

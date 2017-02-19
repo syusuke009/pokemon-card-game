@@ -114,39 +114,29 @@
   };
 
   MonsterCard.prototype.trush = function() {
+    MonsterCard.dispatchRemoveEvent(this.getAllCards());
+  };
 
+  MonsterCard.prototype.getAllCards = function() {
     var targets = [];
-    this.energy_.forEach(function(e) {
-      targets.push(e);
-    });
-    this.getAllBase().forEach(function(b) {
-      targets.push(b);
-    });
-    $.each(this.attackEffect_, function(key, value) {
-      if (!!value.trnId) {
-        targets.push(value);
-      }
-    });
-    $.each(this.defenceEffect_, function(key, value) {
-      if (!!value.trnId) {
-        targets.push(value);
-      }
-    });
-
-    this.damage_ = 0;
-    this.status_ = [];
-    this.energy_ = [];
-    this.attackEffectReservation_ = {};
-    this.attackEffect_ = {};
-    this.defenceEffect_ = {};
-    this.evolutedBase_ = null;
-
     if (this.isDummy) {
       targets.push(this.originalCard);
     } else {
       targets.push(this);
     }
-    MonsterCard.dispatchRemoveEvent(targets);
+    this.getAllBase().forEach(function(b) {
+      targets.push(b);
+    });
+    this.energy_.forEach(function(e) {
+      targets.push(e);
+    });
+
+    this.damage_ = 0;
+    this.status_ = [];
+    this.energy_ = [];
+    this.evolutedBase_ = null;
+
+    return targets;
   };
 
   MonsterCard.prototype.getDamageCount = function() {
@@ -265,6 +255,24 @@
     base.damage_ = 0;
     base.energy_ = [];
     base.status_ = [];
+  };
+
+  MonsterCard.prototype.degenerate = function() {
+
+    var base = this.evolutedBase_;
+
+    base.damage_ = this.damage_;
+    base.energy_ = this.energy_;
+    this.damage_ = 0;
+    this.energy_ = [];
+    this.status_ = [];
+
+    this.effect_ = [];
+    this.persistantEffect_ = [];
+    this.overwrittenWeak_ = null;
+    this.overwrittenRegist_ = null;
+
+    return base;
   };
 
   MonsterCard.prototype.canAttack = function() {
