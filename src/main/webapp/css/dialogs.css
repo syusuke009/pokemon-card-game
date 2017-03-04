@@ -156,3 +156,9 @@
     display: inline-block;
     width: 240px;
 }
+.card-disclosure-dialog-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 167px;
+}

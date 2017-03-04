@@ -29,6 +29,7 @@
     TAKE_ALONG: 'take-along',
     ATTACK_DOWN_10: 'attack-down-10',
     ATTACK_DOWN_20: 'attack-down-20',
+    ATTACK_UP_10: 'attack-up-10',
     DEFENCE_UP_20: 'defence-up-20',
     CANT_ESCAPE: 'cant-escape',
     CANT_ATTACK: 'cant-attack',

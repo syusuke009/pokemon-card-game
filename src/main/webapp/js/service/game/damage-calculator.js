@@ -56,6 +56,7 @@
   };
 
   DamageCalculator.prototype.effectAttackerEffect_ = function(attacker, d) {
+    d = d + (10 * attacker.getEffectCount(Const.Effect.ATTACK_UP_10));
     d = d - (10 * attacker.getEffectCount(Const.Effect.ATTACK_DOWN_10));
     d = d - (20 * attacker.getEffectCount(Const.Effect.ATTACK_DOWN_20));
     return d;
