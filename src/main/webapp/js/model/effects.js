@@ -891,7 +891,7 @@
     });
   };
 
-  Effects.trainer_effect_1005 = function(model) {
+  Effects.trainer_effect_1005 = function(model, used) {
     var turn = model.getTurn();
     var viewpoint = turn.whoseTurn();
     var field = model.getField(viewpoint);
@@ -908,6 +908,7 @@
     $defer.promise().then(function(response) {
       var target = field.selectFrom(response.area, response.trnId);
       target.addEffect(Const.Effect.ATTACK_UP_10);
+      target.addAttackEffectCard(used);
       MessageDisplay.newSentence('プラスパワー を つかった！');
       MessageDisplay.println(target.name + ' は こうげきりょくがあがった！');
       Effects.dispatchRedrawFieldRequestEvent();
@@ -919,7 +920,7 @@
     return true;
   };
 
-  Effects.trainer_effect_1006 = function(model) {
+  Effects.trainer_effect_1006 = function(model, used) {
     var turn = model.getTurn();
     var viewpoint = turn.whoseTurn();
     var field = model.getField(viewpoint);
@@ -936,6 +937,7 @@
     $defer.promise().then(function(response) {
       var target = field.selectFrom(response.area, response.trnId);
       target.addEffect(Const.Effect.DEFENCE_UP_20);
+      target.addDefenceEffectCard(used);
       MessageDisplay.newSentence('ディフェンダー を つかった！');
       MessageDisplay.println(target.name + ' は ぼうぎょりょくが ぐーんとあがった！');
       Effects.dispatchRedrawFieldRequestEvent();

@@ -228,7 +228,7 @@
     if (this.attackEffectCards_.length === 0) {
       return;
     }
-    this.dispatchRemoveEvent(this.attackEffectCards_);
+    MonsterCard.dispatchRemoveEvent(this.attackEffectCards_);
     this.attackEffectCards_ = [];
   };
 
@@ -236,7 +236,7 @@
     if (this.defenceEffectCards_.length === 0) {
       return;
     }
-    this.dispatchRemoveEvent(this.defenceEffectCards_);
+    MonsterCard.dispatchRemoveEvent(this.defenceEffectCards_);
     this.defenceEffectCards_ = [];
   };
 
