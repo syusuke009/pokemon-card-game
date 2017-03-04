@@ -28,6 +28,10 @@
     RequestSignalReceiver.controller_.onSelectCard(null, data);
   };
 
+  RequestSignalReceiver.disclose = function(cards, description) {
+    new CardDisclosureDialog().show(cards, description);
+  };
+
   RequestSignalReceiver.displayClear = function() {
     MessageDisplay.clear();
   };

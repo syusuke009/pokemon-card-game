@@ -30,6 +30,10 @@
     controller.onSelectInterceptor_.forGoBattle($defer);
   };
 
+  RivalOperationManualImpl.prototype.disclose = function(cards, description) {
+    //
+  };
+
   RivalOperationManualImpl.prototype.displayClear = function(message) {
     // RequestSignalReceiver.displayClear(message);
   };

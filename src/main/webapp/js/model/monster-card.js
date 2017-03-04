@@ -30,6 +30,8 @@
 
     this.effect_ = [];
     this.persistantEffect_ = [];
+    this.attackEffectCards_ = [];
+    this.defenceEffectCards_ = [];
     this.overwrittenWeak_ = null;
     this.overwrittenRegist_ = null;
 
@@ -212,6 +214,30 @@
 
   MonsterCard.prototype.addPersistantEffect = function(effect) {
     this.persistantEffect_.push(effect);
+  };
+
+  MonsterCard.prototype.addAttackEffectCard = function(card) {
+    this.attackEffectCards_.push(card);
+  };
+
+  MonsterCard.prototype.addDefenceEffectCard = function(card) {
+    this.defenceEffectCards_.push(card);
+  };
+
+  MonsterCard.prototype.trushAttackEffectCards = function() {
+    if (this.attackEffectCards_.length === 0) {
+      return;
+    }
+    this.dispatchRemoveEvent(this.attackEffectCards_);
+    this.attackEffectCards_ = [];
+  };
+
+  MonsterCard.prototype.trushDefenceEffectCards = function() {
+    if (this.defenceEffectCards_.length === 0) {
+      return;
+    }
+    this.dispatchRemoveEvent(this.defenceEffectCards_);
+    this.defenceEffectCards_ = [];
   };
 
   MonsterCard.prototype.hasPersistantEffect = function(effect) {

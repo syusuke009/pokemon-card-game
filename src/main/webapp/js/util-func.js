@@ -14,6 +14,10 @@
     return String(kind) === 'goods' || String(kind) === 'supporter';
   };
 
+  UtilFunc.isBaseEnergy = function(kind){
+    return String(kind) === 'energy';
+  };
+
   UtilFunc.isEnergy = function(kind){
     return String(kind) === 'energy' || String(kind) === 'energy-sp';
   };

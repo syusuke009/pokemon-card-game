@@ -5,7 +5,9 @@
   MessageDisplay = {};
 
   MessageDisplay.println = function(message, opt_msgForSend) {
-    view.println(message);
+    if (!!message) {
+      view.println(message);
+    }
     RequestSignalSender.displayPrintln(opt_msgForSend || message);
   };
 

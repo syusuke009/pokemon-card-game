@@ -13,6 +13,8 @@
 
   RivalOperation.prototype.selectBattleMonster = abstractMethod;
 
+  RivalOperation.prototype.disclose = abstractMethod;
+
   RivalOperation.prototype.displayClear = abstractMethod;
   RivalOperation.prototype.displayPrintln = abstractMethod;
 

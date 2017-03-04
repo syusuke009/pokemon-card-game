@@ -106,6 +106,9 @@
     if (attacker.getEffectCount(Const.Effect.BLIND) > 0) {
       attacker.removeEffect(Const.Effect.BLIND);
     }
+    if (attacker.getEffectCount(Const.Effect.ATTACK_UP_10) > 0) {
+      attacker.removeEffect(Const.Effect.ATTACK_UP_10);
+    }
     if (attacker.getEffectCount(Const.Effect.ATTACK_DOWN_10) > 0) {
       attacker.removeEffect(Const.Effect.ATTACK_DOWN_10);
     }
@@ -131,6 +134,7 @@
       attacker.removeEffect(Const.Effect.PRE_DOUBLING);
       attacker.addEffect(Const.Effect.DOUBLING);
     }
+    attacker.trushAttackEffectCards();
 
     var defenderField = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
     var defender = defenderField.getBattleMonster();
@@ -149,6 +153,7 @@
     if (defender.getEffectCount(Const.Effect.MATCHLESS) > 0) {
       defender.removeEffect(Const.Effect.MATCHLESS);
     }
+    defender.trushDefenceEffectCards();
   };
 
   PokemonChecker.prototype.checkDying_ = function(field) {

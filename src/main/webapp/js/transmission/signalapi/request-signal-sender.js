@@ -27,6 +27,10 @@
     RequestSignalSender.operation_.selectBattleMonster($defer, selectables);
   };
 
+  RequestSignalSender.disclose = function(cards, description) {
+    RequestSignalSender.operation_.disclose(cards, description);
+  };
+
   RequestSignalSender.displayClear = function(message) {
     RequestSignalSender.operation_.displayClear(message);
   };
