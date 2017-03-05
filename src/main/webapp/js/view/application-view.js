@@ -16,6 +16,7 @@
     EVOLUTE: DetailAreaView.EventType.EVOLUTE,
     USE: DetailAreaView.EventType.USE,
     ATTACH_ENERGY: DetailAreaView.EventType.ATTACH,
+    SPECIAL: DetailAreaView.EventType.SPECIAL,
     ATTACK: DetailAreaView.EventType.ATTACK,
     ESCAPE: DetailAreaView.EventType.ESCAPE,
     TURN_END: DetailAreaView.EventType.TURN_END,

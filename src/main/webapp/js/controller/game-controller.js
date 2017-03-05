@@ -49,6 +49,7 @@
     this.view_.getElement().on(ApplicationView.EventType.EVOLUTE, this.onEvolute_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.USE, this.onUseTrainer_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ATTACH_ENERGY, this.onAttachEnergy_.bind(this));
+    this.view_.getElement().on(ApplicationView.EventType.SPECIAL, this.onSpecial_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ATTACK, this.onAttack_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.ESCAPE, this.onEscape_.bind(this));
     this.view_.getElement().on(ApplicationView.EventType.TURN_END, this.turnEnd.bind(this));
@@ -145,6 +146,19 @@
     }
     this.view_.redrawField(this.model_);
     this.view_.redrawDetail(card, Const.Area.BENCH);
+  };
+
+  GameController.prototype.onSpecial_ = function(e, trnId) {
+    var viewpoint = UtilFunc.getViewpoint(trnId);
+    var field = this.model_.getField(viewpoint);
+    var card = field.selectFrom(this.selectingData_.area, this.selectingData_.trnId);
+
+    this.model_.getTurn().useSpecial(card);
+    var bool = this.effectDao_.getSkillEffect('special_' + card.special.code)(this.model_, card);
+
+    if (bool !== false) {
+      this.view_.redrawField(this.model_);
+    }
   };
 
   GameController.prototype.onEvolute_ = function(e, trnId) {

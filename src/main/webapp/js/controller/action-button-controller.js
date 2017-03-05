@@ -36,11 +36,11 @@
       break;
     case Const.Area.BATTLE_MONSTER:
       result.attack = turn.allowAttack() && card.canAttack();
-      result.special;
+      result.special = this.canActSpecial(card) ? this.effectDao_.getSkillEffectCondition('special_' + card.special.code)(game, card) : null;
       result.escape = !turn.wasEscaped() && card.canEscape() && field.getBench().length > 0;
       break;
     case Const.Area.BENCH:
-      result.special;
+      result.special = this.canActSpecial(card) ? this.effectDao_.getSkillEffectCondition('special_' + card.special.code)(game, card) : null;
       result.toBattle = !this.existsBattleMonster_(field);
       break;
     }
@@ -56,11 +56,11 @@
       break;
     case Const.Area.BATTLE_MONSTER:
       result.attack = turn.allowAttack() && card.canAttack();
-      result.special;
+      result.special = this.canActSpecial(card) ? this.effectDao_.getSkillEffectCondition('special_' + card.special.code)(game, card) : null;
       result.escape = !turn.wasEscaped() && card.canEscape() && field.getBench().length > 0;
       break;
     case Const.Area.BENCH:
-      result.special;
+      result.special = this.canActSpecial(card) ? this.effectDao_.getSkillEffectCondition('special_' + card.special.code)(game, card) : null;
       result.toBattle = !this.existsBattleMonster_(field);
       break;
     }
@@ -72,7 +72,7 @@
     result.kind = 'trainer';
     switch(area) {
     case Const.Area.HAND:
-      if (turn.isSetupTurn() || turn.isProhibittedTrainer()) {
+      if (turn.isSetupTurn() || turn.isProhibitedTrainer()) {
         result.use = false;
       } else{
         var notlimit = card.kind === 'goods' ? true : !turn.isUsedSupporter();
@@ -97,6 +97,13 @@
       break;
     }
     return result;
+  };
+
+  ActionButtonController.prototype.canActSpecial = function(card) {
+    if (!card.special) {
+      return false;
+    }
+    return card.special.timing === Const.EffectTiming.ACTION;
   };
 
   ActionButtonController.prototype.existsBattleMonster_ = function(field) {

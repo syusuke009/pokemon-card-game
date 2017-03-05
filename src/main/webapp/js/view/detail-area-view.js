@@ -10,6 +10,7 @@
     TO_BENCH: 'to-bench',
     EVOLUTE: 'evolute',
     USE: 'use',
+    SPECIAL: 'special',
     ATTACH: 'attach',
     ATTACK: 'attack',
     ESCAPE: 'escape',
@@ -70,6 +71,11 @@
       this.$element_.trigger(DetailAreaView.EventType.ATTACH, $trnId.val());
     }.bind(this));
 
+    this.$element_.on('click', '.special-button', function(e){
+      if ($(e.target).hasClass('disabled')) return;
+      var $trnId = this.$element_.find('.detail-trn-id');
+      this.$element_.trigger(DetailAreaView.EventType.SPECIAL, $trnId.val());
+    }.bind(this));
     this.$element_.on('click', '.attack-button', function(e){
       if ($(e.target).hasClass('disabled')) return;
       var $trnId = this.$element_.find('.detail-trn-id');

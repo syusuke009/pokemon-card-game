@@ -28,6 +28,26 @@
     });
   };
 
+  UtilFunc.specialIs = function(code, card){
+    if (!card.special) {
+      return false;
+    }
+    return card.special.code === code;
+  };
+
+  UtilFunc.hasPreventSpecialStatus = function(card){
+    if (card.hasStatus(Const.Status.SLEEP)) {
+      return true;
+    }
+    if (card.hasStatus(Const.Status.PARALYSIS)) {
+      return true;
+    }
+    if (card.hasStatus(Const.Status.CONFUSION)) {
+      return true;
+    }
+    return false;
+  };
+
   UtilFunc.findEvolutionBase = function(evolution, field, turn) {
     var result = field.getBench().filter(function(c){
       return c.code === evolution.baseCardCode && !turn.isNewAssignedMonster(c.trnId);
