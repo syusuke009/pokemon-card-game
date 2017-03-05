@@ -575,19 +575,27 @@
     width: 272px;
 }
 
+
+.detail-special,
 .detail-skill1,
 .detail-skill2 {
     border-bottom: 1px solid #dadde0;
     margin-top: 8px;
     font-size: 18px;
 }
+.special-name{
+    color: #e91e63;
+    margin-left: -8px;
+}
 
 .skill1-cost,
 .skill2-cost {
 }
 
+.special-description,
 .skill1-description,
 .skill2-description {
+    color: #555;
     font-size: 10.5px;
 }
 

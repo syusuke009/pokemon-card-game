@@ -14,6 +14,8 @@
     this.newAssigned_ = [];
     this.escaped_ = false;
 
+    this.useSpecialIds_ = [];
+
     this.turnCount_ = !!opt_turn ? opt_turn.turnCount_ + 1 : 0;
 
     this.prohibittedTrainerCount_ = !!opt_turn ? Math.max(opt_turn.prohibittedTrainerCount_ - 1, 0) : 0;
@@ -79,11 +81,19 @@
     return this.escaped_;
   };
 
+  TurnModel.prototype.useSpecial = function(card) {
+    this.useSpecialIds_.push(card.trnId);
+  };
+
+  TurnModel.prototype.wasUsedSpecial = function(card) {
+    return this.useSpecialIds_.indexOf(card.trnId) >= 0;
+  };
+
   TurnModel.prototype.prohibitTrainer = function() {
     this.prohibittedTrainerCount_ = 2;
   };
 
-  TurnModel.prototype.isProhibittedTrainer = function() {
+  TurnModel.prototype.isProhibitedTrainer = function() {
     return this.prohibittedTrainerCount_ > 0;
   };
 })(jQuery);

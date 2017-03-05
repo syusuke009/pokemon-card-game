@@ -719,6 +719,7 @@
       field.replace(response.area, target, base);
       field.addHand(target);
       MessageDisplay.println(target.name + ' は ' + base.name + ' にたいかした！');
+      Effects.dispatchRedrawFieldRequestEvent();
     });
     Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
     return $defer;
@@ -739,6 +740,107 @@
     return monsters.filter(function(card){
       return UtilFunc.isEvolutionMonster(card.kind);
     }).length > 0;
+  };
+
+
+
+  Effects.special_45_sp = function(model, card) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var targets = [];
+    targets.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      targets.push(card);
+    });
+    targets = targets.filter(function(card) {
+      return card.getDamageCount() > 0;
+    });
+
+    var dialog = new CoinTossDialog();
+    dialog.show().then(function(response) {
+      var $defer = $.Deferred();
+      if (response[0]) {
+        Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(targets), $defer);
+      } else {
+        $defer.reject();
+      }
+      return $defer.promise();
+    }).then(function(response) {
+      var target = field.selectFrom(response.area, response.trnId);
+      target.hurt(-10);
+      MessageDisplay.newSentence(card.name + ' の ' + card.special.name + '！');
+      MessageDisplay.println(target.name + ' は 10 かいふくした！');
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    return false;
+  };
+  Effects.special_45_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    var turn = model.getTurn();
+    if (turn.wasUsedSpecial(card)) {
+      return false;
+    }
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+    var targets = [];
+    targets.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      targets.push(card);
+    });
+    return targets.some(function(card) {
+      return card.getDamageCount() > 0;
+    });
+  };
+
+  Effects.special_149_sp = function(model, card) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var oldMonster = field.getBattleMonster();
+    var newMonster = field.pickBench(card.trnId);
+    field.putBench(oldMonster);
+    field.setBattleMonster(newMonster);
+    MessageDisplay.newSentence(card.name + ' の ' + card.special.name + '！');
+  };
+  Effects.special_149_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getBattleMonster() !== card;
+  };
+
+  // 89_sp かがくへんかガス
+  Effects.existsChemicalGas = function(model) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var monster = field.getBattleMonster();
+    if (UtilFunc.specialIs(Const.Special.CHEMICAL_GAS, monster) && !UtilFunc.hasPreventSpecialStatus(monster)) {
+      return true;
+    }
+    if (field.getBench().some(function(card) {
+      return UtilFunc.specialIs(Const.Special.CHEMICAL_GAS, card);
+    })) {
+      return true;
+    }
+
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    monster = field.getBattleMonster();
+    if (UtilFunc.specialIs(Const.Special.CHEMICAL_GAS, monster) && !UtilFunc.hasPreventSpecialStatus(monster)) {
+      return true;
+    }
+    if (field.getBench().some(function(card) {
+      return UtilFunc.specialIs(Const.Special.CHEMICAL_GAS, card);
+    })) {
+      return true;
+    }
+    return false;
   };
 
 

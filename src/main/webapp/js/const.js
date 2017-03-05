@@ -44,6 +44,21 @@
     DOUBLING: 'doubling'
   };
 
+  // autoの特殊能力のみ
+  Const.Special = {
+    ENERGY_BURN: '6_sp',
+    PRAYING_RAIN: '9_sp',
+    COUNTER_ATTACK: '68_sp',
+    ESCAPE_SUPPORT: '85_sp',
+    CHEMICAL_GAS: '89_sp',
+    MYSTERIOUS_WALL: '122_sp',
+    TRANSFORMATION: '132_sp',
+    SEEING_THROUGH: '138_sp',
+    HELMET_ARMOUR: '138_sp',
+    PRIMITIVE_POWER: '142_sp',
+    IMMUNITAS: '143_sp'
+  };
+
   Const.Types = ["normal","leaf","fire","aqua","thunder","fight","esper"];
 
   Const.EffectTiming = {
@@ -52,6 +67,9 @@
 
     BEFORE_DAMAGE: 'before-damage',
     CALC_DAMAGE: 'calc-damage',
-    AFTER_DAMAGE: 'after-damage'
+    AFTER_DAMAGE: 'after-damage',
+
+    AUTO: 'auto',
+    ACTION: 'action'
   };
 })(jQuery);

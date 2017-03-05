@@ -14,6 +14,10 @@
       if (!card) {
         throw 'unregistered card: ' + code;
       }
+      if (!!card.special && (typeof card.special === 'string')) {
+        var special = this.skillDao_.get(card.special);
+        card.special = new Special(card.special, special);
+      }
       if (!!card.skill1 && (typeof card.skill1 === 'string')) {
         var skill1 = this.skillDao_.get(card.skill1.replace('skill_',''));
         card.skill1 = new Skill(card.skill1, skill1);

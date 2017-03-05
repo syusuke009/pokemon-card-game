@@ -65,6 +65,15 @@
     $hp.show();
     $hp.text('HP: ' + card.hp);
 
+    var $special = this.$element_.find('.detail-special');
+    if (!!card.special) {
+      $special.show();
+      this.$element_.find('.special-name').text('【特殊能力】' + card.special.name);
+      this.$element_.find('.special-description').text(card.special.description);
+    } else {
+      $special.hide();
+    }
+
     var $skill1 = this.$element_.find('.detail-skill1');
     if (!!card.skill1) {
       $skill1.show();
