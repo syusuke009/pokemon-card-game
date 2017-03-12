@@ -134,7 +134,13 @@
 
     if (defender.hp <= defender.getDamageCount() * 10 && defender.getEffectCount(Const.Effect.TAKE_ALONG) > 0) {
       attacker.hurt(attacker.hp);
-      MessageDisplay.println(defender.name + ' は ' + attacker.name + ' を みちづれにした');
+      MessageDisplay.println(defender.name + ' は ' + attacker.name + ' を みちづれにした！');
+    }
+    if (!UtilFunc.hasPreventSpecialStatus(defender) && !Effects.existsChemicalGas()
+        && UtilFunc.specialIs(Const.Special.COUNTER_ATTACK, defender)) {
+      attacker.hurt(10);
+      MessageDisplay.println(defender.name + ' ははんげきした！');
+      MessageDisplay.println(attacker.name + ' に 10 ダメージ！');
     }
 
     if (response.skill.timing === Const.EffectTiming.AFTER_DAMAGE) {

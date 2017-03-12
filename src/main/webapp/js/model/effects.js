@@ -51,7 +51,7 @@
   Effects.skill_8_1 = EffectsBase.damageGuardByCoinToss;
 
   Effects.skill_9_1 = function(param) {
-    var energies = UtilFunc.mapEnergyToArray(param.attacker.getEnergy());
+    var energies = UtilFunc.mapEnergyToArray(param.attacker.getEnergy(), param.attacker);
     return EffectsBase.boostByExtraEnergy(energies, param.skill, "aqua", 2);
   };
 
@@ -509,7 +509,7 @@
     });
   };;
   Effects.skill_103_2 = function(param) {
-    var times = UtilFunc.mapEnergyToArray(param.attacker.getEnergy()).length;
+    var times = UtilFunc.mapEnergyToArray(param.attacker.getEnergy(), param.attacker).length;
     return EffectsBase.pluralAttack(param, times);
   };
 
@@ -519,7 +519,7 @@
   Effects.skill_105_1 = Effects.skill_15_1;
   Effects.skill_105_2 = function(param) {
     return EffectsBase.callFriend(param, function(card) {
-      return card.type === 'fight' && card.kind === '1';
+      return card.getType() === 'fight' && card.kind === '1';
     });
   };
 
@@ -798,6 +798,165 @@
     });
   };
 
+  Effects.special_49_sp = function(model, card) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+
+    var $defer = $.Deferred();
+    $defer.then(function(response) {
+      var f = model.getField(UtilFunc.getViewpoint(response.trnId));
+      var target = f.selectFrom(response.area, response.trnId);
+      card.overwriteType(target.getType());
+      MessageDisplay.println(card.name + ' は ' + UtilFunc.getTypeCaption(target.getType()) + 'タイプ にへんしょくした！');
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+
+    var field = model.getField(viewpoint);
+    var targets = [];
+    targets.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      targets.push(card);
+    });
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    targets.push(field.getBattleMonster());
+    $.each(field.getBench(), function(idx, card) {
+      targets.push(card);
+    });
+    var ids = UtilFunc.mapToTrnId(targets).filter(function(c) {
+      return c.trnId !== card.trnId;
+    });
+    Effects.dispatchSelectRequestEvent(ids, $defer);
+    return false;
+  };
+  Effects.special_49_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    var turn = model.getTurn();
+    if (turn.wasUsedSpecial(card)) {
+      return false;
+    }
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    return true;
+  };
+
+  Effects.special_72_sp = function(model, card) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var hands = field.getHands();
+    var trush = field.getTrush();
+
+    var $defer = $.Deferred();
+    $defer.then(function(response) {
+      if (!!response) {
+        var battleMonster = field.pickBench(response.trnId);
+        field.setBattleMonster(battleMonster);
+      } else {
+        field.pickBench(card.trnId);
+      }
+      card.backToHand();
+      var cards = card.getAllCards();
+      $.each(cards, function(idx, c) {
+        if (c.trnId === card.trnId) {
+          hands.add(c);
+          MessageDisplay.println(card.name + ' は おくびょうになって手札にもどった！');
+        } else {
+          trush.trush(c);
+        }
+      });
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    if (card.trnId === field.getBattleMonster().trnId) {
+      Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
+    } else {
+      $defer.resolve();
+    }
+    return false;
+  };
+  Effects.special_72_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    if (model.getTurn().isNewAssignedMonster(card.trnId)) {
+      return false;
+    }
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getBench().length !== 0;
+  };
+
+  Effects.special_101_sp = function(model, card) {
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    var trush = field.getTrush();
+
+    var dialog = new TypeSelectionDialog();
+    dialog.show(Const.Types).then(function(type) {
+      var $defer = $.Deferred();
+      var targets = [];
+      targets.push(field.getBattleMonster());
+      $.each(field.getBench(), function(idx, c) {
+        targets.push(c);
+      });
+      var ids = UtilFunc.mapToTrnId(targets).filter(function(c) {
+        return c.trnId !== card.trnId;
+      });
+      Effects.dispatchSelectRequestEvent(ids, $defer);
+
+      return $.when($.Deferred().resolve(type).promise(), $defer);
+    }).then(function(type, selection) {
+      MessageDisplay.newSentence(card.name + ' の エネエネ！');
+
+      card.hurt(card.hp);
+      AutopsyService.process(model, viewpoint);
+
+      var dao = new CardMstDao();
+      var mst = dao.get('10099');
+      var key = {};
+      key.id = card.trnId;
+      key.cardCode = card.code;
+      mst.type = type;
+
+      var energy = CardFactory.create(key, mst);
+      energy.originalCard = trush.pick(card.trnId);
+
+      var target = field.selectFrom(selection.area, selection.trnId);
+      target.addEnergy(energy);
+
+      MessageDisplay.println(target.name + ' に ' + UtilFunc.getTypeCaption(type) + 'エネルギー が2こつけられた');
+
+      var $defer = $.Deferred();
+      if (field.getBattleMonster() === null) {
+        Effects.dispatchSelectRequestEvent(UtilFunc.mapToTrnId(field.getBench()), $defer);
+      } else {
+        $defer.resolve();
+      }
+      return $defer.promise();
+    }).then(function(response) {
+      if (!!response) {
+        field.setBattleMonster(field.pickBench(response.trnId));
+      }
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    return false;
+  };
+  Effects.special_101_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    var viewpoint = model.getTurn().whoseTurn();
+    var field = model.getField(viewpoint);
+    return field.getBench().length !== 0;
+  };
+
   Effects.special_149_sp = function(model, card) {
     var viewpoint = model.getTurn().whoseTurn();
     var field = model.getField(viewpoint);
@@ -816,9 +975,28 @@
     return field.getBattleMonster() !== card;
   };
 
+  // 9_sp あまごい
+  Effects.findPrayingRain = function(field) {
+    var monster = field.getBattleMonster();
+    if (UtilFunc.specialIs(Const.Special.PRAYING_RAIN, monster) && !UtilFunc.hasPreventSpecialStatus(monster)) {
+      return monster;
+    }
+    var result = null;
+    $.each(field.getBench(), function(idx, card) {
+      if (UtilFunc.specialIs(Const.Special.PRAYING_RAIN, card)) {
+        result = card;
+      }
+    });
+    return result;
+  };
+
   // 89_sp かがくへんかガス
   Effects.existsChemicalGas = function(model) {
+    model = model || window.getGameModel();
     var viewpoint = model.getTurn().whoseTurn();
+    if (!viewpoint) {
+      return false;
+    }
     var field = model.getField(viewpoint);
     var monster = field.getBattleMonster();
     if (UtilFunc.specialIs(Const.Special.CHEMICAL_GAS, monster) && !UtilFunc.hasPreventSpecialStatus(monster)) {
@@ -909,7 +1087,7 @@
     var $defer = $.Deferred();
     $defer.promise().then(function(response) {
       var target = field.selectFrom(response.area, response.trnId);
-      var dialog = new EnergySelectionDialog();
+      var dialog = new EnergySelectionDialog(target);
       return $.when(dialog.show(target.getEnergy(), ['normal']), $.Deferred().resolve(target).promise());
     }).then(function(response, target){
       response.forEach(function(trushed){

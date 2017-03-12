@@ -31,10 +31,8 @@
     }
 
     $.when(def1, def2, def3, def4).then(function(){
-      var myDyingCount = this.checkDying_(myModel);
-      this.getSide_(rivalModel, myDyingCount);
-      var rivalDyingCount = this.checkDying_(rivalModel);
-      this.getSide_(myModel, rivalDyingCount);
+      AutopsyService.process(model, Const.Viewpoint.ME);
+      AutopsyService.process(model, Const.Viewpoint.RIVAL);
       $defer.resolve();
     }.bind(this));
 
@@ -154,46 +152,6 @@
       defender.removeEffect(Const.Effect.MATCHLESS);
     }
     defender.trushDefenceEffectCards();
-  };
-
-  PokemonChecker.prototype.checkDying_ = function(field) {
-    var isDead = function(c) {
-      return c.hp <= c.getDamageCount() * 10;
-    };
-    var count = 0;
-    var monster = field.getBattleMonster();
-    if (isDead(monster)) {
-      monster.trush();
-      field.setBattleMonster(null);
-      if (!monster.isDummy) {
-        count++;
-      }
-      MessageDisplay.println(monster.name + ' は たおれた！');
-    }
-    var dead = [];
-    $.each(field.getBench(), function(idx, card) {
-      if (isDead(card)) {
-        dead.push(card.trnId);
-        if (!card.isDummy) {
-          count++;
-        }
-        MessageDisplay.println(card.name + ' は たおれた！');
-      }
-    });
-    $.each(dead, function(idx, id) {
-      field.pickBench(id).trush();
-    });
-    return count;
-  };
-
-  PokemonChecker.prototype.getSide_ = function(field, count) {
-    for (var i = 0; i < count; i++) {
-      var side = field.pickSide();
-      if (side === null) {
-        break;
-      }
-      field.addHand(side);
-    }
   };
 
 })(jQuery);

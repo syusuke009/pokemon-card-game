@@ -29,6 +29,9 @@
   };
 
   UtilFunc.specialIs = function(code, card){
+    if (!card) {
+      return false;
+    }
     if (!card.special) {
       return false;
     }
@@ -83,12 +86,17 @@
     });
   };
 
-  UtilFunc.mapEnergyToArray = function(energies) {
+  UtilFunc.mapEnergyToArray = function(energies, card) {
     var arr = [];
+    var overwrittenType = null;
+    if (!UtilFunc.hasPreventSpecialStatus(card) && !Effects.existsChemicalGas()
+        && UtilFunc.specialIs(Const.Special.ENERGY_BURN, card)) {
+      overwrittenType = 'fire';
+    }
     $.each(energies, function(idx, e) {
       var size = e.value;
       for (var i = 0; i < size; i++) {
-        arr.push(e.type);
+        arr.push(overwrittenType || e.getType());
       }
     });
     arr.sort(function(a,b){

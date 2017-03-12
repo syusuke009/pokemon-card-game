@@ -7,7 +7,7 @@
     this.code = String(key.cardCode);
     this.kind = mst.kind;
     this.kindCaption = MonsterCard.KindCaption[this.kind];
-    this.type = mst.type;
+    this.type_ = mst.type;
     this.typeCaption = UtilFunc.getTypeCaption(this.type);
     this.name = mst.name;
     this.hp = Number(mst.hp);
@@ -17,7 +17,8 @@
     this.skill1 = mst.skill1;
     this.skill2 = mst.skill2;
 
-    this.escapeCost = mst.escape;
+    this.escapeCost_ = mst.escape;
+    this.originalType_ = mst.type;
     this.originalWeak_ = mst.weak;
     this.originalRegist_ = mst.regist;
 
@@ -58,6 +59,30 @@
     MonsterCard.getEventTarget().trigger(MonsterCard.EventType.REMOVE, [arr]);
   };
 
+  MonsterCard.prototype.getType = function() {
+    if (!UtilFunc.hasPreventSpecialStatus(this) && !Effects.existsChemicalGas()) {
+      return this.type_;
+    }
+    return this.originalType_;
+  }
+
+  MonsterCard.prototype.getEscapeCost = function() {
+    var model = window.getGameModel();
+    var field = model.getField(UtilFunc.getViewpoint(this.trnId));
+    var escapeCost = [];
+    var count = this.escapeCost_.length;
+    $.each(field.getBench(), function(idx, c) {
+      if (!Effects.existsChemicalGas(model) && UtilFunc.specialIs(Const.Special.ESCAPE_SUPPORT, c)) {
+        count--;
+      }
+    });
+    for (var i = 0; i < count; i++) {
+      escapeCost.push(this.escapeCost_[i]);
+    }
+
+    return escapeCost;
+  }
+
   MonsterCard.prototype.isWeak = function(type) {
     if (!!this.overwrittenWeak_) {
       return this.overwrittenWeak_[type] || '';
@@ -76,6 +101,10 @@
       return this.originalRegist_[type] || '';
     }
     return '';
+  };
+
+  MonsterCard.prototype.overwriteType = function(type) {
+    this.type_ = type;
   };
 
   MonsterCard.prototype.overwriteWeak = function(type) {
@@ -101,7 +130,8 @@
       return e.trnId === c.trnId;
     });
     if (idx >= 0) {
-      MonsterCard.dispatchRemoveEvent(this.energy_.splice(idx, 1));
+      var energy = this.energy_.splice(idx, 1);
+      MonsterCard.dispatchRemoveEvent(energy.originalCard || energy);
     }
   };
 
@@ -116,6 +146,7 @@
   };
 
   MonsterCard.prototype.trush = function() {
+    this.backToHand();
     MonsterCard.dispatchRemoveEvent(this.getAllCards());
   };
 
@@ -130,7 +161,7 @@
       targets.push(b);
     });
     this.energy_.forEach(function(e) {
-      targets.push(e);
+      targets.push(e.originalCard || e);
     });
 
     this.damage_ = 0;
@@ -163,6 +194,11 @@
 
   MonsterCard.prototype.addStatus = function(status) {
     if (this.status_.indexOf(status) >= 0) {
+      return;
+    }
+    if (!UtilFunc.hasPreventSpecialStatus(this) && !Effects.existsChemicalGas()
+        && UtilFunc.specialIs(Const.Special.IMMUNITAS, this)) {
+      MessageDisplay.println(this.name + ' は めんえき で ステータスいじょうをふせいだ！');
       return;
     }
     var idx;
@@ -269,6 +305,7 @@
   MonsterCard.prototype.backToHand = function() {
     this.backToBench();
 
+    this.type_ = this.originalType_;
     this.persistantEffect_ = [];
   };
 
@@ -295,6 +332,7 @@
 
     this.effect_ = [];
     this.persistantEffect_ = [];
+    this.type_ = this.originalType_;
     this.overwrittenWeak_ = null;
     this.overwrittenRegist_ = null;
 
@@ -310,7 +348,7 @@
     if (this.getEffectCount(Const.Effect.CANT_ATTACK) > 0) {
       return false;
     }
-    var energies = UtilFunc.mapEnergyToArray(this.getEnergy());
+    var energies = UtilFunc.mapEnergyToArray(this.getEnergy(), this);
     if (!!this.skill1 && this.skill1.satisfy(energies)) {
       return true;
     }
@@ -329,7 +367,7 @@
     if (this.getEffectCount(Const.Effect.CANT_ESCAPE) > 0) {
       return false;
     }
-    return UtilFunc.checkEnoughEnergy(this.escapeCost, UtilFunc.mapEnergyToArray(this.energy_));
+    return UtilFunc.checkEnoughEnergy(this.getEscapeCost(), UtilFunc.mapEnergyToArray(this.energy_, this));
   };
 
   MonsterCard.prototype.attacked = function(skill) {

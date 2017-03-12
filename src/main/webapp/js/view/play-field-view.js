@@ -31,7 +31,7 @@
     $view.find('.side').html(sideTmpl.render({'list':field.getSide()}));
 
     var openedTmpl = Hogan.compile($('#opened-card-template').text());
-    $view.find('.hands').html(openedTmpl.render({'list':field.getHands().getAll()}));
+    $view.find('.hands').html(openedTmpl.render({'list':this.embedCurrentType_(field.getHands().getAll())}));
 
     var battleMonster = field.getBattleMonster();
     if (battleMonster === null) {
@@ -39,12 +39,12 @@
       $view.find('.hp-barometer').html('');
       $view.find('.energy-barometer').html('');
     } else {
-      $view.find('.battle-monster').html(openedTmpl.render({'list':[battleMonster]}));
+      $view.find('.battle-monster').html(openedTmpl.render({'list':this.embedCurrentType_([battleMonster])}));
       $view.find('.hp-barometer').html(this.hpBarometer_(battleMonster));
       $view.find('.energy-barometer').html(this.energyBarometer_(battleMonster));
     }
 
-    $view.find('.bench').html(openedTmpl.render({'list':field.getBench()}));
+    $view.find('.bench').html(openedTmpl.render({'list':this.embedCurrentType_(field.getBench())}));
 
     $view.find('.hands-size').text(field.getHands().size() + '枚');
 
@@ -52,7 +52,7 @@
     if (trush.isEmpty()) {
       $view.find('.trush').html('');
     } else {
-      $view.find('.trush').html(openedTmpl.render({'list':[trush.getTop()]}));
+      $view.find('.trush').html(openedTmpl.render({'list':this.embedCurrentType_([trush.getTop()])}));
     }
 
     if (isSelfTurn) {
@@ -60,6 +60,13 @@
     } else {
       $view.find('.turn-indicator').addClass('hidden');
     }
+  };
+
+  PlayFieldView.prototype.embedCurrentType_ = function(arr) {
+    $.each(arr, function(idx, card) {
+      card.currentType = card.getType();
+    });
+    return arr;
   };
 
   PlayFieldView.prototype.drawSelectable = function(selectable) {
@@ -193,7 +200,7 @@
   PlayFieldView.prototype.energyBarometer_ = function(monster) {
     var barometer = '<div class="barometer-caption">ｴﾈ:</div><div class="hp-barometer-container">';
     var energies = monster.getEnergy();
-    $.each(UtilFunc.mapEnergyToArray(energies), function(idx, type) {
+    $.each(UtilFunc.mapEnergyToArray(energies, monster), function(idx, type) {
       barometer += '<span class="cost ' + type + '"></span>';
     });
     return barometer + '</div>';

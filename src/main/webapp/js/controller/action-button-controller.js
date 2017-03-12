@@ -22,7 +22,7 @@
       return this.forTrainer_(card, field, area, turn, game);
     case 'energy':
     case 'energy-sp':
-      return this.forEnergy_(field, area, turn);
+      return this.forEnergy_(field, area, turn, card);
     }
   };
 
@@ -84,7 +84,7 @@
     return result;
   };
 
-  ActionButtonController.prototype.forEnergy_ = function(field, area, turn) {
+  ActionButtonController.prototype.forEnergy_ = function(field, area, turn, card) {
     var result = {};
     result.kind = 'energy';
     switch(area) {
@@ -92,7 +92,7 @@
       if (turn.isSetupTurn()) {
         result.attach = false;
       } else{
-        result.attach = !turn.isAttachedEnergy();
+        result.attach = !turn.isAttachedEnergy() || (Effects.findPrayingRain(field) && card.getType() === 'aqua');
       }
       break;
     }

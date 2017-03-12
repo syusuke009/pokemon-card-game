@@ -14,7 +14,7 @@
     $content.show();
     $content.removeClass();
     $content.addClass('detail-content')
-    $content.addClass(card.type);
+    $content.addClass(card.getType());
 
     var $trnId = this.$element_.find('.detail-trn-id');
     $trnId.val(card.trnId);
@@ -98,7 +98,7 @@
 
     var $escape = this.$element_.find('.detail-escape-cost');
     $escape.html('<span class="label">にげる</span><span class="detail-escape-simbol">━</span>' +
-        this.createTypeHtml_(card.escapeCost));
+        this.createTypeHtml_(card.getEscapeCost()));
     var $weak = this.$element_.find('.detail-weak');
     var weakType = this.getType_(card, card.isWeak);
     var weakHtml = !weakType ? 'なし' : this.createTypeHtml_([weakType]) +
@@ -112,7 +112,7 @@
     $regist.html('<span class="label">抵抗力</span>' + registHtml);
 
     var $energy = this.$element_.find('.detail-energy');
-    var energyHtml = this.createTypeHtml_(UtilFunc.mapEnergyToArray(card.getEnergy()))
+    var energyHtml = this.createTypeHtml_(UtilFunc.mapEnergyToArray(card.getEnergy(), card))
     $energy.html('<span class="label">エネルギー</span><div class="value-group">' + energyHtml + '</div>');
 
     var $damage = this.$element_.find('.detail-damage');

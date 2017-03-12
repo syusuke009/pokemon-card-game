@@ -39,8 +39,14 @@
       var monster = field.selectFrom(eventdata.area, eventdata.trnId);
       var energy = field.pickHand(energyTrnId);
       monster.addEnergy(energy);
-      model.getTurn().attachEnergy();
-      MessageDisplay.newSentence(monster.name + ' に ' + energy.name + ' が つけられた');
+      if (!!Effects.findPrayingRain(field) && monster.getType() === 'aqua' && energy.getType() === 'aqua') {
+        var sp = Effects.findPrayingRain(field);
+        MessageDisplay.newSentence(sp.name + 'の あまごい！');
+        MessageDisplay.println(monster.name + ' に ' + energy.name + ' が つけられた');
+      } else {
+        MessageDisplay.newSentence(monster.name + ' に ' + energy.name + ' が つけられた');
+        model.getTurn().attachEnergy();
+      }
       return true;
     };
     return this.defer_.promise();
