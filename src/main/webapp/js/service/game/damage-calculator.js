@@ -30,6 +30,14 @@
 
       d = this.effectDefenderEffect_(defender, d);
 
+      if (!UtilFunc.hasPreventSpecialStatus(defender) && !Effects.existsChemicalGas(model)
+          && UtilFunc.specialIs(Const.Special.MYSTERIOUS_WALL, defender)) {
+        if (d >= 30) {
+          MessageDisplay.println(defender.name + ' の なぞのかべ にこうげきをはばまれた！');
+          d = 0;
+        }
+      }
+
       d = Math.max(d, 0);
 
       MessageDisplay.println(defender.name + ' に ' + d + ' のダメージ！');
@@ -63,7 +71,7 @@
   };
 
   DamageCalculator.prototype.effectWeak_ = function(attacker, defender, d) {
-    var weakValue = defender.isWeak(attacker.type);
+    var weakValue = defender.isWeak(attacker.getType());
     switch (weakValue) {
     case '*2':
       MessageDisplay.println('こうかは ばつぐんだ！');
@@ -73,7 +81,7 @@
   };
 
   DamageCalculator.prototype.effectRegist_ = function(attacker, defender, d) {
-    var registValue = defender.hasRegist(attacker.type);
+    var registValue = defender.hasRegist(attacker.getType());
     var num = Number(registValue);
     if (!isNaN(num) && num < 0) {
       MessageDisplay.println('こうかは いまひとつのようだ');

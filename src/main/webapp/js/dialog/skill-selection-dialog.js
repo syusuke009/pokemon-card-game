@@ -33,7 +33,7 @@
   SkillSelectionDialog.prototype.createContentDom_ = function(card) {
 
     var energyHtml = '';
-    $.each(UtilFunc.mapEnergyToArray(card.getEnergy()), function(idx, t){
+    $.each(UtilFunc.mapEnergyToArray(card.getEnergy(), card), function(idx, t){
       energyHtml += '<div class="cost ' + t + '"></div>';
     });
     var hidden1 = '';
@@ -76,7 +76,7 @@
 
   SkillSelectionDialog.prototype.controlEnabled_ = function($content, card) {
     var allTypes = ["rainbow","rainbow","rainbow","rainbow","rainbow"];
-    var energyArr = this.isForSkill_ ? allTypes : UtilFunc.mapEnergyToArray(card.getEnergy());
+    var energyArr = this.isForSkill_ ? allTypes : UtilFunc.mapEnergyToArray(card.getEnergy(), card);
     if (!!card.skill1) {
       var $skillPanel1 = $content.find('.skill1');
       if (card.skill1.satisfy(energyArr) && !(card.getEffectCount(Const.Effect.CANT_SKILL1) > 0) && this.satisfyCondition_(card.skill1)) {

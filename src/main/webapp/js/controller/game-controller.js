@@ -17,6 +17,10 @@
 
     this.model_;
     this.selectingData_;
+
+    window.getGameModel = function() {
+      return this.model_;
+    }.bind(this);
   };
 
   GameController.prototype.ready = function() {
@@ -203,12 +207,21 @@
     var field = this.model_.getField(viewpoint);
 
     var selectables = [];
-    selectables.push(field.getBattleMonster().trnId);
+    selectables.push(field.getBattleMonster());
     $.each(field.getBench(), function(idx, c) {
-      selectables.push(c.trnId);
+      selectables.push(c);
     });
+    if (this.model_.getTurn().isAttachedEnergy()) {
+      if (Effects.findPrayingRain(field)) {
+        selectables = selectables.filter(function(c) {
+          return c.getType() === 'aqua';
+        });
+      } else {
+        return;
+      }
+    }
 
-    this.view_.drawSelectable(selectables);
+    this.view_.drawSelectable(UtilFunc.mapToTrnId(selectables));
     (viewpoint === Const.Viewpoint.ME ? this.view_.myHands : this.view_.rivalHands).call(this.view_, false);
     this.onSelectInterceptor_.forEnergyAttach(trnId).then(function() {
       (viewpoint === Const.Viewpoint.ME ? this.view_.myHands : this.view_.rivalHands).call(this.view_, true);
@@ -262,11 +275,18 @@
       MessageDisplay.println('『もどれっ！ ' + escaped.name + '！』', 'あいては ' + escaped.name + ' を ひっこめた');
     }.bind(this);
 
-    if (escaped.escapeCost.length === 0) {
+    $.each(field.getBench(), function(idx, c) {
+      if (!Effects.existsChemicalGas(this.model_) && UtilFunc.specialIs(Const.Special.ESCAPE_SUPPORT, c)) {
+        MessageDisplay.println(c.name + ' のにげるサポートで ' + escaped.name + ' はにげやすくなった！');
+      }
+    });
+
+    var escapeCost = escaped.getEscapeCost();
+    if (escapeCost.length <= 0) {
       afterTrushed([]);
     } else {
-      var dialog = new EnergySelectionDialog();
-      dialog.show(escaped.getEnergy(), escaped.escapeCost).then(afterTrushed);
+      var dialog = new EnergySelectionDialog(escaped);
+      dialog.show(escaped.getEnergy(), escapeCost).then(afterTrushed);
     }
   };
 

@@ -787,7 +787,7 @@
 	font-size: 12px;
 }
 .status.poison:before {
-	content: 'どく';
+	content: 'どく';
 	color: #fff;
 	background-color: #c44ad9;
 	padding: 2px 8px;
@@ -795,7 +795,7 @@
 	margin-right: 4px;
 }
 .status.double-poison:before {
-	content: 'どくどく';
+	content: 'どくどく';
 	color: #fff;
 	background-color: #c44ad9;
 	padding: 2px 8px;

@@ -7,7 +7,7 @@
     this.code = String(key.cardCode);
     this.kind = mst.kind;
     this.kindCaption = TrainerCard.KindCaption[this.kind];
-    this.type = 'trainer';
+    this.type_ = 'trainer';
     this.typeCaption = '道';
     this.name = mst.name;
     this.description = mst.description;
@@ -20,6 +20,10 @@
 
   TrainerCard.prototype.isSupporter = function() {
     return this.kind === 'supporter';
+  };
+
+  TrainerCard.prototype.getType = function() {
+    return this.type_;
   };
 
   TrainerCard.KindCaption = {

@@ -1,10 +1,12 @@
 (function($){
 
-  EnergySelectionDialog = function() {
+  EnergySelectionDialog = function(monster) {
     this.$defer_ = null;
 
     this.energyMap_;
     this.require_;
+
+    this.monster_ = monster;
   };
 
 
@@ -51,20 +53,28 @@
     var html = '';
     var filter = Array.isArray(require) ? require : [require];
     energies.filter(function(e) {
-      return filter.indexOf(e.type) >= 0 || filter.indexOf('normal') >= 0;
-    }).forEach(function(e) {
+      return filter.indexOf(this.getEnergyType_(e)) >= 0 || filter.indexOf('normal') >= 0;
+    }.bind(this)).forEach(function(e) {
       var costtypes = '';
       for (var i = 0; i < e.value; i++) {
-        costtypes += '<div class="cost ' + e.type + '" data-type="' + e.type + '"></div>';
+        costtypes += '<div class="cost ' + this.getEnergyType_(e) + '" data-type="' + this.getEnergyType_(e) + '"></div>';
       }
       html += '<div class="row" data-trn-id="'+ e.trnId +'">' +
           '<div class="checkbox"></div><span class="caption">' + e.name + '</span>' +
           '<div class="types">' + costtypes + '</div>' +
           '</div>';
-    });
+    }.bind(this));
     return '<div class="energy-selection-container">' +
         '<div class="required-area"><span class="label">必要なエネルギー</span>' + requiretypes + '</div><div class="list-area">' +
         html + '</div></div>';
+  };
+
+  EnergySelectionDialog.prototype.getEnergyType_ = function(e) {
+    if (!UtilFunc.hasPreventSpecialStatus(this.monster_) && !Effects.existsChemicalGas()
+        && UtilFunc.specialIs(Const.Special.ENERGY_BURN, this.monster_)) {
+      return 'fire';
+    }
+    return e.getType();
   };
 
   EnergySelectionDialog.prototype.createButtonsDom_ = function(require) {

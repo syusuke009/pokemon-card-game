@@ -195,5 +195,7 @@
 "10004":{"name":"雷エネルギー","kind":"energy","type":"thunder","value":"1"},
 "10005":{"name":"超エネルギー","kind":"energy","type":"esper","value":"1"},
 "10006":{"name":"闘エネルギー","kind":"energy","type":"fight","value":"1"},
-"10011":{"name":"無色2個エネルギー","kind":"energy-sp","type":"normal","value":"2"}
+"10011":{"name":"無色2個エネルギー","kind":"energy-sp","type":"normal","value":"2"},
+
+"10099":{"name":"マルマイン","kind":"energy-sp","value":"2"}
 }

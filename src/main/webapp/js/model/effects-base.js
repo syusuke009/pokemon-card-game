@@ -108,8 +108,8 @@
 
   EffectsBase.confusionEachOther = function(param) {
     param.defender.addStatus(Const.Status.CONFUSION);
-    param.attacker.addStatus(Const.Status.CONFUSION);
     MessageDisplay.println(param.defender.name + ' は こんらんした！', param.attacker.name + ' は こんらんした！');
+    param.attacker.addStatus(Const.Status.CONFUSION);
     MessageDisplay.println(param.attacker.name + ' は こんらんした！', param.defender.name + ' は こんらんした！');
     return  $.Deferred().resolve().promise();
   };
@@ -136,8 +136,8 @@
     dialog.show().then(function(response){
       if (response[0]) {
         MessageDisplay.println(param.defender.name + ' は どく になった！');
-        MessageDisplay.println(param.defender.name + ' は こんらんした！');
         param.defender.addStatus(Const.Status.POISON);
+        MessageDisplay.println(param.defender.name + ' は こんらんした！');
         param.defender.addStatus(Const.Status.CONFUSION);
       }
       $defer.resolve();
@@ -190,11 +190,11 @@
   EffectsBase.matchlessByTrushEnergy = function(param, trushes) {
     var $defer = $.Deferred();
     var card = param.attacker;
-    if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+    if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy(), card))) {
       MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
       return $defer.resolve().promise();
     }
-    var dialog = new EnergySelectionDialog();
+    var dialog = new EnergySelectionDialog(card);
     dialog.show(card.getEnergy(), trushes).then(function(response){
       response.forEach(function(trushed){
         card.removeEnergy(trushed);
@@ -275,11 +275,11 @@
    */
   EffectsBase.trushEnergy = function(card, trushes) {
     var $defer = $.Deferred();
-    if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+    if (!UtilFunc.checkEnoughEnergy(trushes, UtilFunc.mapEnergyToArray(card.getEnergy(), card))) {
       MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
       return $defer.resolve(false).promise();
     }
-    var dialog = new EnergySelectionDialog();
+    var dialog = new EnergySelectionDialog(card);
     dialog.show(card.getEnergy(), trushes).then(function(response){
       response.forEach(function(trushed){
         card.removeEnergy(trushed);
@@ -308,7 +308,7 @@
   EffectsBase.trushAllEnergy = function(param) {
     var $defer = $.Deferred();
     var card = param.attacker;
-    card.getEnergy().forEach(function(e) {
+    $.each(card.getEnergy(), function(idx, e) {
       card.removeEnergy(e);
     });
     return $defer.resolve(true).promise();
@@ -570,17 +570,17 @@
   EffectsBase.trushDeckByTrushEnergy = function(param) {
     var $defer = $.Deferred();
     var card = param.attacker;
-    if (!UtilFunc.checkEnoughEnergy(['fire'], UtilFunc.mapEnergyToArray(card.getEnergy()))) {
+    if (!UtilFunc.checkEnoughEnergy(['fire'], UtilFunc.mapEnergyToArray(card.getEnergy(), card))) {
       MessageDisplay.println('しかし ' + card.name + ' は ワザがだせなかった！');
       return $defer.resolve().promise();
     }
     var viewpoint = UtilFunc.reverseViewpoint(param.model.getTurn().whoseTurn());
     var defenderField = param.model.getField(viewpoint);
-    var dialog = new EnergySelectionDialog();
+    var dialog = new EnergySelectionDialog(card);
     dialog.show(card.getEnergy(), 'fire').then(function(response){
       var deck = defenderField.getDeck();
       var trush = defenderField.getTrush();
-      response.forEach(function(trushed){
+      $.each(response, function(idx, trushed){
         card.removeEnergy(trushed);
       })
       for (var i = 0; i < response.length; i++) {
