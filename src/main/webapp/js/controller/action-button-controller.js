@@ -118,6 +118,9 @@
     if (turn.isFirstTurn()) {
       return false;
     }
+    if (Effects.existsPrimitivePower()) {
+      return false;
+    }
     return UtilFunc.findEvolutionBase(card, field, turn).length > 0;
   };
 

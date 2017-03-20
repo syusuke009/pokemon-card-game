@@ -30,12 +30,11 @@
 
       d = this.effectDefenderEffect_(defender, d);
 
-      if (!UtilFunc.hasPreventSpecialStatus(defender) && !Effects.existsChemicalGas(model)
-          && UtilFunc.specialIs(Const.Special.MYSTERIOUS_WALL, defender)) {
-        if (d >= 30) {
-          MessageDisplay.println(defender.name + ' の なぞのかべ にこうげきをはばまれた！');
-          d = 0;
-        }
+      if (Effects.hasMysteriousWall(defender) && d >= 30) {
+        MessageDisplay.println(defender.name + ' の なぞのかべ にこうげきをはばまれた！');
+        d = 0;
+      } else if (Effects.hasHermetArmour(defender)) {
+        d = Math.floor(d / 10 / 2) * 10;
       }
 
       d = Math.max(d, 0);

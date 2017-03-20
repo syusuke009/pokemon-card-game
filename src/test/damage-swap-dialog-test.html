@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Swap Test</title>
+
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/animation.css">
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/styles.css">
+<link rel="stylesheet" type="text/css" href="../main/webapp/css/dialogs.css">
+<script type="text/javascript" src="../main/webapp/js/lib/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="../main/webapp/js/lib/hogan.min.js"></script>
+<script type="text/javascript" src="../main/webapp/json/card-list.js"></script>
+<script type="text/javascript" src="../main/webapp/js/dao/card-mst-dao.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/play-field-model.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/monster-card.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/trainer-card.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/card-bundle.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/deck-model.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/bench-model.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/hands-model.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/trush-model.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/energy-card.js"></script>
+<script type="text/javascript" src="../main/webapp/js/form-components.js"></script>
+<script type="text/javascript" src="../main/webapp/js/const.js"></script>
+<script type="text/javascript" src="../main/webapp/js/util-func.js"></script>
+<script type="text/javascript" src="../main/webapp/js/card-factory.js"></script>
+<script type="text/javascript" src="../main/webapp/js/dialog/damage-swap-dialog.js"></script>
+
+</head>
+
+
+<body>
+	<button id="button-1" class="btn">ダメージスワップ</button>
+	<button id="button-2" class="btn">へんなこうどう</button>
+	<button id="button-3" class="btn">のろい</button>
+
+	<div class="dialog-backdrop"></div>
+	<div class="dialog-window">
+		<div class="dialog-header"></div>
+		<div class="dialog-content"></div>
+		<div class="dialog-buttons"></div>
+	</div>
+
+	<script type="text/javascript">
+		var field = new PlayField(new Deck());
+		var cardDao = new CardMstDao();
+		var key = {};
+		var mst = null;
+		var card = null;
+		key.id = 'test-card1';
+		key.cardCode = '3';
+		mst = cardDao.get(key.cardCode);
+		card = CardFactory.create(key, mst);
+		card.hurt(50);
+		field.setBattleMonster(card);
+		key.id = 'test-card2';
+		key.cardCode = '80';
+		mst = cardDao.get(key.cardCode);
+		card = CardFactory.create(key, mst);
+		card.hurt(10);
+		field.putBench(card);
+		key.id = 'test-card3';
+		key.cardCode = '65';
+		mst = cardDao.get(key.cardCode);
+		card = CardFactory.create(key, mst);
+		field.putBench(card);
+		key.id = 'test-card4';
+		key.cardCode = '113';
+		mst = cardDao.get(key.cardCode);
+		card = CardFactory.create(key, mst);
+		card.hurt(110);
+		field.putBench(card);
+		key.id = 'test-card5';
+		key.cardCode = '94';
+		mst = cardDao.get(key.cardCode);
+		card = CardFactory.create(key, mst);
+		card.hurt(20);
+		field.putBench(card);
+	</script>
+
+	<script type="text/javascript">
+		$('#button-1').on('click', function(e){
+		  var sd = new DamageSwapDialog();
+		  var promise = sd.show(field);
+		  promise.then(function(res) {
+		    console.log(field);
+		    alert(res);
+		  });
+		});
+		$('#button-2').on('click', function(e){
+		  var sd = new DamageSwapDialog('test-card2');
+		  var promise = sd.show(field);
+		  promise.then(function(res) {
+		    console.log(field);
+		    alert(res);
+		  });
+		});
+		$('#button-3').on('click', function(e){
+		  var sd = new DamageSwapDialog(1);
+		  var promise = sd.show(field);
+		  promise.then(function(res) {
+		    console.log(field);
+		    alert(res);
+		  });
+		});
+	</script>
+</body>
+</html>
