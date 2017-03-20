@@ -136,8 +136,7 @@
       attacker.hurt(attacker.hp);
       MessageDisplay.println(defender.name + ' は ' + attacker.name + ' を みちづれにした！');
     }
-    if (!UtilFunc.hasPreventSpecialStatus(defender) && !Effects.existsChemicalGas()
-        && UtilFunc.specialIs(Const.Special.COUNTER_ATTACK, defender)) {
+    if (Effects.canCounterAttack(defender)) {
       attacker.hurt(10);
       MessageDisplay.println(defender.name + ' ははんげきした！');
       MessageDisplay.println(attacker.name + ' に 10 ダメージ！');

@@ -162,3 +162,53 @@
     align-items: center;
     height: 167px;
 }
+.swap-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 16px;
+}
+.swap-container .swap-card-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+}
+.swap-container .swap-card-unit.droppable {
+    background-color: #ffa;
+}
+.swap-container .swap-card-unit.undroppable {
+    background-color: #ddd;
+}
+.swap-container .original-field,
+.swap-container .transfer-field {
+    width: 130px;
+    height: 74px;
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.swap-container .original-field .draggable,
+.swap-container .transfer-field .draggable {
+    cursor: move;
+}
+.swap-container .original-field .draggable.deactive,
+.swap-container .transfer-field .draggable.deactive {
+    visibility: hidden;
+}
+.swap-container .dragging {
+    display: none;
+    position: absolute;
+    opacity: .5;
+}
+.swap-container .dragging.active {
+    display: block;
+}
+.swap-container .empty-swap-target{
+    height: 20px;
+    width: 20px;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 4px;
+}

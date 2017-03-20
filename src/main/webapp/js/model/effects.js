@@ -807,7 +807,7 @@
       var f = model.getField(UtilFunc.getViewpoint(response.trnId));
       var target = f.selectFrom(response.area, response.trnId);
       card.overwriteType(target.getType());
-      MessageDisplay.println(card.name + ' は ' + UtilFunc.getTypeCaption(target.getType()) + 'タイプ にへんしょくした！');
+      MessageDisplay.newSentence(card.name + ' は ' + UtilFunc.getTypeCaption(target.getType()) + 'タイプ にへんしょくした！');
       Effects.dispatchRedrawFieldRequestEvent();
     });
 
@@ -840,6 +840,40 @@
       return false;
     }
     return true;
+  };
+
+  Effects.special_65_sp = function(model, card) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+
+    var dialog = new DamageSwapDialog();
+    dialog.show(field).then(function(response) {
+      model.setField(viewpoint, response);
+      MessageDisplay.newSentence(card.name + ' は みかたのダメージをいれかえた！');
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    return false;
+  };
+  Effects.special_65_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    var turn = model.getTurn();
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    var field = model.getField(turn.whoseTurn());
+    var bench = field.getBench();
+    if (bench.length === 0) {
+      return false;
+    }
+    if (field.getBattleMonster().getDamageCount() > 0) {
+      return true;
+    }
+    return bench.some(function(c) {
+      return c.getDamageCount() > 0;
+    });
   };
 
   Effects.special_72_sp = function(model, card) {
@@ -888,6 +922,82 @@
     var viewpoint = model.getTurn().whoseTurn();
     var field = model.getField(viewpoint);
     return field.getBench().length !== 0;
+  };
+
+  Effects.special_80_sp = function(model, card) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
+
+    var dialog = new DamageSwapDialog(card.trnId);
+    dialog.show(field).then(function(response) {
+      model.setField(viewpoint, response);
+      MessageDisplay.newSentence(card.name + ' は じぶんにダメージをあつめた！');
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    return false;
+  };
+  Effects.special_80_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    var isTarget = function(c) {
+      if (card.trnId === c.trnId) {
+        return false;
+      }
+      return c.getDamageCount() > 0;
+    };
+    var turn = model.getTurn();
+    var field = model.getField(turn.whoseTurn());
+    var bench = field.getBench();
+    if (bench.length === 0) {
+      return false;
+    }
+    if (isTarget(field.getBattleMonster())) {
+      return true;
+    }
+    return bench.some(isTarget);
+  };
+
+  Effects.special_94_sp = function(model, card) {
+    var turn = model.getTurn();
+    var viewpoint = UtilFunc.reverseViewpoint(turn.whoseTurn());
+    var field = model.getField(viewpoint);
+
+    var dialog = new DamageSwapDialog(1);
+    dialog.show(field).then(function(response) {
+      model.setField(viewpoint, response);
+      MessageDisplay.newSentence(card.name + ' は あいてのダメージをうつした！', card.name + ' に あいてダメージをうつされた！');
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    return false;
+  };
+  Effects.special_94_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    var turn = model.getTurn();
+    if (turn.wasUsedSpecial(card)) {
+      return false;
+    }
+    var isTarget = function(c) {
+      return c.getDamageCount() > 0;
+    };
+    var field = model.getField(UtilFunc.reverseViewpoint(turn.whoseTurn()));
+    var bench = field.getBench();
+    if (bench.length === 0) {
+      return false;
+    }
+    if (isTarget(field.getBattleMonster())) {
+      return true;
+    }
+    return bench.some(isTarget);
   };
 
   Effects.special_101_sp = function(model, card) {
@@ -990,6 +1100,20 @@
     return result;
   };
 
+  // 68_sp はんげき
+  Effects.canCounterAttack = function(defender) {
+    if (UtilFunc.hasPreventSpecialStatus(defender)) {
+      return false;
+    }
+    if (Effects.existsChemicalGas()) {
+      return false;
+    }
+    if (UtilFunc.specialIs(Const.Special.COUNTER_ATTACK, defender)) {
+      return true;
+    }
+    return false;
+  };
+
   // 89_sp かがくへんかガス
   Effects.existsChemicalGas = function(model) {
     model = model || window.getGameModel();
@@ -1015,6 +1139,68 @@
     }
     if (field.getBench().some(function(card) {
       return UtilFunc.specialIs(Const.Special.CHEMICAL_GAS, card);
+    })) {
+      return true;
+    }
+    return false;
+  };
+
+  // 122_sp なぞのかべ
+  Effects.hasMysteriousWall = function(defender) {
+    if (UtilFunc.hasPreventSpecialStatus(defender)) {
+      return false;
+    }
+    if (Effects.existsChemicalGas()) {
+      return false;
+    }
+    if (UtilFunc.specialIs(Const.Special.MYSTERIOUS_WALL, defender)) {
+      return true;
+    }
+    return false;
+  };
+
+  // 140_sp カブトアーマー
+  Effects.hasHermetArmour = function(defender) {
+    if (UtilFunc.hasPreventSpecialStatus(defender)) {
+      return false;
+    }
+    if (Effects.existsChemicalGas()) {
+      return false;
+    }
+    if (UtilFunc.specialIs(Const.Special.HELMET_ARMOUR, defender)) {
+      return true;
+    }
+    return false;
+  };
+
+  // 142_sp げんしのちから
+  Effects.existsPrimitivePower = function() {
+    var model = window.getGameModel();
+    var viewpoint = model.getTurn().whoseTurn();
+    if (!viewpoint) {
+      return false;
+    }
+    if (Effects.existsChemicalGas()) {
+      return false;
+    }
+    var field = model.getField(viewpoint);
+    var monster = field.getBattleMonster();
+    if (UtilFunc.specialIs(Const.Special.PRIMITIVE_POWER, monster) && !UtilFunc.hasPreventSpecialStatus(monster)) {
+      return true;
+    }
+    if (field.getBench().some(function(card) {
+      return UtilFunc.specialIs(Const.Special.PRIMITIVE_POWER, card);
+    })) {
+      return true;
+    }
+
+    field = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+    monster = field.getBattleMonster();
+    if (UtilFunc.specialIs(Const.Special.PRIMITIVE_POWER, monster) && !UtilFunc.hasPreventSpecialStatus(monster)) {
+      return true;
+    }
+    if (field.getBench().some(function(card) {
+      return UtilFunc.specialIs(Const.Special.PRIMITIVE_POWER, card);
     })) {
       return true;
     }
@@ -2027,6 +2213,9 @@
     return false;
   };
   Effects.trainer_condition_8004 = function(model) {
+    if (Effects.existsPrimitivePower()) {
+      return false;
+    }
     var turn = model.getTurn();
     var viewpoint = turn.whoseTurn();
     var field = model.getField(viewpoint);

@@ -8,7 +8,7 @@
 
   TypeSelectionDialog.prototype.show = function(types) {
     $('.dialog-backdrop').addClass('open');
-    $('.dialog-window').addClass('open').height(380).width(200);
+    $('.dialog-window').addClass('open').height(types.length * 40 + 130).width(200);
     $('.dialog-header').text('タイプ選択');
     var $content = $('.dialog-content').html(this.createContentDom_(types));
     var $buttons = $('.dialog-buttons').html(this.createButtonsDom_());

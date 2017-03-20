@@ -54,7 +54,7 @@
     MYSTERIOUS_WALL: '122_sp',
     TRANSFORMATION: '132_sp',
     SEEING_THROUGH: '138_sp',
-    HELMET_ARMOUR: '138_sp',
+    HELMET_ARMOUR: '140_sp',
     PRIMITIVE_POWER: '142_sp',
     IMMUNITAS: '143_sp'
   };
