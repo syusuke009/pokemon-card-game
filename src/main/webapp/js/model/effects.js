@@ -1159,6 +1159,23 @@
     return false;
   };
 
+  // 138_sp おみとおし
+  Effects.existsSeeingThrough = function(field) {
+    if (Effects.existsChemicalGas()) {
+      return false;
+    }
+    var monster = field.getBattleMonster();
+    if (UtilFunc.specialIs(Const.Special.SEEING_THROUGH, monster) && !UtilFunc.hasPreventSpecialStatus(monster)) {
+      return true;
+    }
+    if (field.getBench().some(function(card) {
+      return UtilFunc.specialIs(Const.Special.SEEING_THROUGH, card);
+    })) {
+      return true;
+    }
+    return false;
+  };
+
   // 140_sp カブトアーマー
   Effects.hasHermetArmour = function(defender) {
     if (UtilFunc.hasPreventSpecialStatus(defender)) {

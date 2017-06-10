@@ -19,19 +19,21 @@
 
   PlayFieldView.prototype.redraw = function(myModel, rivalModel, turn){
     var viewpoint = turn.whoseTurn();
-    this.renderInner_(this.$element_.find('#my-area'), myModel, viewpoint === Const.Viewpoint.ME);
-    this.renderInner_(this.$element_.find('#rival-area'), rivalModel, viewpoint === Const.Viewpoint.RIVAL);
+    var shouldOpenHands = !viewpoint || Effects.existsSeeingThrough(viewpoint === Const.Viewpoint.ME ? myModel : rivalModel);
+    this.renderInner_(this.$element_.find('#my-area'), myModel, viewpoint === Const.Viewpoint.ME, shouldOpenHands);
+    this.renderInner_(this.$element_.find('#rival-area'), rivalModel, viewpoint === Const.Viewpoint.RIVAL, shouldOpenHands);
   };
 
 
-  PlayFieldView.prototype.renderInner_ = function($view, field, isSelfTurn){
+  PlayFieldView.prototype.renderInner_ = function($view, field, isSelfTurn, shouldOpenHands){
     $view.find('.rest-card-count').text('残 ' + field.getDeck().size());
 
-    var sideTmpl = Hogan.compile($('#card-list-template').text());
-    $view.find('.side').html(sideTmpl.render({'list':field.getSide()}));
+    var rearTmpl = Hogan.compile($('#card-list-template').text());
+    $view.find('.side').html(rearTmpl.render({'list':field.getSide()}));
 
     var openedTmpl = Hogan.compile($('#opened-card-template').text());
-    $view.find('.hands').html(openedTmpl.render({'list':this.embedCurrentType_(field.getHands().getAll())}));
+    var handTmpl = isSelfTurn || shouldOpenHands ? openedTmpl : rearTmpl;
+    $view.find('.hands').html(handTmpl.render({'list':this.embedCurrentType_(field.getHands().getAll())}));
 
     var battleMonster = field.getBattleMonster();
     if (battleMonster === null) {
@@ -113,6 +115,9 @@
 
   PlayFieldView.prototype.enterDocument = function() {
     this.$element_.on('click', '.hands .card', function(e){
+      if ($(e.currentTarget).hasClass('rear')) {
+        return;
+      }
       this.$element_.trigger(PlayFieldView.EventType.SELECT_HAND, e.currentTarget);
     }.bind(this));
     this.$element_.on('click', '.bench .card', function(e){
