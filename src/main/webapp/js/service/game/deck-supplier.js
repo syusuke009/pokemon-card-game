@@ -16,7 +16,7 @@
       }
       if (!!card.special && (typeof card.special === 'string')) {
         var special = this.skillDao_.get(card.special);
-        card.special = new Special(card.special, special);
+        card.special = !!special ? new Special(card.special, special) : null;
       }
       if (!!card.skill1 && (typeof card.skill1 === 'string')) {
         var skill1 = this.skillDao_.get(card.skill1.replace('skill_',''));

@@ -6,6 +6,7 @@
   };
 
   DeckEditView.EventType = {
+      RENDER_DETAIL: 'render-detail',
       ADD_TO_DECK: 'add-to-deck',
       REMOVE_FROM_DECK: 'remove-from-deck',
       SAVE: 'save',
@@ -64,11 +65,25 @@
   };
 
   DeckEditView.prototype.enterDocument = function(){
+    this.$element_.on('mouseover', this.onRowMouseover_.bind(this));
     this.$element_.on('click', '.revert-btn', this.onRevertClick_.bind(this));
     this.$element_.on('click', '.save-btn', this.onSaveClick_.bind(this));
     this.$element_.on('click', '.exit-btn', this.onExitClick_.bind(this));
     this.$element_.on('click', '.add-btn', this.onAddClick_.bind(this));
     this.$element_.on('click', '.remove-btn', this.onRemoveClick_.bind(this));
+  };
+
+  DeckEditView.prototype.onRowMouseover_ = function(e) {
+    var $target = $(e.target);
+    var $row = $target.parents('.holding-row');
+    if ($row.length === 0) {
+      $row = $target.parents('.deck-row');
+    }
+    if ($row.length === 0) {
+      return;
+    }
+    var data = $row.attr('data-code');
+    this.$element_.trigger(DeckEditView.EventType.RENDER_DETAIL, data);
   };
 
   DeckEditView.prototype.onSaveClick_ = function(e) {

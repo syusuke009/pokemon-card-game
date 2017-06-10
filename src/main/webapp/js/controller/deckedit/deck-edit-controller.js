@@ -9,6 +9,7 @@
 
     this.regulation_ = new RegulationModel();
     this.view_ = new DeckEditView(this.regulation_);
+    this.detailRenderer_ = new CardDetailRenderer($('.edit-detail'));
 
     this.idNum_ = 0;
     this.holding_;
@@ -26,12 +27,17 @@
   };
 
   DeckEditController.prototype.bindEvents_ = function() {
+    this.view_.getElement().on(DeckEditView.EventType.RENDER_DETAIL, this.onRenderDetail_.bind(this));
     this.view_.getElement().on(DeckEditView.EventType.SAVE, this.onSave_.bind(this));
     this.view_.getElement().on(DeckEditView.EventType.REVERT, this.onRevert_.bind(this));
     this.view_.getElement().on(DeckEditView.EventType.EXIT, this.onExit_.bind(this));
     this.view_.getElement().on(DeckEditView.EventType.ADD_TO_DECK, this.onAdd_.bind(this));
     this.view_.getElement().on(DeckEditView.EventType.REMOVE_FROM_DECK, this.onRemove_.bind(this));
     this.view_.getElement().on(DeckEditView.EventType.REFLECT_DECK_TEMPLATE, this.onReflectDeckTemplate_.bind(this));
+  };
+
+  DeckEditController.prototype.onRenderDetail_ = function(e, code) {
+    this.detailRenderer_.render(this.createCard_(code, 'detailcontent', 'noid'));
   };
 
   DeckEditController.prototype.onAdd_ = function(e, code) {
@@ -120,6 +126,10 @@
     key.id = prefix + '-' + id;
     key.cardCode = code;
     var card = this.cardMstDao_.get(code);
+    if (!!card.special && (typeof card.special === 'string')) {
+      var special = this.skillDao_.get(card.special);
+      card.special = !!special ? new Special(card.special, special) : null;
+    }
     if (!!card.skill1 && (typeof card.skill1 === 'string')) {
       var skill1 = this.skillDao_.get(card.skill1.replace('skill_',''));
       card.skill1 = new Skill(card.skill1, skill1);
@@ -165,3 +175,18 @@
   };
 
 })(jQuery);
+Effects = {};
+Effects.existsChemicalGas = function() {
+  return false;
+};
+window.getGameModel = function() {
+  var model = {};
+  model.getField = function() {
+    var field = {};
+    field.getBench = function() {
+      return [];
+    };
+    return field;
+  };
+  return model;
+};
