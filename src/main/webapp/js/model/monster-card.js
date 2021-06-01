@@ -122,7 +122,8 @@
   };
 
   MonsterCard.prototype.getEnergy = function() {
-    return this.energy_;
+    var energy =  this.energy_;
+    return Effects.formRainbowEnergy(this, energy);
   };
 
   MonsterCard.prototype.removeEnergy = function(e) {
@@ -300,6 +301,8 @@
 
     this.overwrittenWeak_ = null;
     this.overwrittenRegist_ = null;
+
+    this.returnMetamorphosis();
   };
 
   MonsterCard.prototype.backToHand = function() {
@@ -378,4 +381,44 @@
     return this.atattackedSkill_;
   };
 
+  MonsterCard.prototype.metamorphose = function(other) {
+    var key = {};
+    key.id = this.trnId;
+    key.cardCode = this.code;
+    var mst = {};
+    $.each(other, function(key, value) {
+      mst[key] = value;
+    });
+    mst.base = null;
+    mst.escape = other.escapeCost_;
+    mst.type = other.originalType_;
+    mst.weak = other.originalWeak_;
+    mst.regist = other.originalRegist_;
+    var copied = new MonsterCard(key, mst);
+    copied.name = this.name;
+    copied.damage_ = this.damage_;
+    copied.status_ = this.status_;
+    copied.energy_ = this.energy_;
+    copied.originalCard = this;
+    return copied;
+  };
+
+  MonsterCard.prototype.returnMetamorphosis = function() {
+    var origin = this.originalCard;
+    if (!origin) {
+      return this;
+    }
+    origin.name = this.name;
+    origin.damage_ = this.damage_;
+    origin.status_ = this.status_;
+    origin.energy_ = this.energy_;
+
+    var key = {};
+    key.id = this.trnId;
+    key.cardCode = this.code;
+    var mst = {};
+    $.each(origin, function(key, value) {
+      this[key] = value;
+    }.bind(this));
+  };
 })(jQuery);

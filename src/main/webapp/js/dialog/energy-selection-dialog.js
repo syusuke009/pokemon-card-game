@@ -7,6 +7,9 @@
     this.require_;
 
     this.monster_ = monster;
+
+    var dao = new CardMstDao();
+    this.originalMst_ = dao.get(monster.code);
   };
 
 
@@ -53,7 +56,8 @@
     var html = '';
     var filter = Array.isArray(require) ? require : [require];
     energies.filter(function(e) {
-      return filter.indexOf(this.getEnergyType_(e)) >= 0 || filter.indexOf('normal') >= 0;
+      var energyType = this.getEnergyType_(e);
+      return filter.indexOf(energyType) >= 0 || energyType.indexOf('rainbow') >= 0 || filter.indexOf('normal') >= 0;
     }.bind(this)).forEach(function(e) {
       var costtypes = '';
       for (var i = 0; i < e.value; i++) {
@@ -70,9 +74,13 @@
   };
 
   EnergySelectionDialog.prototype.getEnergyType_ = function(e) {
-    if (!UtilFunc.hasPreventSpecialStatus(this.monster_) && !Effects.existsChemicalGas()
-        && UtilFunc.specialIs(Const.Special.ENERGY_BURN, this.monster_)) {
-      return 'fire';
+    if (!UtilFunc.hasPreventSpecialStatus(this.monster_) && !Effects.existsChemicalGas()) {
+      if (UtilFunc.specialIs(Const.Special.METAMORPHOSE, this.originalMst_)) {
+        return 'rainbow';
+      }
+      if (UtilFunc.specialIs(Const.Special.ENERGY_BURN, this.monster_)) {
+        return 'fire';
+      }
     }
     return e.getType();
   };

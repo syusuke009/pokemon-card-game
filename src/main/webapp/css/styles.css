@@ -778,6 +778,9 @@
 .cost.esper {
     background-image: url(../img/type/esper.jpg);
 }
+.cost.rainbow {
+    background-image: url(../img/type/rainbow.jpg);
+}
 .damage-counter {
     background-image: url(../img/damage10.jpg);
 }
