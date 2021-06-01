@@ -130,7 +130,7 @@
 "129":{"name":"コイキング","kind":"1","base":"","type":"aqua","hp":"30","skill1":"skill_129_1","skill2":"","escape":["normal"],"weak":{"thunder":"*2"}},
 "130":{"name":"ギャラドス","kind":"2","base":"129","type":"aqua","hp":"100","skill1":"skill_130_1","skill2":"skill_130_2","escape":["normal","normal","normal"],"weak":{"thunder":"*2"},"regist":{"fight":"-30"}},
 "131":{"name":"ラプラス","kind":"1","base":"","type":"aqua","hp":"80","skill1":"skill_131_1","skill2":"skill_131_2","escape":["normal","normal"],"weak":{"thunder":"*2"}},
-// "132":{"name":"メタモン","kind":"1","base":"","type":"normal","hp":"50","special":"132_sp","skill1":"","skill2":"","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
+"132":{"name":"メタモン","kind":"1","base":"","type":"normal","hp":"50","special":"132_sp","skill1":"","skill2":"","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 "133":{"name":"イーブイ","kind":"1","base":"","type":"normal","hp":"50","skill1":"skill_133_1","skill2":"skill_133_2","escape":["normal"],"weak":{"fight":"*2"},"regist":{"esper":"-30"}},
 "134":{"name":"シャワーズ","kind":"2","base":"133","type":"aqua","hp":"70","skill1":"skill_134_1","skill2":"skill_134_2","escape":["normal"],"weak":{"thunder":"*2"}},
 "135":{"name":"サンダース","kind":"2","base":"133","type":"thunder","hp":"70","skill1":"skill_135_1","skill2":"skill_135_2","escape":["normal"],"weak":{"fight":"*2"}},
@@ -195,7 +195,5 @@
 "10004":{"name":"雷エネルギー","kind":"energy","type":"thunder","value":"1"},
 "10005":{"name":"超エネルギー","kind":"energy","type":"esper","value":"1"},
 "10006":{"name":"闘エネルギー","kind":"energy","type":"fight","value":"1"},
-"10011":{"name":"無色2個エネルギー","kind":"energy-sp","type":"normal","value":"2"},
-
-"10099":{"name":"マルマイン","kind":"energy-sp","value":"2"}
+"10011":{"name":"無色2個エネルギー","kind":"energy-sp","type":"normal","value":"2"}
 }

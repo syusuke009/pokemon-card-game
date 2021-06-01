@@ -52,14 +52,14 @@
     ESCAPE_SUPPORT: '85_sp',
     CHEMICAL_GAS: '89_sp',
     MYSTERIOUS_WALL: '122_sp',
-    TRANSFORMATION: '132_sp',
+    METAMORPHOSE: '132_sp',
     SEEING_THROUGH: '138_sp',
     HELMET_ARMOUR: '140_sp',
     PRIMITIVE_POWER: '142_sp',
     IMMUNITAS: '143_sp'
   };
 
-  Const.Types = ["normal","leaf","fire","aqua","thunder","fight","esper"];
+  Const.Types = ["normal","leaf","fire","aqua","thunder","fight","esper","rainbow"];
 
   Const.EffectTiming = {
     HACK_SKILL: 'hack-skill',

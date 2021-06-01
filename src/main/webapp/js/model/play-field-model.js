@@ -43,8 +43,11 @@
     this.side_ = sides;
   };
 
-  PlayField.prototype.setBattleMonster = function(card) {
+  PlayField.prototype.setBattleMonster = function(card, opt_ignoreMetamorphose) {
     this.battleMonster_ = card;
+    if (!!card && !opt_ignoreMetamorphose) {
+      Effects.reflectMetamorphose(card);
+    }
   };
 
   PlayField.prototype.getBattleMonster = function() {

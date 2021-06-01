@@ -13,7 +13,12 @@
 <script type="text/javascript" src="../main/webapp/js/lib/hogan.min.js"></script>
 <script type="text/javascript" src="../main/webapp/json/card-list.js"></script>
 <script type="text/javascript" src="../main/webapp/js/dao/card-mst-dao.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/game-model.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/turn-model.js"></script>
 <script type="text/javascript" src="../main/webapp/js/model/energy-card.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/monster-card.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/effects-base.js"></script>
+<script type="text/javascript" src="../main/webapp/js/model/effects.js"></script>
 <script type="text/javascript" src="../main/webapp/js/form-components.js"></script>
 <script type="text/javascript" src="../main/webapp/js/const.js"></script>
 <script type="text/javascript" src="../main/webapp/js/util-func.js"></script>
@@ -26,6 +31,7 @@
 <body>
 	<button id="button" class="btn">2個</button>
 	<button id="button-unlimited" class="btn">無制限</button>
+	<button id="button-fire" class="btn">炎1個</button>
 
 	<div class="dialog-backdrop"></div>
 	<div class="dialog-window">
@@ -35,6 +41,10 @@
 	</div>
 
 	<script type="text/javascript">
+		window.getGameModel = function() {
+		  return new GameModel();
+		};
+
 		var cardDao = new CardMstDao();
 		var energies = [];
 		var key = {};
@@ -57,9 +67,15 @@
 		card = cardDao.get(key.cardCode);
 		energies.push(CardFactory.create(key, card));
 
+		key.id = 'test-moster';
+		key.cardCode = '132';
+		card = cardDao.get(key.cardCode);
+		card.special = {'code': card.special};
+		var monster = CardFactory.create(key, card);
+
 
 		$('#button').on('click', function(e){
-		  var esd = new EnergySelectionDialog();
+		  var esd = new EnergySelectionDialog(monster);
 		  var promise = esd.show(energies, ['normal', 'normal']);
 		  promise.then(function(res) {
 		    alert(res.map(function(t){
@@ -68,8 +84,17 @@
 		  });
 		});
 		$('#button-unlimited').on('click', function(e){
-		  var esd = new EnergySelectionDialog();
+		  var esd = new EnergySelectionDialog(monster);
 		  var promise = esd.show(energies, 'leaf');
+		  promise.then(function(res) {
+		    alert(res.map(function(t){
+		      return t.trnId;
+		    }));
+		  });
+		});
+		$('#button-fire').on('click', function(e){
+		  var esd = new EnergySelectionDialog(monster);
+		  var promise = esd.show(energies, ['fire']);
 		  promise.then(function(res) {
 		    alert(res.map(function(t){
 		      return t.trnId;

@@ -1159,6 +1159,71 @@
     return false;
   };
 
+  // 132_sp へんしん
+  Effects.reflectMetamorphose = function(card) {
+    model = window.getGameModel();
+    if (Effects.existsChemicalGas(model)) {
+      return;
+    }
+    var activeViewpoint = UtilFunc.getViewpoint(card.trnId);
+    var activeField = model.getField(activeViewpoint);
+    var active = activeField.getBattleMonster();
+    var passiveViewpoint = UtilFunc.reverseViewpoint(activeViewpoint);
+    var passiveField = model.getField(passiveViewpoint);
+    var passive = passiveField.getBattleMonster();
+
+    if (!active || !passive) {
+      return;
+    }
+    var dao = new CardMstDao();
+    var activeMst = dao.get(active.code);
+    var passiveMst = dao.get(passive.code);
+
+    if (UtilFunc.specialIs(Const.Special.METAMORPHOSE, activeMst) && UtilFunc.specialIs(Const.Special.METAMORPHOSE, passiveMst)) {
+      activeField.setBattleMonster(Effects.returnMetamorphosis(active), true);
+      passiveField.setBattleMonster(Effects.returnMetamorphosis(passive), true);
+      return;
+    }
+    if (UtilFunc.specialIs(Const.Special.METAMORPHOSE, activeMst)) {
+      if (UtilFunc.hasPreventSpecialStatus(active)) {
+        return;
+      }
+      var metamorphose = active.metamorphose(passive);
+      activeField.setBattleMonster(metamorphose, true);
+    }
+    if (UtilFunc.specialIs(Const.Special.METAMORPHOSE, passiveMst)) {
+      if (UtilFunc.hasPreventSpecialStatus(passive)) {
+        return;
+      }
+      var metamorphose = passive.metamorphose(active);
+      passiveField.setBattleMonster(metamorphose, true);
+    }
+  };
+  Effects.returnMetamorphosis = function(card) {
+    var dao = new CardMstDao();
+    var originalMst = dao.get(card.code);
+    if (UtilFunc.specialIs(Const.Special.METAMORPHOSE, originalMst)) {
+      return card.returnMetamorphosis();
+    }
+    return card;
+  };
+  Effects.formRainbowEnergy = function(card, energies) {
+    var dao = new CardMstDao();
+    var originalMst = dao.get(card.code);
+    if (UtilFunc.specialIs(Const.Special.METAMORPHOSE, originalMst)) {
+      $.each(energies, function(index, energy) {
+        var eneMst = dao.get(energy.code);
+        var key = {};
+        key.id = energy.trnId;
+        key.cardCode = energy.code;
+        var ene = new EnergyCard(key, eneMst);
+        ene.type_ = "rainbow";
+        energies[index] = ene;
+      });
+    }
+    return energies;
+  };
+
   // 138_sp おみとおし
   Effects.existsSeeingThrough = function(field) {
     if (Effects.existsChemicalGas()) {
