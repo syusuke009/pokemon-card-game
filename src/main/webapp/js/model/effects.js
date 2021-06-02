@@ -842,6 +842,32 @@
     return true;
   };
 
+  Effects.special_56_sp = function(model, card) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var myField = model.getField(viewpoint);
+    var rivalField = model.getField(UtilFunc.reverseViewpoint(viewpoint));
+
+    var dialog = new SpyDialog();
+    dialog.show(myField, rivalField).then(function(response) {
+      MessageDisplay.newSentence(response.name + ' を のぞきみた！', 'あいてはカードをのぞきみた！');
+    });
+    return false;
+  };
+  Effects.special_56_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    var turn = model.getTurn();
+    if (turn.wasUsedSpecial(card)) {
+      return false;
+    }
+    return true;
+  };
+
   Effects.special_65_sp = function(model, card) {
     var turn = model.getTurn();
     var viewpoint = turn.whoseTurn();
