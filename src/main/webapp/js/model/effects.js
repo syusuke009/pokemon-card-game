@@ -742,7 +742,45 @@
     }).length > 0;
   };
 
+  Effects.special_3_sp = function(model, card) {
+    var turn = model.getTurn();
+    var viewpoint = turn.whoseTurn();
+    var field = model.getField(viewpoint);
 
+    var dialog = new EnergyTransDialog('leaf');
+    dialog.show(field).then(function(response) {
+      model.setField(viewpoint, response);
+      MessageDisplay.newSentence(card.name + ' は 草エネルギーをうつした！', card.name + ' は あいての草エネルギーをうつした！');
+      Effects.dispatchRedrawFieldRequestEvent();
+    });
+    return false;
+  };
+  Effects.special_3_sp_condition = function(model, card) {
+    if (Effects.existsChemicalGas(model)) {
+      return false;
+    }
+    if (UtilFunc.hasPreventSpecialStatus(card)) {
+      return false;
+    }
+    var turn = model.getTurn();
+    if (turn.wasUsedSpecial(card)) {
+      return false;
+    }
+    var isTarget = function(c) {
+      return c.getEnergy().some(function(e) {
+        return e.code == '10001'; // 草エネルギーカード
+      });
+    };
+    var field = model.getField(turn.whoseTurn());
+    var bench = field.getBench();
+    if (bench.length === 0) {
+      return false;
+    }
+    if (isTarget(field.getBattleMonster())) {
+      return true;
+    }
+    return bench.some(isTarget);
+  };
 
   Effects.special_45_sp = function(model, card) {
     var turn = model.getTurn();
