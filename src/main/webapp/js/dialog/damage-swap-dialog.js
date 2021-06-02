@@ -16,7 +16,7 @@
 
   var CARD_TEMPLATE = '{{#list}}' +
       '<div class="swap-card-unit" data-id="{{trnId}}">' +
-      '  <div class="card {{currentType}}">' +
+      '  <div class="card {{type_}}">' +
       '    <div class="type-area">' +
       '      <span class="type-mark"></span>' +
       '      <span class="kind-caption">{{kindCaption}}</span>' +

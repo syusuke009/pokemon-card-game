@@ -162,6 +162,7 @@
     align-items: center;
     height: 167px;
 }
+
 .swap-container {
     display: flex;
     justify-content: space-around;
@@ -230,4 +231,55 @@
     display: flex;
     justify-content: center;
     padding: 32px;
+}
+
+.trans-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 16px;
+}
+.trans-container .trans-card-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+}
+.trans-container .trans-card-unit.droppable {
+    background-color: #ffa;
+}
+.trans-container .trans-card-unit.undroppable {
+    background-color: #ddd;
+}
+.trans-container .original-field,
+.trans-container .transfer-field {
+    width: 130px;
+    height: 74px;
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.trans-container .original-field .draggable,
+.trans-container .transfer-field .draggable {
+    cursor: move;
+}
+.trans-container .original-field .draggable.deactive,
+.trans-container .transfer-field .draggable.deactive {
+    visibility: hidden;
+}
+.trans-container .dragging {
+    display: none;
+    position: absolute;
+    opacity: .5;
+}
+.trans-container .dragging.active {
+    display: block;
+}
+.trans-container .empty-trans-target{
+    height: 20px;
+    width: 20px;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 4px;
 }
