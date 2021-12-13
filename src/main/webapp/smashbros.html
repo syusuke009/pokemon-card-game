@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Smash Brothers Random Fighter</title>
+
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<link rel="stylesheet" type="text/css" href="css/menu.css">
+<script type="text/javascript" src="js/lib/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="js/lib/hogan.min.js"></script>
+
+<style type="text/css">
+.option-area {
+	text-align: center;
+}
+.option-title {
+	font-size: 24px;
+}
+.option-text {
+	margin-right: 20px;
+}
+.result-screen {
+	text-align: center;
+}
+.result-screen .image {
+	margin-top: 32px;
+	max-height: 400px;
+}
+.result-screen .name {
+	font-size: 24px;
+	margin-bottom: 32px;
+}
+.menu-btn .btn,
+.back-btn {
+	font-size: 26px;
+	height: 48px;
+	width: 50%;
+}
+</style>
+
+</head>
+
+
+<body>
+	<div class="main-screen">
+		<div class="menu-area">
+			<ul class="menues">
+				<li class="menu-btn"><button class="btn btn-primary omakase-btn">おまかせ</button></li>
+				<li class="menu-btn"><button class="btn omakase-3-btn">おまかせ×3</button></li>
+				<li class="menu-btn"><button class="btn omakase-5-btn">おまかせ×5</button></li>
+			</ul>
+			<div class="option-area">
+				<div class="option-title">オプション</div>
+				<div class="option-item"><span class="option-text">Miiファイター有無</span><button class="btn mii-out-btn btn-primary">除外する</button><button class="btn mii-in-btn">含める</button></div>
+			</div>
+		</div>
+	</div>
+	<div class="result-screen hidden">
+		<div class="fighters-area"></div>
+		<button class="btn back-btn">戻る</button>
+	</div>
+
+	<script type="text/javascript">
+	(function($){
+		option = {};
+		option.count = 1;
+		option.mii = false;
+
+		var onClickOne_ = function(element) {
+		  this.option.count = 1;
+		  this.omakase_();
+		};
+		var onClickThree_ = function(element) {
+		  this.option.count = 3;
+		  this.omakase_();
+		};
+		var onClickFive_ = function(element) {
+		  this.option.count = 5;
+		  this.omakase_();
+		};
+		omakase_ = function(element) {
+			var $result = $('.result-screen');
+			$('.main-screen').addClass('hidden');
+			$result.removeClass('hidden');
+		    var templete = Hogan.compile('{{#list}}<div class="image-area"><img class="image" src="./img/smashbros/{{no}}.png" /></div><div class="name">{{no}}. {{name}}</div>{{/list}}');
+		    var list = [];
+		    while (list.length < option.count) {
+				var num1 = Math.floor(Math.random() * 100000);
+				var num2 = Math.floor(Math.random() * 100000);
+				var num3 = Math.floor(Math.random() * 100000);
+				var num = num1 + num2 + num3;
+				num = num%(option.mii ? 86 : 83);
+				console.log(num);
+				if (list.indexOf(num) >= 0) {
+					console.log('again: ' + num);
+					continue;
+				}
+				list.push(num);
+		    }
+		    var fighters = [];
+		    for (var i = 0; i < list.length; i++) {
+				fighters.push(data[list[i]]);
+		    }
+		    var str = templete.render({'list':fighters});
+		    $result.find('.fighters-area').html(str);
+		};
+
+		var onClickBack_ = function(element) {
+			$('.result-screen').addClass('hidden');
+			$('.main-screen').removeClass('hidden');
+		};
+
+		var onClickMiiIn_ = function(element) {
+			$('.mii-out-btn').removeClass('btn-primary');
+			$('.mii-in-btn').addClass('btn-primary');
+			this.option.mii = true;
+		};
+		var onClickMiiOut_ = function(element) {
+			$('.mii-out-btn').addClass('btn-primary');
+			$('.mii-in-btn').removeClass('btn-primary');
+			this.option.mii = false;
+		};
+
+		$('.menu-area').on('click', '.omakase-btn', onClickOne_.bind(this));
+		$('.menu-area').on('click', '.omakase-3-btn', onClickThree_.bind(this));
+		$('.menu-area').on('click', '.omakase-5-btn', onClickFive_.bind(this));
+		$('.menu-area').on('click', '.mii-in-btn', onClickMiiIn_.bind(this));
+		$('.menu-area').on('click', '.mii-out-btn', onClickMiiOut_.bind(this));
+		$('.result-screen').on('click', '.back-btn', onClickBack_.bind(this));
+
+		var data = [
+		  {"no":"01","name":"マリオ"},
+		  {"no":"02","name":"ドンキーコング"},
+		  {"no":"03","name":"リンク"},
+		  {"no":"04","name":"サムス"},
+		  {"no":"05","name":"ダークサムス"},
+		  {"no":"06","name":"ヨッシー"},
+		  {"no":"07","name":"カービィ"},
+		  {"no":"08","name":"フォックス"},
+		  {"no":"09","name":"ピカチュウ"},
+		  {"no":"10","name":"ルイージ"},
+		  {"no":"11","name":"ネス"},
+		  {"no":"12","name":"キャプテン・ファルコン"},
+		  {"no":"13","name":"プリン"},
+		  {"no":"14","name":"ピーチ"},
+		  {"no":"15","name":"デイジー"},
+		  {"no":"16","name":"クッパ"},
+		  {"no":"17","name":"アイスクライマー"},
+		  {"no":"18","name":"シーク"},
+		  {"no":"19","name":"ゼルダ"},
+		  {"no":"20","name":"ドクターマリオ"},
+		  {"no":"21","name":"ピチュー"},
+		  {"no":"22","name":"ファルコ"},
+		  {"no":"23","name":"マルス"},
+		  {"no":"24","name":"ルキナ"},
+		  {"no":"25","name":"こどもリンク"},
+		  {"no":"26","name":"ガノンドロフ"},
+		  {"no":"27","name":"ミュウツー"},
+		  {"no":"28","name":"ロイ"},
+		  {"no":"29","name":"クロム"},
+		  {"no":"30","name":"Mr.ゲーム&ウォッチ"},
+		  {"no":"31","name":"メタナイト"},
+		  {"no":"32","name":"ピット"},
+		  {"no":"33","name":"ブラックピット"},
+		  {"no":"34","name":"ゼロスーツサムス"},
+		  {"no":"35","name":"ワリオ"},
+		  {"no":"36","name":"スネーク"},
+		  {"no":"37","name":"アイク"},
+		  {"no":"38","name":"ポケモントレーナー"},
+		  {"no":"39","name":"ディディーコング"},
+		  {"no":"40","name":"リュカ"},
+		  {"no":"41","name":"ソニック"},
+		  {"no":"42","name":"デデデ"},
+		  {"no":"43","name":"ピクミン&オリマー"},
+		  {"no":"44","name":"ルカリオ"},
+		  {"no":"45","name":"ロボット"},
+		  {"no":"46","name":"トゥーンリンク"},
+		  {"no":"47","name":"ウルフ"},
+		  {"no":"48","name":"むらびと"},
+		  {"no":"49","name":"ロックマン"},
+		  {"no":"50","name":"Wii Fit トレーナー"},
+		  {"no":"51","name":"ロゼッタ&チコ"},
+		  {"no":"52","name":"リトルマック"},
+		  {"no":"53","name":"ゲッコウガ"},
+		  {"no":"54","name":"パルテナ"},
+		  {"no":"55","name":"パックマン"},
+		  {"no":"56","name":"ルフレ"},
+		  {"no":"57","name":"シュルク"},
+		  {"no":"58","name":"クッパJr."},
+		  {"no":"59","name":"ダックハント"},
+		  {"no":"60","name":"リュウ"},
+		  {"no":"61","name":"ケン"},
+		  {"no":"62","name":"クラウド"},
+		  {"no":"63","name":"カムイ"},
+		  {"no":"64","name":"ベヨネッタ"},
+		  {"no":"65","name":"インクリング"},
+		  {"no":"66","name":"リドリー"},
+		  {"no":"67","name":"シモン"},
+		  {"no":"68","name":"リヒター"},
+		  {"no":"69","name":"キングクルール"},
+		  {"no":"70","name":"しずえ"},
+		  {"no":"71","name":"ガオガエン"},
+		  {"no":"72","name":"パックンフラワー"},
+		  {"no":"73","name":"ジョーカー"},
+		  {"no":"74","name":"勇者"},
+		  {"no":"75","name":"バンジョー&カズーイ"},
+		  {"no":"76","name":"テリー"},
+		  {"no":"77","name":"ベレト"},
+		  {"no":"78","name":"ミェンミェン"},
+		  {"no":"79","name":"スティーブ"},
+		  {"no":"80","name":"セフィロス"},
+		  {"no":"81","name":"ホムラ / ヒカリ"},
+		  {"no":"82","name":"カズヤ"},
+		  {"no":"83","name":"ソラ"},
+		  {"no":"84","name":"格闘Mii"},
+		  {"no":"85","name":"剣術Mii"},
+		  {"no":"86","name":"射撃Mii"},
+		];
+	})(jQuery);
+	</script>
+</body>
+</html>
